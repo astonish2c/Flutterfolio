@@ -1,14 +1,11 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
-
-import 'package:crypto_exchange_app/pages/exchange%20page/exchange_page.dart';
-import 'package:crypto_exchange_app/pages/holdings%20page/holdings_page.dart';
-import 'package:crypto_exchange_app/pages/settings%20pages/settings_page.dart';
+import 'package:crypto_exchange_app/pages/holdings_page/holdings_page.dart';
+import 'package:crypto_exchange_app/pages/settings_pages/settings_page.dart';
 import 'package:flutter/material.dart';
 
-import '../pages/home page/components/nav_bar_item.dart';
-import '../pages/home page/home_page.dart';
-import '../pages/market page/market_page.dart';
-import 'constants.dart';
+import '../pages/exchange_page/exchange_page.dart';
+import '../pages/home_page/home_page.dart';
+import '../pages/market_page/market_page.dart';
 
 class NavBar extends StatefulWidget {
   final int currentIndex;
@@ -33,20 +30,74 @@ class _NavBarState extends State<NavBar> {
 
   int _selectedIndex = 0;
 
-  void navigateToPage(BuildContext context, Widget page) {
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBarTheme(
+      data: Theme.of(context).bottomNavigationBarTheme,
+      child: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: (value) {
+          setState(() {
+            _selectedIndex = value;
+          });
+          if (_selectedIndex == 0) {
+            navigateToPage(context, HomePage());
+          }
+          if (_selectedIndex == 1) {
+            navigateToPage(context, HoldingsPage());
+          }
+          if (_selectedIndex == 2) {
+            navigateToPage(context, ExchangePage());
+          }
+          if (_selectedIndex == 3) {
+            navigateToPage(context, MarketPage());
+          }
+          if (_selectedIndex == 4) {
+            navigateToPage(context, SettingsPage());
+          }
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_rounded),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.pie_chart_rounded),
+            label: 'Holdings',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.swap_vertical_circle_rounded),
+            label: 'Exchange',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bar_chart_rounded),
+            label: 'Market',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<Widget> buildPageAsync(Widget page) async {
+    return Future.microtask(() {
+      return page;
+    });
+  }
+
+  void navigateToPage(BuildContext context, Widget getPage) async {
+    // var page = await buildPageAsync(getPage);
+    // var route = MaterialPageRoute(builder: (_) => page);
+    // Navigator.pushReplacement(context, route);
+
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
-        pageBuilder: (context, animation1, animation2) => page,
+        pageBuilder: (context, animation1, animation2) => getPage,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          // if (_selectedIndex < widget.currentIndex) {
-          //   begin = Offset(-1, 0);
-          // } else if (_selectedIndex > widget.currentIndex) {
-          //   begin = Offset(1, 0);
-          // } else {
-          //   begin = Offset(0, 0);
-          // }
-
           Offset begin = Offset(0, 0);
           var end = Offset.zero;
           var curve = Curves.ease;
@@ -58,68 +109,8 @@ class _NavBarState extends State<NavBar> {
             child: child,
           );
         },
-
-        transitionDuration: Duration(milliseconds: 300),
-        // reverseTransitionDuration: Duration.zero,
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return NavigationBarTheme(
-      data: NavigationBarThemeData(
-        height: 50,
-        indicatorColor: darkBlue.withOpacity(0.2),
-        backgroundColor: lightBlue,
-        labelTextStyle: MaterialStateProperty.all(
-          TextStyle(
-            color: Colors.white,
-            fontSize: 10,
-          ),
-        ),
-      ),
-      child: NavigationBar(
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: (value) {
-          setState(() {
-            _selectedIndex = value;
-          });
-          if (value == 0) {
-            navigateToPage(context, HomePage());
-          } else if (value == 1) {
-            navigateToPage(context, HoldingsPage());
-          } else if (value == 2) {
-            navigateToPage(context, ExchangePage());
-          } else if (value == 3) {
-            navigateToPage(context, MarketPage());
-          } else if (value == 4) {
-            navigateToPage(context, SettingsPage());
-          }
-        },
-        destinations: [
-          NavgationBarItem(
-            iconUrl: 'assets/icons/home.svg',
-            label: 'Home',
-          ),
-          NavgationBarItem(
-            iconUrl: 'assets/icons/pie_chart.svg',
-            label: 'Holdings',
-          ),
-          NavgationBarItem(
-            iconUrl: 'assets/icons/exchange.svg',
-            label: 'Exchange',
-          ),
-          NavgationBarItem(
-            iconUrl: 'assets/icons/bar_chart.svg',
-            label: 'Market',
-          ),
-          NavgationBarItem(
-            iconUrl: 'assets/icons/settings.svg',
-            label: 'Settings',
-          ),
-        ],
+        transitionDuration: Duration.zero,
+        reverseTransitionDuration: Duration.zero,
       ),
     );
   }

@@ -7,10 +7,7 @@ class CoinModel {
   final String imageUrl;
   final Color color;
   final String priceDiff;
-  double? buyPrice;
-  double? amount;
-  bool? isBought;
-  DateTime? dateTime;
+  final List<BuyCoin>? buyCoin;
 
   CoinModel({
     required this.currentPrice,
@@ -19,14 +16,18 @@ class CoinModel {
     required this.imageUrl,
     required this.priceDiff,
     required this.color,
-    this.buyPrice,
-    this.dateTime,
-    this.amount,
-    this.isBought,
+    this.buyCoin,
   });
+}
 
-  // CoinModel.buy({
-  //   required double this.buyPrice,
+class BuyCoin {
+  final double buyPrice;
+  final double amount;
+  final DateTime dateTime;
 
-  // });
+  BuyCoin({
+    required this.buyPrice,
+    required this.amount,
+    required this.dateTime,
+  });
 }

@@ -4,22 +4,12 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+
     {
-      "name": "crypto_exchange_app",
-      "request": "launch",
-      "type": "dart"
-    },
-    {
-      "name": "crypto_exchange_app (profile mode)",
+      "name": "Flutter",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "profile"
-    },
-    {
-      "name": "crypto_exchange_app (release mode)",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "release"
+      "flutterMode": "debug"
     }
   ]
 }

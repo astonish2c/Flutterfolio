@@ -1,20 +1,33 @@
-import 'package:crypto_exchange_app/pages/holdings%20page/components/coin_detail_screen.dart';
-import 'package:flutter/foundation.dart';
+import 'package:crypto_exchange_app/pages/home_page/components/home_tab_bar.dart';
+import 'package:crypto_exchange_app/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../pages/home page/home_page.dart';
-import '../pages/market%20page/market_page.dart';
-import '../pages/holdings%20page/holdings_page.dart';
+import 'utils/custom_theme.dart';
+import 'pages/home_page/home_page.dart';
+import 'pages/market_page/market_page.dart';
+import 'pages/holdings_page/holdings_page.dart';
 import '../provider/data_provider.dart';
+import 'pages/holdings_page/components/holdings_item_transactions.dart';
+import 'pages/home_page/components/home_items_list.dart';
 
 void main() {
   runApp(
     DevicePreview(
-      enabled: !kReleaseMode,
-      builder: (context) => const App(),
+      enabled: false,
+      builder: (context) => MultiProvider(
+        providers: [
+          ChangeNotifierProvider<DataProvider>(
+            create: (context) => DataProvider(),
+          ),
+          ListenableProvider<ThemeProvider>(
+            create: (context) => ThemeProvider(),
+          ),
+        ],
+        builder: (context, child) => const App(),
+      ),
     ),
   );
 }
@@ -24,37 +37,29 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final newTextTheme = Theme.of(context).textTheme.apply(
-          fontFamily: 'Montserrat',
-          bodyColor: Colors.white,
-          displayColor: Colors.white,
-        );
-    return ChangeNotifierProvider(
-      create: (context) => DataProvider(),
-      builder: (context, child) {
-        return ScreenUtilInit(
-          designSize: const Size(1080, 2400),
-          minTextAdapt: true,
-          splitScreenMode: true,
-          builder: (context, child) => MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              scaffoldBackgroundColor: Colors.transparent,
-              appBarTheme: const AppBarTheme(
-                backgroundColor: Colors.transparent,
-                shadowColor: Colors.transparent,
-              ),
-              textTheme: newTextTheme,
-            ),
-            routes: {
-              '/': (context) => const HomePage(),
-              MarketPage.routeName: (context) => const MarketPage(),
-              HoldingsPage.routeName: (context) => const HoldingsPage(),
-              CoinDetailScreen.routeName: (context) => const CoinDetailScreen(),
-            },
-          ),
-        );
-      },
+    // print('App build');
+    return ScreenUtilInit(
+      designSize: const Size(1080, 2400),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) => Consumer<ThemeProvider>(
+        builder: (context, value, child) => MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: lightThemeData,
+          darkTheme: darkThemeData,
+          themeMode: value.themeMode,
+          routes: {
+            '/': (context) => const HomePage(),
+            MarketPage.routeName: (context) => const MarketPage(),
+            HoldingsPage.routeName: (context) => const HoldingsPage(),
+            HoldingsItemTransactions.routeName: (context) => const HoldingsItemTransactions(),
+            HomeItemsList.routeName: (context) => const HomeItemsList(),
+            HomeTabBar.routeName: (context) => const HomeTabBar(),
+          },
+        ),
+        // child: ,
+      ),
+      // child: ,
     );
   }
 }

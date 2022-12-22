@@ -1,4 +1,3 @@
-import 'package:crypto_exchange_app/model/coin_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -26,13 +25,17 @@ String convertStrToNum(double num) {
 
 //Convert BTC amount to Doller value
 double convertBtcToDoller(double btcAmount) {
-  final double oneBtcValue = 29850.15;
+  const double oneBtcValue = 29850.15;
 
   return btcAmount * oneBtcValue;
 }
 
 //convert Doller to BTC Value
 double convertDollerToBTC(double dollerAmount) {
-  final oneBtcValue = 29850.15;
+  const oneBtcValue = 29850.15;
   return dollerAmount / oneBtcValue;
+}
+
+String removeTrailingZeros(String n) {
+  return n.replaceAll(RegExp(r"([.]*0+)(?!.*\d)"), "");
 }
