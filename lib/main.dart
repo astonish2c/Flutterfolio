@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'utils/custom_theme.dart';
 import 'pages/home_page/home_page.dart';
@@ -13,7 +14,10 @@ import '../provider/data_provider.dart';
 import 'pages/holdings_page/components/holdings_item_transactions.dart';
 import 'pages/home_page/components/home_items_list.dart';
 
-void main() {
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   runApp(
     DevicePreview(
       enabled: false,

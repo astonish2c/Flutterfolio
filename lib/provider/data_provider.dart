@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 import '../model/coin_model.dart';
 
@@ -89,6 +90,10 @@ class DataProvider with ChangeNotifier {
   List<CoinModel> get userCoins {
     return [..._userCoins.values];
   }
+
+  FirebaseDatabase database = FirebaseDatabase.instance;
+
+  DatabaseReference ref = FirebaseDatabase.instance.ref();
 
   void removeTransaction({required CoinModel coinModel, required int buyCoinIndex, required BuildContext buildContext}) {
     _userCoins[coinModel.shortName.toLowerCase()]!.buyCoin!.removeAt(buyCoinIndex);
