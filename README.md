@@ -1,4 +1,4 @@
-# crypto_exchange_app
+# Crypto portfolio
 
 A new Flutter project.
 
