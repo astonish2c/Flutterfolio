@@ -41,13 +41,13 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print('App build');
     return ScreenUtilInit(
       designSize: const Size(1080, 2400),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) => Consumer<ThemeProvider>(
         builder: (context, value, child) => MaterialApp(
+          title: 'Crypto Firebase',
           debugShowCheckedModeBanner: false,
           theme: lightThemeData,
           darkTheme: darkThemeData,
