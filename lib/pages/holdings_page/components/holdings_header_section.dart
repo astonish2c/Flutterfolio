@@ -48,7 +48,7 @@ class HoldingsHeaderSection extends StatelessWidget {
             ),
             InkWell(
               onTap: () {
-                dataProvider.togglePieChart();
+                // dataProvider.togglePieChart();
               },
               child: Row(
                 children: [

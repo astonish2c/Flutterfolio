@@ -28,7 +28,10 @@ class HoldingsItemTransactions extends StatelessWidget {
   Widget build(BuildContext context) {
     final DataProvider dataProvider = Provider.of<DataProvider>(context);
     final TextTheme textTheme = Theme.of(context).textTheme;
-    // print('HoldingsItemTransactions build is run');
+
+    void popPage() {
+      Navigator.of(context).pop();
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -69,7 +72,7 @@ class HoldingsItemTransactions extends StatelessWidget {
               //Item Details
               Expanded(
                 child: ListView.builder(
-                  itemCount: coinModel!.buyCoin!.length,
+                  itemCount: coinModel!.transactions!.length,
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () async {
@@ -80,11 +83,11 @@ class HoldingsItemTransactions extends StatelessWidget {
                           ),
                           context: context,
                           builder: (context) {
-                            return TransactionDetailsBottomSheet(coinModel: coinModel!, index: index, dataProvider: dataProvider);
+                            return TransactionDetailsBottomSheet(coinModel: coinModel!, index: index, dataProvider: dataProvider, popPage: popPage);
                           },
                         );
                       },
-                      child: CoinDetailScreenListItem(coinModel: coinModel!, buyCoin: coinModel!.buyCoin![index]),
+                      child: CoinDetailScreenListItem(coinModel: coinModel!, buyCoin: coinModel!.transactions![index]),
                     );
                   },
                 ),
@@ -93,7 +96,7 @@ class HoldingsItemTransactions extends StatelessWidget {
               ExchnageBigBtn(
                 text: 'Add Transaction',
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeTabBar(coinModel: coinModel)));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeTabBar(coinModel: coinModel, pushHomePage: false)));
                 },
               ),
             ],

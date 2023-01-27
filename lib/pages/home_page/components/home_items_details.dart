@@ -14,13 +14,14 @@ class BuyView extends StatefulWidget {
   const BuyView({
     Key? key,
     required this.coinModel,
-    // required this.focusNode,
     this.indexOfBuyCoin,
+    this.pushHomePage,
   }) : super(key: key);
 
   final CoinModel coinModel;
-  // final FocusNode focusNode;
   final int? indexOfBuyCoin;
+  final bool? pushHomePage;
+
   @override
   State<BuyView> createState() => _BuyViewState();
 }
@@ -47,10 +48,10 @@ class _BuyViewState extends State<BuyView> {
   void setPreValues(TextEditingController amountController) {
     if (widget.indexOfBuyCoin != null) {
       // print('amount here is: ${amountController.text}');
-      amountController.text = widget.coinModel.buyCoin![widget.indexOfBuyCoin!].amount.toString();
-      _selectedDate = widget.coinModel.buyCoin![widget.indexOfBuyCoin!].dateTime;
+      amountController.text = widget.coinModel.transactions![widget.indexOfBuyCoin!].amount.toString();
+      _selectedDate = widget.coinModel.transactions![widget.indexOfBuyCoin!].dateTime;
       _isDateSet = true;
-      _priceValue = widget.coinModel.buyCoin![widget.indexOfBuyCoin!].buyPrice;
+      _priceValue = widget.coinModel.transactions![widget.indexOfBuyCoin!].buyPrice;
       _isPriceSet = true;
     } else {
       return;
@@ -93,8 +94,8 @@ class _BuyViewState extends State<BuyView> {
         imageUrl: widget.coinModel.imageUrl,
         priceDiff: widget.coinModel.priceDiff,
         color: widget.coinModel.color,
-        buyCoin: [
-          BuyCoin(
+        transactions: [
+          Transaction(
             buyPrice: _priceValue,
             amount: double.parse(_amountController.text),
             dateTime: _selectedDate,
@@ -102,9 +103,10 @@ class _BuyViewState extends State<BuyView> {
         ],
       ),
     );
-    Provider.of<DataProvider>(context, listen: false).calTotalUserBalance();
     Navigator.of(context).pop();
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
+    if (widget.pushHomePage == null) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
+    }
   }
 
   //to Check if our input is legit
@@ -323,15 +325,14 @@ class _BuyViewState extends State<BuyView> {
                   ? null
                   : () {
                       if (widget.indexOfBuyCoin != null) {
-                        Provider.of<DataProvider>(context, listen: false).updateBuyCoin(
+                        Provider.of<DataProvider>(context, listen: false).updateTransaction(
                           widget.coinModel,
                           widget.indexOfBuyCoin!,
-                          BuyCoin(buyPrice: _priceValue, amount: double.parse(_amountController.text), dateTime: _selectedDate),
+                          Transaction(buyPrice: _priceValue, amount: double.parse(_amountController.text), dateTime: _selectedDate),
                         );
                         Provider.of<DataProvider>(context, listen: false).calTotalUserBalance();
                         Navigator.of(context).pop();
-                        Navigator.of(context)
-                            .pushReplacement(MaterialPageRoute(builder: (context) => HoldingsItemTransactions(coinModel: widget.coinModel)));
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HoldingsItemTransactions(coinModel: widget.coinModel)));
                       } else {
                         _submit();
                       }

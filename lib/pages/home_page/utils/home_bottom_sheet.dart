@@ -56,12 +56,11 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
           imageUrl: coinModel.imageUrl,
           priceDiff: coinModel.priceDiff,
           color: coinModel.color,
-          buyCoin: [
-            BuyCoin(buyPrice: buyPrice, amount: amount, dateTime: _dateTime),
+          transactions: [
+            Transaction(buyPrice: buyPrice, amount: amount, dateTime: _dateTime),
           ],
         ),
       );
-      Provider.of<DataProvider>(context, listen: false).calTotalUserBalance();
       Navigator.of(context).pop();
     }
   }

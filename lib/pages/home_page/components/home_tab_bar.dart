@@ -11,8 +11,9 @@ class HomeTabBar extends StatefulWidget {
 
   final CoinModel? coinModel;
   final int? indexBuyCoin;
+  final bool? pushHomePage;
 
-  const HomeTabBar({super.key, this.coinModel, this.indexBuyCoin});
+  const HomeTabBar({super.key, this.coinModel, this.indexBuyCoin, this.pushHomePage});
 
   @override
   State<HomeTabBar> createState() => _HomeTabBarState();
@@ -101,7 +102,7 @@ class _HomeTabBarState extends State<HomeTabBar> with TickerProviderStateMixin {
           child: TabBarView(
             controller: _tabController,
             children: [
-              BuyView(coinModel: widget.coinModel!, indexOfBuyCoin: widget.indexBuyCoin),
+              BuyView(coinModel: widget.coinModel!, indexOfBuyCoin: widget.indexBuyCoin, pushHomePage: widget.pushHomePage),
               Text(''),
               Text(''),
             ],

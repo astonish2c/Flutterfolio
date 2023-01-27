@@ -14,12 +14,14 @@ class TransactionDetailsBottomSheet extends StatelessWidget {
     required this.coinModel,
     required this.index,
     required this.dataProvider,
+    required this.popPage,
   }) : super(key: key);
 
   final CoinModel coinModel;
   final DataProvider dataProvider;
-
+  final Function popPage;
   final int index;
+
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
@@ -48,7 +50,7 @@ class TransactionDetailsBottomSheet extends StatelessWidget {
           const SizedBox(height: 8),
           TransactionDetailsRow(
             title1: 'Date',
-            title2: DateFormat('d, MMM, y, h:m a').format(coinModel.buyCoin![index].dateTime),
+            title2: DateFormat('d, MMM, y, h:m a').format(coinModel.transactions![index].dateTime),
           ),
           const Divider(
             color: Colors.grey,
@@ -56,7 +58,7 @@ class TransactionDetailsBottomSheet extends StatelessWidget {
           const SizedBox(height: 8),
           TransactionDetailsRow(
             title1: 'Price Per Coin',
-            title2: '\$${convertStrToNum(coinModel.buyCoin![index].buyPrice)}',
+            title2: '\$${convertStrToNum(coinModel.transactions![index].buyPrice)}',
           ),
           const Divider(
             color: Colors.grey,
@@ -64,7 +66,7 @@ class TransactionDetailsBottomSheet extends StatelessWidget {
           const SizedBox(height: 8),
           TransactionDetailsRow(
             title1: 'Quantity',
-            title2: coinModel.buyCoin![index].amount.toString(),
+            title2: coinModel.transactions![index].amount.toString(),
           ),
           const Divider(
             color: Colors.grey,
@@ -80,7 +82,7 @@ class TransactionDetailsBottomSheet extends StatelessWidget {
           const SizedBox(height: 8),
           TransactionDetailsRow(
             title1: 'Total Cost',
-            title2: '\$${convertStrToNum(coinModel.buyCoin![index].amount * coinModel.buyCoin![index].buyPrice)}',
+            title2: '\$${convertStrToNum(coinModel.transactions![index].amount * coinModel.transactions![index].buyPrice)}',
           ),
           const Divider(
             color: Colors.grey,
@@ -100,10 +102,13 @@ class TransactionDetailsBottomSheet extends StatelessWidget {
             text: 'Remove Transaction',
             bgColor: Colors.red[900],
             textColor: Colors.white,
-            onTap: () {
-              dataProvider.removeTransaction(coinModel: coinModel, buyCoinIndex: index, buildContext: context);
-              dataProvider.calTotalUserBalance();
-              Navigator.of(context).pop();
+            onTap: () async {
+              await dataProvider.removeTransaction(coin: coinModel, transactionIndex: index).then((value) {
+                Navigator.of(context).pop();
+                if (value == true) {
+                  popPage();
+                }
+              });
             },
           ),
         ],

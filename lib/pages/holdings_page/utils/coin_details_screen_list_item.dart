@@ -13,7 +13,7 @@ class CoinDetailScreenListItem extends StatelessWidget {
   }) : super(key: key);
 
   final CoinModel coinModel;
-  final BuyCoin? buyCoin;
+  final Transaction? buyCoin;
 
   @override
   Widget build(BuildContext context) {
