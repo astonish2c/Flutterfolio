@@ -107,7 +107,7 @@ class HoldingsItemList extends StatelessWidget {
             SizedBox(
               width: 50,
               height: 50,
-              child: Image.asset(coinModel.imageUrl),
+              child: Image.network(coinModel.imageUrl),
             ),
             SizedBox(width: defaultPadding),
             //Title

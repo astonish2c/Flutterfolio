@@ -91,6 +91,7 @@ class _HomeItemsListState extends State<HomeItemsList> {
                 Expanded(
                   child: Consumer<DataProvider>(
                     builder: (context, value, child) => ListView.builder(
+                      physics: BouncingScrollPhysics(),
                       itemCount: value.allCoins.length,
                       itemBuilder: (context, index) {
                         return GestureDetector(
@@ -134,19 +135,19 @@ class ListItem extends StatelessWidget {
           leading: SizedBox(
             height: 30,
             width: 30,
-            child: Image.asset(dataProvider.allCoins[index].imageUrl),
+            child: Image.network(dataProvider.allCoins[index].imageUrl),
           ),
           title: Row(
             children: [
               Text(
-                dataProvider.allCoins[index].name,
+                dataProvider.allCoins[index].shortName.toUpperCase(),
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
               ),
               SizedBox(width: 6),
               Text(
-                dataProvider.allCoins[index].shortName.toUpperCase(),
+                dataProvider.allCoins[index].name,
                 style: theme.textTheme.bodyMedium,
               ),
             ],

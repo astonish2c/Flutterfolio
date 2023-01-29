@@ -3,7 +3,6 @@ import 'package:crypto_exchange_app/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'utils/custom_theme.dart';
@@ -41,29 +40,22 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(1080, 2400),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context, child) => Consumer<ThemeProvider>(
-        builder: (context, value, child) => MaterialApp(
-          title: 'Crypto Firebase',
-          debugShowCheckedModeBanner: false,
-          theme: lightThemeData,
-          darkTheme: darkThemeData,
-          themeMode: value.themeMode,
-          routes: {
-            '/': (context) => const HomePage(),
-            MarketPage.routeName: (context) => const MarketPage(),
-            HoldingsPage.routeName: (context) => const HoldingsPage(),
-            HoldingsItemTransactions.routeName: (context) => const HoldingsItemTransactions(),
-            HomeItemsList.routeName: (context) => const HomeItemsList(),
-            HomeTabBar.routeName: (context) => const HomeTabBar(),
-          },
-        ),
-        // child: ,
+    return Consumer<ThemeProvider>(
+      builder: (context, value, child) => MaterialApp(
+        title: 'Crypto Firebase',
+        debugShowCheckedModeBanner: false,
+        theme: lightThemeData,
+        darkTheme: darkThemeData,
+        themeMode: value.themeMode,
+        routes: {
+          '/': (context) => const HomePage(),
+          MarketPage.routeName: (context) => const MarketPage(),
+          HoldingsPage.routeName: (context) => const HoldingsPage(),
+          HoldingsItemTransactions.routeName: (context) => const HoldingsItemTransactions(),
+          HomeItemsList.routeName: (context) => const HomeItemsList(),
+          HomeTabBar.routeName: (context) => const HomeTabBar(),
+        },
       ),
-      // child: ,
     );
   }
 }

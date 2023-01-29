@@ -79,7 +79,7 @@ class _HomeTabBarState extends State<HomeTabBar> with TickerProviderStateMixin {
               SizedBox(
                 height: 25,
                 width: 25,
-                child: Image.asset(widget.coinModel!.imageUrl),
+                child: Image.network(widget.coinModel!.imageUrl),
               ),
               SizedBox(width: 4),
               Text(

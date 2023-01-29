@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +20,14 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<DataProvider>(context, listen: false).setUserCoin();
+
+    DataProvider dataProvider = Provider.of<DataProvider>(context, listen: false);
+
+    if (dataProvider.firstRun) {
+      dataProvider.setAllCoins();
+      dataProvider.periodicSetAllCoin();
+      dataProvider.setUserCoin();
+    }
   }
 
   @override

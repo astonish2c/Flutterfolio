@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
 //BG color and FG color
@@ -13,14 +14,19 @@ double defaultPadding = 16;
 
 //Covert String to Num (removing and adding things)
 String convertStrToNum(double num) {
-  final String trimedString = num.toStringAsFixed(2); //2 digits after decimal
-  final double trimedDouble = double.parse(trimedString); //converted to double
-
-  final NumberFormat numberFormat = NumberFormat.decimalPattern(); //will be used to include comma
-
-  final String readyOutput = numberFormat.format(trimedDouble); //now has comma in between
-
+  final String readyOutput = NumberFormat.decimalPattern().format(num); //now has comma in between
+  if (readyOutput == '0') {
+    if (num > 0) {
+      return num.toString();
+    }
+  }
   return readyOutput;
+}
+
+//reduces Percentage number to 2 digits after decimal point
+String convertPerToNum(String percentage) {
+  final doubleStr = double.parse(percentage).toStringAsFixed(2);
+  return doubleStr;
 }
 
 //Convert BTC amount to Doller value

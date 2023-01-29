@@ -1,11 +1,7 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:crypto_exchange_app/pages/exchange_page/components/exchange_big_btn.dart';
-import 'package:crypto_exchange_app/pages/home_page/components/home_items_details.dart';
 import 'package:crypto_exchange_app/pages/home_page/components/home_tab_bar.dart';
 import 'package:crypto_exchange_app/utils/constants.dart';
 import 'package:crypto_exchange_app/utils/icon_btn_zero_padding.dart';
-import 'package:crypto_exchange_app/utils/nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -32,6 +28,9 @@ class HoldingsItemTransactions extends StatelessWidget {
     void popPage() {
       Navigator.of(context).pop();
     }
+
+    var filteredCM = dataProvider.allCoins.where((element) => element.shortName == coinModel!.shortName).toList();
+    var cm = filteredCM[0];
 
     return Scaffold(
       appBar: AppBar(
@@ -78,7 +77,7 @@ class HoldingsItemTransactions extends StatelessWidget {
                       onTap: () async {
                         await showModalBottomSheet(
                           isScrollControlled: true,
-                          shape: RoundedRectangleBorder(
+                          shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
                           ),
                           context: context,
@@ -92,11 +91,11 @@ class HoldingsItemTransactions extends StatelessWidget {
                   },
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ExchnageBigBtn(
                 text: 'Add Transaction',
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeTabBar(coinModel: coinModel, pushHomePage: false)));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeTabBar(coinModel: cm, pushHomePage: false)));
                 },
               ),
             ],

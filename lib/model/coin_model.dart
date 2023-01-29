@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class CoinModel {
@@ -18,6 +19,17 @@ class CoinModel {
     required this.color,
     this.transactions,
   });
+
+  factory CoinModel.fromJson(Map<String, dynamic> json) {
+    return CoinModel(
+      currentPrice: double.parse(json["current_price"].toString()),
+      name: json["id"],
+      shortName: json["symbol"],
+      imageUrl: json['image'],
+      priceDiff: json["price_change_percentage_24h"].toString(),
+      color: Colors.blue,
+    );
+  }
 }
 
 class Transaction {

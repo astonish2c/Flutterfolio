@@ -47,7 +47,6 @@ class _BuyViewState extends State<BuyView> {
 
   void setPreValues(TextEditingController amountController) {
     if (widget.indexOfBuyCoin != null) {
-      // print('amount here is: ${amountController.text}');
       amountController.text = widget.coinModel.transactions![widget.indexOfBuyCoin!].amount.toString();
       _selectedDate = widget.coinModel.transactions![widget.indexOfBuyCoin!].dateTime;
       _isDateSet = true;
@@ -134,8 +133,8 @@ class _BuyViewState extends State<BuyView> {
   @override
   Widget build(BuildContext context) {
     final double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
-    // print('index of BuyCoin at BuyView Widget: ${widget.indexOfBuyCoin}');
     final ThemeData theme = Theme.of(context);
+
     return Column(
       children: [
         //Amount Section

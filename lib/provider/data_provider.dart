@@ -1,39 +1,21 @@
 // ignore_for_file: avoid_print
 
+import 'dart:async';
+
 import 'package:firebase_database/firebase_database.dart' hide Transaction;
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 import '../model/coin_model.dart';
 
 class DataProvider with ChangeNotifier {
   double totalUserBalance = 0.0;
+  double marketCapPercentage = 0;
+  bool firstRun = true;
+  bool isRunning = false;
 
-  final Map<String, CoinModel> _allCoins = {
-    DateTime.now.toString(): CoinModel(
-      currentPrice: 29850.15,
-      name: 'Bitcoin',
-      shortName: 'btc',
-      imageUrl: 'assets/images/bitcoin.png',
-      priceDiff: '+0.9%',
-      color: Colors.orange,
-    ),
-    'DateTime.now.toString': CoinModel(
-      currentPrice: 8891.19,
-      name: 'Ethereum',
-      shortName: 'eth',
-      imageUrl: 'assets/images/ethereum.png',
-      priceDiff: '+1.2%',
-      color: Colors.purple,
-    ),
-    'DateTime.now.toStrin': CoinModel(
-      currentPrice: 221.98,
-      name: 'Ripple',
-      shortName: 'xrp',
-      imageUrl: 'assets/images/xrp.png',
-      priceDiff: '+0.5%',
-      color: Colors.blue,
-    ),
-  };
+  final Map<String, CoinModel> _allCoins = {};
 
   final Map<String, CoinModel> _userCoins = {};
 
@@ -43,6 +25,50 @@ class DataProvider with ChangeNotifier {
 
   List<CoinModel> get userCoins {
     return [..._userCoins.values];
+  }
+
+  void periodicSetAllCoin() {
+    Timer.periodic(const Duration(seconds: 15), (timer) {
+      setAllCoins();
+    });
+  }
+
+  void totalMC() async {
+    print('Is first run? $firstRun');
+    firstRun = false;
+    var response = await http.get(Uri.parse('https://api.coingecko.com/api/v3/global'));
+    if (response.statusCode == 200) {
+      var list = Map<String, dynamic>.from(json.decode(response.body));
+      var data = list['data'] as Map<String, dynamic>;
+      marketCapPercentage = data['market_cap_change_percentage_24h_usd'];
+    } else {
+      throw Exception('Could not retrieve, Total Market Cap Change.');
+    }
+  }
+
+  Future<void> setAllCoins() async {
+    print('Attempting');
+    totalMC();
+    http.Response response = await http.get(Uri.parse('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=1'));
+
+    if (response.statusCode == 200) {
+      List<dynamic> coins = json.decode(response.body);
+
+      if (_allCoins.isEmpty) {
+        for (var coin in coins) {
+          CoinModel cm = CoinModel.fromJson(coin as Map<String, dynamic>);
+          _allCoins.putIfAbsent(cm.shortName, () => cm);
+        }
+      } else {
+        for (var coin in coins) {
+          CoinModel cm = CoinModel.fromJson(coin as Map<String, dynamic>);
+          _allCoins.update(cm.shortName, (value) => cm);
+        }
+      }
+      notifyListeners();
+    } else {
+      throw Exception('Could not get data from API, try again.');
+    }
   }
 
   void setUserCoin() {
@@ -64,7 +90,7 @@ class DataProvider with ChangeNotifier {
           for (var transaction in transactionsValue) {
             transactions.add(
               Transaction(
-                buyPrice: transaction['buyPrice'],
+                buyPrice: double.parse(transaction['buyPrice'].toString()),
                 amount: double.parse(transaction['amount'].toString()),
                 dateTime: DateTime.parse(transaction['dateTime']),
                 id: transaction['id'],
@@ -75,7 +101,7 @@ class DataProvider with ChangeNotifier {
           _userCoins.putIfAbsent(
             coin['shortName'],
             () => CoinModel(
-              currentPrice: coin['currentPrice'],
+              currentPrice: double.parse(coin['currentPrice'].toString()),
               name: coin['name'],
               shortName: coin['shortName'],
               imageUrl: coin['imageUrl'],

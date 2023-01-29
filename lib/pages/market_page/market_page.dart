@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+import 'dart:async';
 
 import 'package:crypto_exchange_app/pages/home_page/utils/home_coin_item.dart';
 import 'package:crypto_exchange_app/utils/constants.dart';
@@ -52,20 +52,20 @@ class _MarketPageState extends State<MarketPage> {
                         style: textTheme.bodyMedium,
                       ),
                       Text(
-                        'Market is up',
+                        dataProvider.marketCapPercentage < 0 ? 'Market is down' : 'Market is up',
                         style: textTheme.titleMedium!.copyWith(fontSize: 26),
                       ),
                     ],
                   ),
                   //Market status
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
-                      color: Colors.green,
+                      color: dataProvider.marketCapPercentage < 0 ? Colors.red : Colors.green,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      '+9.17%',
+                      dataProvider.marketCapPercentage < 0 ? '${convertPerToNum(dataProvider.marketCapPercentage.toString())}%' : '+${convertPerToNum(dataProvider.marketCapPercentage.toString())}%',
                       style: textTheme.bodyMedium!.copyWith(
                         fontWeight: FontWeight.bold,
                       ),

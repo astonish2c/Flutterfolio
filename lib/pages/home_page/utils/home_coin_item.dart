@@ -21,8 +21,6 @@ class CoinListItem extends StatefulWidget {
 }
 
 class _CoinListItemState extends State<CoinListItem> {
-  bool _isExpanded = false;
-
   @override
   Widget build(BuildContext context) {
     final double deviceWidth = MediaQuery.of(context).size.width;
@@ -39,7 +37,7 @@ class _CoinListItemState extends State<CoinListItem> {
               SizedBox(
                 width: 50,
                 height: 50,
-                child: Image.asset(widget.coinModel.imageUrl),
+                child: Image.network(widget.coinModel.imageUrl),
               ),
               SizedBox(width: defaultPadding),
               //Title
@@ -57,60 +55,12 @@ class _CoinListItemState extends State<CoinListItem> {
                   ),
                 ],
               ),
-              //Chart
-              if (deviceWidth >= 370)
-                Expanded(
-                  child: Row(
-                    children: [
-                      SizedBox(width: defaultPadding),
-                      //Chart
-                      Expanded(
-                        child: SizedBox(
-                          height: 50,
-                          child: Chart(
-                            coinModel: widget.coinModel,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              SizedBox(width: defaultPadding),
+              Spacer(),
               //Price Row
-              if (deviceWidth < 370)
-                Expanded(
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: buildPriceColumn(deviceWidth),
-                      ),
-                      IconButton(
-                        padding: EdgeInsets.symmetric(horizontal: defaultPadding),
-                        constraints: BoxConstraints(),
-                        onPressed: () {
-                          setState(() {
-                            _isExpanded = !_isExpanded;
-                          });
-                        },
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              if (deviceWidth >= 370) buildPriceColumn(deviceWidth),
+              buildPriceColumn(deviceWidth),
             ],
           ),
         ),
-        //Hidden Chart
-        if (_isExpanded && deviceWidth < 370)
-          SizedBox(
-            height: 70,
-            width: double.infinity,
-            child: Chart(coinModel: widget.coinModel),
-          ),
         //Divider
         Divider(),
       ],
@@ -118,11 +68,11 @@ class _CoinListItemState extends State<CoinListItem> {
   }
 
   Column buildPriceColumn(double deviceWidth) {
-    // final themeProvider = Provider.of<ThemeProvider>(context);
-
+    bool isNegative = double.parse(widget.coinModel.priceDiff).isNegative;
     return Column(
-      crossAxisAlignment: deviceWidth < 370 ? CrossAxisAlignment.end : CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
+        //Price
         FittedBox(
           fit: BoxFit.scaleDown,
           child: Text(
@@ -133,20 +83,16 @@ class _CoinListItemState extends State<CoinListItem> {
           ),
         ),
         SizedBox(height: defaultPadding / 4),
+        //Percentage
         Consumer<ThemeProvider>(
           builder: (context, value, child) => FittedBox(
             fit: BoxFit.scaleDown,
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-              decoration: BoxDecoration(color: Colors.green[300], borderRadius: BorderRadius.circular(4)),
-              child: Text(widget.coinModel.priceDiff,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.end,
-                  style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.black)),
+              decoration: BoxDecoration(color: isNegative ? Colors.red[300] : Colors.green[300], borderRadius: BorderRadius.circular(4)),
+              child: Text('${isNegative ? '' : '+'}${convertPerToNum(widget.coinModel.priceDiff)}%', maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.end, style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.black)),
             ),
           ),
-          // child: ,
         ),
       ],
     );
