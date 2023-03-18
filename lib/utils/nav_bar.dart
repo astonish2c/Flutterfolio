@@ -1,9 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
-import 'package:crypto_exchange_app/pages/holdings_page/holdings_page.dart';
-import 'package:crypto_exchange_app/pages/settings_pages/settings_page.dart';
 import 'package:flutter/material.dart';
-
-import '../pages/exchange_page/exchange_page.dart';
 import '../pages/home_page/home_page.dart';
 import '../pages/market_page/market_page.dart';
 
@@ -41,41 +36,20 @@ class _NavBarState extends State<NavBar> {
             _selectedIndex = value;
           });
           if (_selectedIndex == 0) {
-            navigateToPage(context, HomePage());
+            navigateToPage(context, const HoldingsPage());
           }
           if (_selectedIndex == 1) {
-            navigateToPage(context, HoldingsPage());
-          }
-          if (_selectedIndex == 2) {
-            navigateToPage(context, ExchangePage());
-          }
-          if (_selectedIndex == 3) {
-            navigateToPage(context, MarketPage());
-          }
-          if (_selectedIndex == 4) {
-            navigateToPage(context, SettingsPage());
+            navigateToPage(context, const MarketPage());
           }
         },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_rounded),
-            label: 'Home',
-          ),
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.pie_chart_rounded),
-            label: 'Holdings',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.swap_vertical_circle_rounded),
-            label: 'Exchange',
+            label: 'Portfolio',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.bar_chart_rounded),
             label: 'Market',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
           ),
         ],
       ),
@@ -88,17 +62,13 @@ class _NavBarState extends State<NavBar> {
     });
   }
 
-  void navigateToPage(BuildContext context, Widget getPage) async {
-    // var page = await buildPageAsync(getPage);
-    // var route = MaterialPageRoute(builder: (_) => page);
-    // Navigator.pushReplacement(context, route);
-
+  void navigateToPage(BuildContext context, Widget getPage) {
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
         pageBuilder: (context, animation1, animation2) => getPage,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          Offset begin = Offset(0, 0);
+          Offset begin = const Offset(0, 0);
           var end = Offset.zero;
           var curve = Curves.ease;
 

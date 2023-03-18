@@ -1,27 +1,25 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/data_provider.dart';
 import '../../utils/nav_bar.dart';
 import 'components/home_app_bar.dart';
-import 'components/home_header_section.dart';
-import 'components/home_portfolio_section.dart';
+import 'components/balance_section.dart';
+import 'components/portfolio_section.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HoldingsPage extends StatefulWidget {
+  const HoldingsPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HoldingsPage> createState() => _HoldingsPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HoldingsPageState extends State<HoldingsPage> {
   @override
   void initState() {
     super.initState();
 
-    DataProvider dataProvider = Provider.of<DataProvider>(context, listen: false);
+    DataProvider dataProvider = context.read<DataProvider>();
 
     if (dataProvider.firstRun) {
       dataProvider.setAllCoins();
@@ -37,10 +35,10 @@ class _HomePageState extends State<HomePage> {
       appBar: const HomeAppBar(),
       body: Column(
         children: const [
-          HomeHeader(),
+          Balance(),
           SizedBox(height: 12),
           Expanded(
-            child: HomePortfolio(),
+            child: Portfolio(),
           ),
         ],
       ),

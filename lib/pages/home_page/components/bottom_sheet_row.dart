@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class TransactionDetailsRow extends StatelessWidget {
+class BottomSheetRow extends StatelessWidget {
   final String title1, title2;
 
-  const TransactionDetailsRow({
+  const BottomSheetRow({
     Key? key,
     required this.title1,
     required this.title2,
@@ -12,6 +12,7 @@ class TransactionDetailsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Row(

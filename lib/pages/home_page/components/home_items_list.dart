@@ -1,5 +1,5 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
-import 'package:crypto_exchange_app/utils/icon_btn_zero_padding.dart';
+import 'package:crypto_exchange_app/utils/custom_icon_button.dart';
 import 'package:provider/provider.dart';
 import 'package:crypto_exchange_app/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +36,7 @@ class _HomeItemsListState extends State<HomeItemsList> {
           automaticallyImplyLeading: false,
           titleSpacing: 0,
           leading: Consumer<ThemeProvider>(
-            builder: (context, value, child) => IconBtnZeroPadding(
+            builder: (context, value, child) => CustomIconButton(
               icon: Icons.keyboard_arrow_left,
               size: 25,
               color: value.isDark ? Colors.white : Colors.black,
@@ -47,47 +47,9 @@ class _HomeItemsListState extends State<HomeItemsList> {
         ),
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
+            padding: const EdgeInsets.only(left: 16, right: 16),
             child: Column(
               children: [
-                //Search Bar
-                SizedBox(
-                  height: 50,
-                  child: Consumer<ThemeProvider>(
-                    builder: (context, value, child) => TextField(
-                      focusNode: _searchFocusNode,
-                      cursorColor: value.isDark ? Colors.white : Colors.black,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.zero,
-                        hintText: 'Search',
-                        hintStyle: const TextStyle(),
-                        fillColor: theme.backgroundColor,
-                        filled: true,
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(24),
-                          borderSide: const BorderSide(color: Colors.transparent),
-                          gapPadding: 0,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(24),
-                          borderSide: BorderSide(color: value.isDark ? Colors.white54 : Colors.black54),
-                          gapPadding: 0,
-                        ),
-                        prefixIcon: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: defaultPadding),
-                          child: Icon(
-                            Icons.search,
-                            size: 25,
-                            color: value.isDark ? Colors.white60 : Colors.black87,
-                          ),
-                        ),
-                      ),
-                    ),
-                    // child: ,
-                  ),
-                ),
-                SizedBox(height: defaultPadding),
-                //List of Coins
                 Expanded(
                   child: Consumer<DataProvider>(
                     builder: (context, value, child) => ListView.builder(
@@ -96,7 +58,7 @@ class _HomeItemsListState extends State<HomeItemsList> {
                       itemBuilder: (context, index) {
                         return GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeTabBar(coinModel: value.allCoins[index])));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeTabBar(coinModel: value.allCoins[index], initialPage: 0)));
                           },
                           child: ListItem(dataProvider: value, index: index),
                         );
@@ -135,12 +97,12 @@ class ListItem extends StatelessWidget {
           leading: SizedBox(
             height: 30,
             width: 30,
-            child: Image.network(dataProvider.allCoins[index].imageUrl),
+            child: Image.network(dataProvider.allCoins[index].image),
           ),
           title: Row(
             children: [
               Text(
-                dataProvider.allCoins[index].shortName.toUpperCase(),
+                dataProvider.allCoins[index].symbol.toUpperCase(),
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),

@@ -4,8 +4,8 @@ import 'package:crypto_exchange_app/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../utils/constants.dart';
-import '../../../utils/icon_btn_zero_padding.dart';
+import 'constants.dart';
+import 'custom_icon_button.dart';
 
 class ExchangeCoinRow extends StatelessWidget {
   final String iconUrl;
@@ -44,7 +44,7 @@ class ExchangeCoinRow extends StatelessWidget {
                 SizedBox(width: 4),
                 Text(coinTitle),
                 SizedBox(width: 4),
-                const IconBtnZeroPadding(icon: Icons.arrow_drop_down),
+                const CustomIconButton(icon: Icons.arrow_drop_down),
                 SizedBox(width: 4),
               ],
             ),

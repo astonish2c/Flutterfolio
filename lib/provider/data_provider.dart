@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_database/firebase_database.dart' hide Transaction;
 import 'package:flutter/material.dart';
@@ -33,41 +34,48 @@ class DataProvider with ChangeNotifier {
     });
   }
 
-  void totalMC() async {
+  void setTotalMC() async {
     print('Is first run? $firstRun');
+
     firstRun = false;
-    var response = await http.get(Uri.parse('https://api.coingecko.com/api/v3/global'));
-    if (response.statusCode == 200) {
+
+    try {
+      var response = await http.get(Uri.parse('https://api.coingecko.com/api/v3/global'));
+
+      if (response.statusCode != 200) throw HttpException('${response.statusCode}');
+
       var list = Map<String, dynamic>.from(json.decode(response.body));
       var data = list['data'] as Map<String, dynamic>;
       marketCapPercentage = data['market_cap_change_percentage_24h_usd'];
-    } else {
-      throw Exception('Could not retrieve, Total Market Cap Change.');
+    } on Exception catch (e) {
+      print(e);
     }
   }
 
   Future<void> setAllCoins() async {
     print('Attempting');
-    totalMC();
-    http.Response response = await http.get(Uri.parse('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=1'));
 
-    if (response.statusCode == 200) {
-      List<dynamic> coins = json.decode(response.body);
+    setTotalMC();
 
+    try {
+      http.Response response = await http.get(Uri.parse('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=1'));
+
+      if (response.statusCode != 200) throw HttpException('${response.statusCode}');
+      List<dynamic> coinsList = json.decode(response.body);
       if (_allCoins.isEmpty) {
-        for (var coin in coins) {
-          CoinModel cm = CoinModel.fromJson(coin as Map<String, dynamic>);
-          _allCoins.putIfAbsent(cm.shortName, () => cm);
+        for (var coinItem in coinsList) {
+          CoinModel coin = CoinModel.fromJson(coinItem as Map<String, dynamic>);
+          _allCoins.putIfAbsent(coin.symbol, () => coin);
         }
       } else {
-        for (var coin in coins) {
-          CoinModel cm = CoinModel.fromJson(coin as Map<String, dynamic>);
-          _allCoins.update(cm.shortName, (value) => cm);
+        for (var coinItem in coinsList) {
+          CoinModel coin = CoinModel.fromJson(coinItem as Map<String, dynamic>);
+          _allCoins.update(coin.symbol, (value) => coin);
         }
       }
       notifyListeners();
-    } else {
-      throw Exception('Could not get data from API, try again.');
+    } on Exception catch (e) {
+      print(e);
     }
   }
 
@@ -75,113 +83,105 @@ class DataProvider with ChangeNotifier {
     DatabaseReference userCoinsRef = FirebaseDatabase.instance.ref('userCoins/');
 
     userCoinsRef.onValue.listen((event) {
-      if (event.snapshot.value != null) {
-        final Map<String, dynamic> coinsUndefined = Map<String, dynamic>.from(event.snapshot.value as Map<Object?, Object?>);
+      if (event.snapshot.value == null) throw Exception();
 
-        final List<Map<String, dynamic>> coinsValue = coinsUndefined.values.toList().map((e) => Map<String, dynamic>.from(e as Map<Object?, Object?>)).toList();
+      final Map<String, dynamic> coinsMapDynamic = Map<String, dynamic>.from(event.snapshot.value as Map<Object?, Object?>);
 
-        for (var coin in coinsValue) {
-          final Map<String, dynamic> coinTransactions = Map<String, dynamic>.from(coin['transactions'] as Map<Object?, Object?>);
+      final List<String> coinsKey = coinsMapDynamic.keys.toList();
 
-          final List<Map<String, dynamic>> transactionsValue = coinTransactions.values.toList().map((e) => Map<String, dynamic>.from(e as Map<Object?, Object?>)).toList();
+      for (int i = 0; i < coinsKey.length; i++) {
+        final Map<String, dynamic> coinMap = Map<String, dynamic>.from(coinsMapDynamic.values.toList()[i] as Map<Object?, Object?>);
 
-          List<Transaction> transactions = [];
+        Map<String, dynamic> transactionsMap = Map<String, dynamic>.from(coinMap['transactions'] as Map<Object?, Object?>);
 
-          for (var transaction in transactionsValue) {
-            transactions.add(
-              Transaction(
-                buyPrice: double.parse(transaction['buyPrice'].toString()),
-                amount: double.parse(transaction['amount'].toString()),
-                dateTime: DateTime.parse(transaction['dateTime']),
-                id: transaction['id'],
-              ),
-            );
-          }
+        final List<Transaction> transactions = [];
 
-          _userCoins.putIfAbsent(
-            coin['shortName'],
-            () => CoinModel(
-              currentPrice: double.parse(coin['currentPrice'].toString()),
-              name: coin['name'],
-              shortName: coin['shortName'],
-              imageUrl: coin['imageUrl'],
-              priceDiff: coin['priceDiff'],
-              color: Colors.blue,
-              transactions: transactions,
-            ),
-          );
+        for (var transactionItem in transactionsMap.values) {
+          final Transaction transaction = Transaction.fromJson(Map<String, dynamic>.from(transactionItem as Map<Object?, Object?>));
+
+          transactions.add(transaction);
         }
+
+        CoinModel coin = CoinModel.fromJson(coinMap);
+
+        _userCoins.putIfAbsent(
+          coin.symbol,
+          () => CoinModel(
+            currentPrice: coin.currentPrice,
+            name: coin.name,
+            symbol: coin.symbol,
+            image: coin.image,
+            priceDiff: coin.priceDiff,
+            color: Colors.blue,
+            transactions: transactions,
+          ),
+        );
         calTotalUserBalance();
-      } else {
-        print('DataBase is empty');
       }
     });
   }
 
   void addUserCoin(CoinModel coinModel) {
-    final String coinUrl = 'userCoins/${coinModel.shortName}';
-    final String coinId = coinModel.shortName;
+    final String coinUrl = 'userCoins/${coinModel.symbol}';
+    final String symbol = coinModel.symbol;
 
-    if (_userCoins.containsKey(coinModel.shortName)) {
-      addTransaction(coinModel.transactions![0], coinUrl, coinId);
+    if (_userCoins.containsKey(coinModel.symbol)) {
+      addTransaction(coinModel.transactions![0], coinUrl, symbol);
     } else {
       addCoin(coinModel);
     }
   }
 
   Future<void> addCoin(CoinModel coin) async {
-    DatabaseReference coinRef = FirebaseDatabase.instance.ref('userCoins/${coin.shortName}');
+    DatabaseReference coinRef = FirebaseDatabase.instance.ref('userCoins/${coin.symbol}');
 
     final String transactionId = coinRef.push().key as String;
 
-    final Map<String, dynamic> transactionMap = transactionToMap(coin.transactions![0], transactionId);
+    final Transaction transaction = coin.transactions![0].addId(coin.transactions![0], transactionId);
 
     await coinRef.set({
-      'currentPrice': coin.currentPrice,
+      'current_price': coin.currentPrice,
       'name': coin.name,
-      'shortName': coin.shortName,
-      'imageUrl': coin.imageUrl,
+      'symbol': coin.symbol,
+      'image': coin.image,
       'priceDiff': coin.priceDiff,
       'color': coin.color.toString(),
-      'transactions': transactionMap,
+      'transactions': transaction.toJson(),
     });
-
-    coin.transactions![0] = addTransactionId(coin.transactions![0], transactionId);
+    print("");
 
     _userCoins.putIfAbsent(
-      coin.shortName,
+      coin.symbol,
       () => CoinModel(
         currentPrice: coin.currentPrice,
         name: coin.name,
-        shortName: coin.shortName,
-        imageUrl: coin.imageUrl,
+        symbol: coin.symbol,
+        image: coin.image,
         priceDiff: coin.priceDiff,
         color: coin.color,
-        transactions: coin.transactions,
+        transactions: [transaction],
       ),
     );
     calTotalUserBalance();
   }
 
-  Future<void> addTransaction(Transaction transaction, String coinUrl, String coinId) async {
+  Future<void> addTransaction(Transaction getTransaction, String coinUrl, String symbol) async {
     DatabaseReference transactionsRef = FirebaseDatabase.instance.ref('$coinUrl/transactions');
 
     final String transactionId = transactionsRef.push().key as String;
 
-    final Map<String, dynamic> transactionMap = transactionToMap(transaction, transactionId);
+    final Transaction transaction = getTransaction.addId(getTransaction, transactionId);
 
-    await transactionsRef.update(transactionMap);
+    await transactionsRef.update(transaction.toJson());
 
-    _userCoins.update(coinId, (coin) {
-      final Transaction updatedTransaction = addTransactionId(transaction, transactionId);
-
-      coin.transactions!.add(updatedTransaction);
+    _userCoins.update(symbol, (coin) {
+      coin.transactions!.add(transaction);
 
       return CoinModel(
         currentPrice: coin.currentPrice,
         name: coin.name,
-        shortName: coin.shortName,
-        imageUrl: coin.imageUrl,
+        symbol: coin.symbol,
+        image: coin.image,
         priceDiff: coin.priceDiff,
         color: coin.color,
         transactions: coin.transactions,
@@ -193,19 +193,14 @@ class DataProvider with ChangeNotifier {
   Future<void> updateTransaction(CoinModel coin, int transactionIndex, Transaction transaction) async {
     final String transactionId = coin.transactions![transactionIndex].id as String;
 
-    DatabaseReference transactionRef = FirebaseDatabase.instance.ref('userCoins/${coin.shortName}/transactions/$transactionId/');
+    DatabaseReference transactionRef = FirebaseDatabase.instance.ref('userCoins/${coin.symbol}/transactions/');
 
-    final Transaction updatedTransaction = addTransactionId(transaction, transactionId);
+    Transaction assignedId = transaction.addId(transaction, transactionId);
 
-    transactionRef.update({
-      'buyPrice': transaction.buyPrice,
-      'amount': transaction.amount,
-      'dateTime': transaction.dateTime.toIso8601String(),
-    });
+    await transactionRef.update(assignedId.toJson());
 
-    final List<Transaction> lBuyCoin = coin.transactions!;
-    lBuyCoin.removeAt(transactionIndex);
-    lBuyCoin.insert(transactionIndex, updatedTransaction);
+    coin.transactions!.removeAt(transactionIndex);
+    coin.transactions!.insert(transactionIndex, assignedId);
 
     calTotalUserBalance();
   }
@@ -215,8 +210,8 @@ class DataProvider with ChangeNotifier {
 
     final String transactionId = transactions[transactionIndex].id as String;
 
-    final DatabaseReference coinRef = FirebaseDatabase.instance.ref('userCoins/${coin.shortName}');
-    final DatabaseReference transactionRef = FirebaseDatabase.instance.ref('userCoins/${coin.shortName}/transactions/$transactionId');
+    final DatabaseReference coinRef = FirebaseDatabase.instance.ref('userCoins/${coin.symbol}');
+    final DatabaseReference transactionRef = FirebaseDatabase.instance.ref('userCoins/${coin.symbol}/transactions/$transactionId');
 
     if (coin.transactions!.length == 1) {
       await coinRef.remove();
@@ -225,59 +220,25 @@ class DataProvider with ChangeNotifier {
       return true;
     } else {
       await transactionRef.remove();
-      _userCoins[coin.shortName.toLowerCase()]!.transactions!.removeAt(transactionIndex);
+      _userCoins[coin.symbol.toLowerCase()]!.transactions!.removeAt(transactionIndex);
       calTotalUserBalance();
       return false;
     }
   }
 
-  Transaction addTransactionId(Transaction transaction, String transactionId) {
-    return Transaction(buyPrice: transaction.buyPrice, amount: transaction.amount, dateTime: transaction.dateTime, id: transactionId);
-  }
-
   void removeItem(CoinModel coinModel) {
-    //implement NotifyListeners()
-    _userCoins.remove(coinModel.shortName);
-  }
-
-  Map<String, dynamic> transactionToMap(Transaction transaction, String transactionId) {
-    Map<String, dynamic> transactionMap = {
-      transactionId: {
-        'buyPrice': transaction.buyPrice,
-        'amount': transaction.amount,
-        'dateTime': transaction.dateTime.toIso8601String(),
-        'id': transactionId,
-      }
-    };
-
-    return transactionMap;
-  }
-
-  double calTotalValue(CoinModel coinModel) {
-    double totalValue = 0.0;
-
-    for (var buyCoin in coinModel.transactions!) {
-      totalValue += buyCoin.amount * buyCoin.buyPrice;
-    }
-
-    return totalValue;
-  }
-
-  String calTotalAmount(CoinModel coinModel) {
-    double totalAmount = 0.0;
-
-    for (var buyCoin in coinModel.transactions!) {
-      totalAmount += buyCoin.amount;
-    }
-
-    return totalAmount.toString();
+    _userCoins.remove(coinModel.symbol);
   }
 
   void calTotalUserBalance() {
     double total = 0.0;
     for (var coin in userCoins) {
       for (var transaction in coin.transactions!) {
-        total += transaction.amount * transaction.buyPrice;
+        if (transaction.isSell) {
+          total -= transaction.amount * transaction.buyPrice;
+        } else {
+          total += transaction.amount * transaction.buyPrice;
+        }
       }
     }
     totalUserBalance = total;

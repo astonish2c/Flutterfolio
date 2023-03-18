@@ -1,13 +1,10 @@
-import 'dart:async';
-
-import 'package:crypto_exchange_app/pages/home_page/utils/home_coin_item.dart';
-import 'package:crypto_exchange_app/utils/constants.dart';
-import 'package:crypto_exchange_app/utils/nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '/utils/constants.dart';
+import '/utils/nav_bar.dart';
 import '../../provider/data_provider.dart';
-import 'components/market_filter_btn.dart';
+import '/pages/market_page/components/market_coin_row.dart';
 
 class MarketPage extends StatefulWidget {
   static const routeName = 'Market_Page';
@@ -30,89 +27,67 @@ class _MarketPageState extends State<MarketPage> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final deviceWidth = MediaQuery.of(context).size.width;
     final dataProvider = Provider.of<DataProvider>(context);
 
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.only(left: defaultPadding, right: defaultPadding, top: defaultPadding * 2),
-          child: Column(
-            children: [
-              //Market Condition Row
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  //Past 24 hours
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'in the past 24 hours',
-                        style: textTheme.bodyMedium,
-                      ),
-                      Text(
-                        dataProvider.marketCapPercentage < 0 ? 'Market is down' : 'Market is up',
-                        style: textTheme.titleMedium!.copyWith(fontSize: 26),
-                      ),
-                    ],
-                  ),
-                  //Market status
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: dataProvider.marketCapPercentage < 0 ? Colors.red : Colors.green,
-                      borderRadius: BorderRadius.circular(12),
+          padding: const EdgeInsets.only(top: 24, right: 16, left: 16),
+          child: CustomScrollView(
+            slivers: [
+              SliverFillRemaining(
+                hasScrollBody: true,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    //Market Condition Row
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'in the past 24 hours',
+                              style: textTheme.bodyMedium,
+                            ),
+                            Text(
+                              dataProvider.marketCapPercentage < 0 ? 'Market is down' : 'Market is up',
+                              style: textTheme.titleMedium!.copyWith(fontSize: 26),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: dataProvider.marketCapPercentage < 0 ? Colors.red : Colors.green,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            dataProvider.marketCapPercentage < 0 ? '${convertPerToNum(dataProvider.marketCapPercentage.toString())}%' : '+${convertPerToNum(dataProvider.marketCapPercentage.toString())}%',
+                            style: textTheme.bodyMedium!.copyWith(color: Colors.black),
+                          ),
+                        ),
+                      ],
                     ),
-                    child: Text(
-                      dataProvider.marketCapPercentage < 0 ? '${convertPerToNum(dataProvider.marketCapPercentage.toString())}%' : '+${convertPerToNum(dataProvider.marketCapPercentage.toString())}%',
-                      style: textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.bold,
+                    SizedBox(height: defaultPadding),
+                    Expanded(
+                      child: ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: dataProvider.allCoins.length,
+                        itemBuilder: (context, index) {
+                          return MarketCoinRow(coinModel: dataProvider.allCoins[index]);
+                        },
                       ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: defaultPadding),
-              //Category Buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  MarketFilterBtn(
-                    isSelected: isSelected == 0 ? true : false,
-                    text: 'All',
-                    onTap: () => toggleSelected(0),
-                  ),
-                  SizedBox(width: deviceWidth > 380 ? defaultPadding * 2 : defaultPadding),
-                  MarketFilterBtn(
-                    isSelected: isSelected == 1 ? true : false,
-                    text: '24h',
-                    onTap: () => toggleSelected(1),
-                  ),
-                  SizedBox(width: deviceWidth > 380 ? defaultPadding * 2 : defaultPadding),
-                  MarketFilterBtn(
-                    isSelected: isSelected == 2 ? true : false,
-                    text: 'Top',
-                    onTap: () => toggleSelected(2),
-                  ),
-                ],
-              ),
-              SizedBox(height: defaultPadding),
-              //Crypto list
-              Expanded(
-                child: ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: dataProvider.allCoins.length,
-                  itemBuilder: (context, index) {
-                    return CoinListItem(coinModel: dataProvider.allCoins[index]);
-                  },
+                    )
+                  ],
                 ),
-              )
+              ),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: const NavBar(currentIndex: 3),
+      bottomNavigationBar: const NavBar(currentIndex: 1),
     );
   }
 }

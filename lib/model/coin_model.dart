@@ -1,11 +1,10 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class CoinModel {
-  double currentPrice;
+  final double currentPrice;
   final String name;
-  final String shortName;
-  final String imageUrl;
+  final String symbol;
+  final String image;
   final Color color;
   final String priceDiff;
   final List<Transaction>? transactions;
@@ -13,22 +12,33 @@ class CoinModel {
   CoinModel({
     required this.currentPrice,
     required this.name,
-    required this.shortName,
-    required this.imageUrl,
+    required this.symbol,
+    required this.image,
     required this.priceDiff,
     required this.color,
     this.transactions,
-  });
+  }) : assert((double.tryParse(currentPrice.toString()) != null));
 
   factory CoinModel.fromJson(Map<String, dynamic> json) {
     return CoinModel(
       currentPrice: double.parse(json["current_price"].toString()),
-      name: json["id"],
-      shortName: json["symbol"],
-      imageUrl: json['image'],
+      name: json["name"],
+      symbol: json["symbol"],
+      image: json['image'],
       priceDiff: json["price_change_percentage_24h"].toString(),
       color: Colors.blue,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'current_price': currentPrice,
+      'name': name,
+      'symbol': symbol,
+      'image': image,
+      'price_change_percentage_24h': priceDiff,
+      'color': color,
+    };
   }
 }
 
@@ -37,11 +47,55 @@ class Transaction {
   final double amount;
   final DateTime dateTime;
   final String? id;
+  final bool isSell;
 
   Transaction({
     required this.buyPrice,
     required this.amount,
     required this.dateTime,
     this.id,
+    this.isSell = false,
   });
+
+  factory Transaction.fromJson(Map<String, dynamic> json) {
+    return Transaction(
+      buyPrice: double.parse(json['buyPrice'].toString()),
+      amount: double.parse(json['amount'].toString()),
+      dateTime: DateTime.parse(json['dateTime']),
+      id: json['id'],
+      isSell: json['isSell'],
+    );
+  }
+
+  Transaction addId(Transaction transaction, String id) {
+    return Transaction(
+      buyPrice: transaction.buyPrice,
+      amount: transaction.amount,
+      dateTime: transaction.dateTime,
+      id: id,
+      isSell: transaction.isSell,
+    );
+  }
+
+  Transaction addIsSell(Transaction transaction, bool isSell) {
+    return Transaction(
+      buyPrice: transaction.buyPrice,
+      amount: transaction.amount,
+      dateTime: transaction.dateTime,
+      id: id,
+      isSell: isSell,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      id!: {
+        'buyPrice': buyPrice,
+        'amount': amount,
+        'dateTime': dateTime.toIso8601String(),
+        'id': id,
+        'isSell': isSell,
+      }
+    };
+  }
 }

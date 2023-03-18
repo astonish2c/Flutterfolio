@@ -1,8 +1,9 @@
-import 'package:crypto_exchange_app/provider/theme_provider.dart';
-import 'package:crypto_exchange_app/utils/constants.dart';
-import 'package:crypto_exchange_app/utils/custom_icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '/provider/theme_provider.dart';
+import '/utils/custom_icon_button.dart';
+import 'home_items_list.dart';
 
 class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
   const HomeAppBar({
@@ -14,15 +15,15 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print('HomeAppBar build');
     return AppBar(
       centerTitle: true,
       leading: Consumer<ThemeProvider>(
         builder: (context, value, child) => CustomIconButton(
+          size: 25,
           onPressed: () {
             value.toggleThemeMode();
           },
-          icon: const Icon(Icons.dark_mode),
+          icon: Icons.dark_mode,
         ),
       ),
       title: Text(
@@ -30,11 +31,26 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
         style: Theme.of(context).textTheme.titleMedium,
       ),
       actions: [
-        CustomIconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.notifications),
+        GestureDetector(
+          onTap: () => Navigator.pushNamed(context, HomeItemsList.routeName),
+          child: Row(
+            children: [
+              const Icon(
+                color: Colors.black,
+                size: 25,
+                Icons.add,
+              ),
+              Center(
+                child: Text(
+                  'Add',
+                  style: Theme.of(context).textTheme.titleMedium,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(width: 16),
+            ],
+          ),
         ),
-        SizedBox(width: defaultPadding),
       ],
     );
   }

@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../../../model/coin_model.dart';
 import '../../../provider/data_provider.dart';
-import '../../exchange_page/components/exchange_big_btn.dart';
+import '../../../utils/exchange_big_btn.dart';
 
 class HomeBottomSheet extends StatefulWidget {
   const HomeBottomSheet({
@@ -18,7 +18,6 @@ class HomeBottomSheet extends StatefulWidget {
 class _HomeBottomSheetState extends State<HomeBottomSheet> {
   late TextEditingController _amountController;
   late TextEditingController _priceController;
-
   int _currentIndex = 0;
   DateTime _dateTime = DateTime.now();
 
@@ -52,8 +51,8 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
         CoinModel(
           currentPrice: coinModel.currentPrice,
           name: coinModel.name,
-          shortName: coinModel.shortName,
-          imageUrl: coinModel.imageUrl,
+          symbol: coinModel.symbol,
+          image: coinModel.image,
           priceDiff: coinModel.priceDiff,
           color: coinModel.color,
           transactions: [
@@ -128,7 +127,7 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
                         SizedBox(
                           width: 20,
                           height: 20,
-                          child: Image.asset(allCoins[_currentIndex].imageUrl),
+                          child: Image.asset(allCoins[_currentIndex].image),
                         ),
                         const SizedBox(width: 8),
                         Text(
@@ -155,7 +154,7 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
                                 SizedBox(
                                   width: 20,
                                   height: 20,
-                                  child: Image.asset(e.imageUrl),
+                                  child: Image.asset(e.image),
                                 ),
                                 const SizedBox(width: 8),
                                 Text(

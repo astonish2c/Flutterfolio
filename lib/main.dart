@@ -8,9 +8,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'utils/custom_theme.dart';
 import 'pages/home_page/home_page.dart';
 import 'pages/market_page/market_page.dart';
-import 'pages/holdings_page/holdings_page.dart';
 import '../provider/data_provider.dart';
-import 'pages/holdings_page/components/holdings_item_transactions.dart';
+import 'pages/home_page/components/transactions_screen.dart';
 import 'pages/home_page/components/home_items_list.dart';
 
 Future main() async {
@@ -48,10 +47,9 @@ class App extends StatelessWidget {
         darkTheme: darkThemeData,
         themeMode: value.themeMode,
         routes: {
-          '/': (context) => const HomePage(),
+          '/': (context) => const HoldingsPage(),
           MarketPage.routeName: (context) => const MarketPage(),
-          HoldingsPage.routeName: (context) => const HoldingsPage(),
-          HoldingsItemTransactions.routeName: (context) => const HoldingsItemTransactions(),
+          TransactionsScreen.routeName: (context) => const TransactionsScreen(),
           HomeItemsList.routeName: (context) => const HomeItemsList(),
           HomeTabBar.routeName: (context) => const HomeTabBar(),
         },
