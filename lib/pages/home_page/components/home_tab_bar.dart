@@ -66,8 +66,18 @@ class _HomeTabBarState extends State<HomeTabBar> with TickerProviderStateMixin {
           child: TabBarView(
             controller: _tabController,
             children: [
-              BuyTab(coinModel: widget.coinModel!, indexTransaction: widget.indexTransaction, pushHomePage: widget.pushHomePage, initialPage: widget.initialPage!),
-              SellTab(coinModel: widget.coinModel!, indexTransaction: widget.indexTransaction, pushHomePage: widget.pushHomePage, initialPage: widget.initialPage!),
+              BuyTab(
+                coinModel: widget.coinModel!,
+                indexTransaction: widget.indexTransaction,
+                pushHomePage: widget.pushHomePage,
+                initialPage: widget.initialPage!,
+              ),
+              SellTab(
+                coinModel: widget.coinModel!,
+                indexTransaction: widget.indexTransaction,
+                pushHomePage: widget.pushHomePage,
+                initialPage: widget.initialPage!,
+              ),
             ],
           ),
         ),
