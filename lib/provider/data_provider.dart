@@ -14,7 +14,6 @@ class DataProvider with ChangeNotifier {
   double totalUserBalance = 0.0;
   double marketCapPercentage = 0;
   bool firstRun = true;
-  bool isRunning = false;
 
   final Map<String, CoinModel> _allCoins = {};
 
@@ -28,62 +27,94 @@ class DataProvider with ChangeNotifier {
     return [..._userCoins.values];
   }
 
-  void periodicSetAllCoin() {
-    Timer.periodic(const Duration(seconds: 15), (timer) {
-      setAllCoins();
+  Future<void> periodicSetAllCoin() async {
+    Timer.periodic(const Duration(seconds: 3), (timer) async {
+      await setAllCoins();
     });
   }
 
-  void setTotalMC() async {
-    print('Is first run? $firstRun');
-
-    firstRun = false;
-
-    try {
+  Future<void> setAllCoins() async {
+    Future<void> setTotalMC() async {
+      firstRun = false;
       var response = await http.get(Uri.parse('https://api.coingecko.com/api/v3/global'));
-
-      if (response.statusCode != 200) throw HttpException('${response.statusCode}');
-
+      if (response.statusCode != 200) return print('setTotalMC failed: ${response.body}');
       var list = Map<String, dynamic>.from(json.decode(response.body));
       var data = list['data'] as Map<String, dynamic>;
       marketCapPercentage = data['market_cap_change_percentage_24h_usd'];
-    } on Exception catch (e) {
-      print(e);
     }
+
+    await setTotalMC();
+    http.Response response = await http.get(Uri.parse('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=1'));
+    if (response.statusCode != 200) return print('setAllCoins failed: ${response.body}');
+    List<dynamic> coinsDynamic = json.decode(response.body);
+    setAndUpdateAllCoin(coinsDynamic);
+    notifyListeners();
+    print('');
   }
 
-  Future<void> setAllCoins() async {
-    print('Attempting');
+  Future<void> fetchAllCoinsFirebase() async {
+    DatabaseReference dr = FirebaseDatabase.instance.ref('allCoins/');
+    DataSnapshot ds = await dr.get();
+    if (!ds.exists) return print('Fetching allCoins from firestore failed.');
+    addAllCoin(ds);
+  }
 
-    setTotalMC();
-
-    try {
-      http.Response response = await http.get(Uri.parse('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=1'));
-
-      if (response.statusCode != 200) throw HttpException('${response.statusCode}');
-      List<dynamic> coinsList = json.decode(response.body);
+  Future<void> setAndUpdateAllCoin(List<dynamic> coins) async {
+    DatabaseReference dr = FirebaseDatabase.instance.ref('allCoins/');
+    Map<String, dynamic> listJsonData = returnJsonData(coins);
+    await dr.set(listJsonData).then((value) {
+      print('coins updated in firebase.');
+      //TODO: updating coins locally remains
       if (_allCoins.isEmpty) {
-        for (var coinItem in coinsList) {
-          CoinModel coin = CoinModel.fromJson(coinItem as Map<String, dynamic>);
-          _allCoins.putIfAbsent(coin.symbol, () => coin);
-        }
-      } else {
-        for (var coinItem in coinsList) {
-          CoinModel coin = CoinModel.fromJson(coinItem as Map<String, dynamic>);
-          _allCoins.update(coin.symbol, (value) => coin);
+        for (var coin in coins) {
+          CoinModel cm = CoinModel.fromJson(coin);
+          _allCoins.putIfAbsent(cm.symbol, () => cm);
         }
       }
-      notifyListeners();
-    } on Exception catch (e) {
-      print(e);
+    });
+  }
+
+  void addAllCoin(DataSnapshot ds) {
+    final Map<String, dynamic> coinsMapDynamic = Map<String, dynamic>.from(ds.value as Map<Object?, Object?>);
+
+    final List<String> coinsKey = coinsMapDynamic.keys.toList();
+
+    for (int i = 0; i < coinsKey.length; i++) {
+      final Map<String, dynamic> coinMap = Map<String, dynamic>.from(coinsMapDynamic.values.toList()[i] as Map<Object?, Object?>);
+
+      CoinModel coin = CoinModel.fromJson(coinMap);
+
+      _allCoins.putIfAbsent(
+        coin.symbol,
+        () => CoinModel(
+          currentPrice: coin.currentPrice,
+          name: coin.name,
+          symbol: coin.symbol,
+          image: coin.image,
+          priceDiff: coin.priceDiff,
+          color: Colors.blue,
+        ),
+      );
     }
+    notifyListeners();
+  }
+
+  Map<String, dynamic> returnJsonData(List<dynamic> coinsList) {
+    Map<String, dynamic> listJsonData = {};
+
+    for (var coinItem in coinsList) {
+      CoinModel coin = CoinModel.fromJson(coinItem as Map<String, dynamic>);
+      final jsonCoin = coin.toJson();
+      listJsonData.putIfAbsent(coin.symbol, () => jsonCoin);
+    }
+    return listJsonData;
   }
 
   void setUserCoin() {
     DatabaseReference userCoinsRef = FirebaseDatabase.instance.ref('userCoins/');
 
     userCoinsRef.onValue.listen((event) {
-      if (event.snapshot.value == null) throw Exception();
+      if (event.snapshot.value == null) return print('userCoins is empty in firebase.');
 
       final Map<String, dynamic> coinsMapDynamic = Map<String, dynamic>.from(event.snapshot.value as Map<Object?, Object?>);
 
@@ -144,11 +175,10 @@ class DataProvider with ChangeNotifier {
       'name': coin.name,
       'symbol': coin.symbol,
       'image': coin.image,
-      'priceDiff': coin.priceDiff,
+      'price_change_percentage_24h': coin.priceDiff,
       'color': coin.color.toString(),
       'transactions': transaction.toJson(),
     });
-    print("");
 
     _userCoins.putIfAbsent(
       coin.symbol,

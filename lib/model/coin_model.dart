@@ -37,7 +37,7 @@ class CoinModel {
       'symbol': symbol,
       'image': image,
       'price_change_percentage_24h': priceDiff,
-      'color': color,
+      'color': color.toString(),
     };
   }
 }
