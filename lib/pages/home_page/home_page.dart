@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,22 +17,34 @@ class HoldingsPage extends StatefulWidget {
 }
 
 class _HoldingsPageState extends State<HoldingsPage> {
-  @override
-  void initState() {
-    super.initState();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  void showInSnackBar(String value) {
+    _scaffoldKey.currentState!.showBottomSheet(
+      (context) => SnackBar(content: Text(value)),
+    );
+  }
+
+  Future<void> setPreValues() async {
     DataProvider dataProvider = context.read<DataProvider>();
-
     if (dataProvider.firstRun) {
-      dataProvider.setAllCoins();
-      dataProvider.periodicSetAllCoin();
+      await dataProvider.fetchAllCoinsFirebase();
+      await dataProvider.setAllCoins();
+      await dataProvider.periodicSetAllCoin();
       dataProvider.setUserCoin();
     }
   }
 
   @override
+  void initState() {
+    super.initState();
+    setPreValues();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       resizeToAvoidBottomInset: true,
       appBar: const HomeAppBar(),
       body: Column(
