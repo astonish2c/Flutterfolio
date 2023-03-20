@@ -19,6 +19,8 @@ class HoldingsPage extends StatefulWidget {
 class _HoldingsPageState extends State<HoldingsPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  late StreamSubscription _streamSubscription;
+
   void showInSnackBar(String value) {
     _scaffoldKey.currentState!.showBottomSheet(
       (context) => SnackBar(content: Text(value)),
@@ -31,7 +33,9 @@ class _HoldingsPageState extends State<HoldingsPage> {
       await dataProvider.fetchAllCoinsFirebase();
       await dataProvider.setAllCoins();
       await dataProvider.periodicSetAllCoin();
-      dataProvider.setUserCoin();
+      _streamSubscription = dataProvider.setUserCoin();
+    } else {
+      _streamSubscription = dataProvider.setUserCoin();
     }
   }
 
@@ -39,6 +43,12 @@ class _HoldingsPageState extends State<HoldingsPage> {
   void initState() {
     super.initState();
     setPreValues();
+  }
+
+  @override
+  void deactivate() {
+    _streamSubscription.cancel();
+    super.deactivate();
   }
 
   @override
