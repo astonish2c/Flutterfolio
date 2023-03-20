@@ -28,7 +28,7 @@ class DataProvider with ChangeNotifier {
   }
 
   Future<void> periodicSetAllCoin() async {
-    Timer.periodic(const Duration(seconds: 3), (timer) async {
+    Timer.periodic(const Duration(seconds: 15), (timer) async {
       await setAllCoins();
     });
   }
@@ -49,12 +49,11 @@ class DataProvider with ChangeNotifier {
     List<dynamic> coinsDynamic = json.decode(response.body);
     setAndUpdateAllCoin(coinsDynamic);
     notifyListeners();
-    print('');
   }
 
   Future<void> fetchAllCoinsFirebase() async {
-    DatabaseReference dr = FirebaseDatabase.instance.ref('allCoins/');
-    DataSnapshot ds = await dr.get();
+    DatabaseReference dr = FirebaseDatabase.instance.ref();
+    DataSnapshot ds = await dr.child('allCoins/').orderByChild('current_price').get();
     if (!ds.exists) return print('Fetching allCoins from firestore failed.');
     addAllCoin(ds);
   }
@@ -62,13 +61,18 @@ class DataProvider with ChangeNotifier {
   Future<void> setAndUpdateAllCoin(List<dynamic> coins) async {
     DatabaseReference dr = FirebaseDatabase.instance.ref('allCoins/');
     Map<String, dynamic> listJsonData = returnJsonData(coins);
-    await dr.set(listJsonData).then((value) {
+
+    await dr.update(listJsonData).then((value) {
       print('coins updated in firebase.');
-      //TODO: updating coins locally remains
-      if (_allCoins.isEmpty) {
+      if (_allCoins.length < coins.length) {
         for (var coin in coins) {
           CoinModel cm = CoinModel.fromJson(coin);
           _allCoins.putIfAbsent(cm.symbol, () => cm);
+        }
+      } else {
+        for (var coin in coins) {
+          CoinModel cm = CoinModel.fromJson(coin);
+          _allCoins.update(cm.symbol, (value) => cm);
         }
       }
     });
@@ -110,10 +114,10 @@ class DataProvider with ChangeNotifier {
     return listJsonData;
   }
 
-  void setUserCoin() {
+  StreamSubscription setUserCoin() {
     DatabaseReference userCoinsRef = FirebaseDatabase.instance.ref('userCoins/');
 
-    userCoinsRef.onValue.listen((event) {
+    StreamSubscription streamSubscription = userCoinsRef.onValue.listen((event) {
       if (event.snapshot.value == null) return print('userCoins is empty in firebase.');
 
       final Map<String, dynamic> coinsMapDynamic = Map<String, dynamic>.from(event.snapshot.value as Map<Object?, Object?>);
@@ -150,6 +154,7 @@ class DataProvider with ChangeNotifier {
         calTotalUserBalance();
       }
     });
+    return streamSubscription;
   }
 
   void addUserCoin(CoinModel coinModel) {
