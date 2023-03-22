@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 
 class CoinModel {
@@ -8,6 +10,7 @@ class CoinModel {
   final Color color;
   final String priceDiff;
   final List<Transaction>? transactions;
+  final int? market_cap_rank;
 
   CoinModel({
     required this.currentPrice,
@@ -17,7 +20,8 @@ class CoinModel {
     required this.priceDiff,
     required this.color,
     this.transactions,
-  }) : assert((double.tryParse(currentPrice.toString()) != null));
+    this.market_cap_rank,
+  });
 
   factory CoinModel.fromJson(Map<String, dynamic> json) {
     return CoinModel(
@@ -27,6 +31,7 @@ class CoinModel {
       image: json['image'],
       priceDiff: json["price_change_percentage_24h"].toString(),
       color: Colors.blue,
+      market_cap_rank: json["market_cap_rank"] ?? 0,
     );
   }
 
@@ -38,6 +43,7 @@ class CoinModel {
       'image': image,
       'price_change_percentage_24h': priceDiff,
       'color': color.toString(),
+      "market_cap_rank": market_cap_rank,
     };
   }
 }

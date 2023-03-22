@@ -53,7 +53,7 @@ class DataProvider with ChangeNotifier {
 
   Future<void> fetchAllCoinsFirebase() async {
     DatabaseReference dr = FirebaseDatabase.instance.ref();
-    DataSnapshot ds = await dr.child('allCoins/').orderByChild('current_price').get();
+    DataSnapshot ds = await dr.child('allCoins/').get();
     if (!ds.exists) return print('Fetching allCoins from firestore failed.');
     addAllCoin(ds);
   }
@@ -109,7 +109,7 @@ class DataProvider with ChangeNotifier {
     for (var coinItem in coinsList) {
       CoinModel coin = CoinModel.fromJson(coinItem as Map<String, dynamic>);
       final jsonCoin = coin.toJson();
-      listJsonData.putIfAbsent(coin.symbol, () => jsonCoin);
+      listJsonData.putIfAbsent(("0${coin.market_cap_rank}"), () => jsonCoin);
     }
     return listJsonData;
   }

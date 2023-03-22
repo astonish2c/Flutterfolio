@@ -111,7 +111,7 @@ class _BuyTabState extends State<BuyTab> {
                                 fontSize: 82,
                                 fontWeight: FontWeight.bold,
                               ),
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintStyle: TextStyle(
                                   fontSize: 82,
