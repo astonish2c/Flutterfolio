@@ -1,12 +1,11 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
-import 'package:crypto_exchange_app/utils/custom_icon_button.dart';
-import 'package:provider/provider.dart';
-import 'package:crypto_exchange_app/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../../model/coin_model.dart';
 import '../../../provider/data_provider.dart';
 import '../../../provider/theme_provider.dart';
 import 'home_tab_bar.dart';
+import 'package:crypto_exchange_app/utils/custom_icon_button.dart';
 
 class HomeItemsList extends StatefulWidget {
   static const routeName = 'Home_Items_List';
@@ -18,6 +17,12 @@ class HomeItemsList extends StatefulWidget {
 
 class _HomeItemsListState extends State<HomeItemsList> {
   final FocusNode _searchFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    // context.read<DataProvider>().setApiCoins();
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -50,22 +55,27 @@ class _HomeItemsListState extends State<HomeItemsList> {
             padding: const EdgeInsets.only(left: 16, right: 16),
             child: Column(
               children: [
-                Expanded(
-                  child: Consumer<DataProvider>(
-                    builder: (context, value, child) => ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      itemCount: value.allCoins.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeTabBar(coinModel: value.allCoins[index], initialPage: 0)));
-                          },
-                          child: ListItem(dataProvider: value, index: index),
-                        );
-                      },
-                    ),
-                  ),
-                ),
+                Builder(builder: (context) {
+                  List<CoinModel> coins = context.watch<DataProvider>().getCoins;
+                  return Expanded(
+                    child: coins.isEmpty
+                        ? const Text('No coins available')
+                        : ListView.builder(
+                            itemCount: coins.length,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => HomeTabBar(coinModel: coins[index], initialPage: 0),
+                                    ),
+                                  );
+                                },
+                                child: ListItem(coinModel: coins[index]),
+                              );
+                            }),
+                  );
+                }),
               ],
             ),
           ),
@@ -76,13 +86,11 @@ class _HomeItemsListState extends State<HomeItemsList> {
 }
 
 class ListItem extends StatelessWidget {
-  final int index;
-  final DataProvider dataProvider;
+  final CoinModel coinModel;
 
   const ListItem({
     Key? key,
-    required this.index,
-    required this.dataProvider,
+    required this.coinModel,
   }) : super(key: key);
 
   @override
@@ -97,29 +105,29 @@ class ListItem extends StatelessWidget {
           leading: SizedBox(
             height: 30,
             width: 30,
-            child: Image.network(dataProvider.allCoins[index].image),
+            child: Image.network(coinModel.image),
           ),
           title: Row(
             children: [
               Text(
-                dataProvider.allCoins[index].symbol.toUpperCase(),
-                style: TextStyle(
+                coinModel.symbol.toUpperCase(),
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(width: 6),
+              const SizedBox(width: 6),
               Text(
-                dataProvider.allCoins[index].name,
+                coinModel.name,
                 style: theme.textTheme.bodyMedium,
               ),
             ],
           ),
-          trailing: Icon(
+          trailing: const Icon(
             Icons.keyboard_arrow_right,
             color: Colors.grey,
           ),
         ),
-        Divider(
+        const Divider(
           color: Colors.white24,
           thickness: 0,
         ),

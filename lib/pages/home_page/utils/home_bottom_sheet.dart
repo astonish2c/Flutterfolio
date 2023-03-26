@@ -38,7 +38,7 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
   void _submit() {
     final String amountText = _amountController.text;
     final String priceText = _priceController.text;
-    final List<CoinModel> allCoins = Provider.of<DataProvider>(context, listen: false).allCoins;
+    final List<CoinModel> allCoins = Provider.of<DataProvider>(context, listen: false).getCoins;
 
     if (amountText.isEmpty || priceText.isEmpty) {
       return;
@@ -67,7 +67,7 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final DataProvider dataProvider = Provider.of<DataProvider>(context);
-    final List<CoinModel> allCoins = dataProvider.allCoins;
+    final List<CoinModel> allCoins = dataProvider.getCoins;
     return Padding(
       padding: const EdgeInsets.only(
         left: 16,

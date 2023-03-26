@@ -22,11 +22,7 @@ class TransactionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DataProvider dataProvider = context.watch<DataProvider>();
     final TextTheme textTheme = Theme.of(context).textTheme;
-
-    var filteredCM = dataProvider.allCoins.where((element) => element.symbol == coinModel!.symbol).toList();
-    var cm = filteredCM[0];
 
     void popPage() {
       Navigator.of(context).pop();
@@ -73,26 +69,34 @@ class TransactionsScreen extends StatelessWidget {
             ),
             SizedBox(height: defaultPadding),
             Expanded(
-              child: ListView.builder(
-                  itemCount: coinModel!.transactions!.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                        child: TransactionRow(coinModel: coinModel!, transaction: coinModel!.transactions![index]),
-                        onTap: () async {
-                          await showModalBottomSheet(
-                              isScrollControlled: true,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(24),
-                                  topRight: Radius.circular(24),
+              child: Builder(builder: (context) {
+                context.watch<DataProvider>().userCoins;
+
+                return ListView.builder(
+                    itemCount: coinModel!.transactions!.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                          child: TransactionRow(coinModel: coinModel!, transaction: coinModel!.transactions![index]),
+                          onTap: () async {
+                            await showModalBottomSheet(
+                                isScrollControlled: true,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(24),
+                                    topRight: Radius.circular(24),
+                                  ),
                                 ),
-                              ),
-                              context: context,
-                              builder: (context) {
-                                return TransactionBottomSheet(coinModel: coinModel!, index: index, dataProvider: dataProvider, popPage: popPage);
-                              });
-                        });
-                  }),
+                                context: context,
+                                builder: (context) {
+                                  return TransactionBottomSheet(
+                                    coinModel: coinModel!,
+                                    index: index,
+                                    popPage: popPage,
+                                  );
+                                });
+                          });
+                    });
+              }),
             ),
             const SizedBox(height: 16),
             ExchnageBigBtn(
@@ -100,7 +104,7 @@ class TransactionsScreen extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => HomeTabBar(coinModel: cm, pushHomePage: false, initialPage: 0),
+                      builder: (context) => HomeTabBar(coinModel: coinModel, pushHomePage: false, initialPage: 0),
                     ),
                   );
                 }),
