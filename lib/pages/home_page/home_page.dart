@@ -17,44 +17,27 @@ class HoldingsPage extends StatefulWidget {
 }
 
 class _HoldingsPageState extends State<HoldingsPage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  late StreamSubscription _streamSubscription;
-
-  void showInSnackBar(String value) {
-    _scaffoldKey.currentState!.showBottomSheet(
-      (context) => SnackBar(content: Text(value)),
-    );
-  }
-
-  Future<void> setPreValues() async {
+  Future<void> setValues() async {
     DataProvider dataProvider = context.read<DataProvider>();
-    if (dataProvider.firstRun) {
-      await dataProvider.fetchAllCoinsFirebase();
-      await dataProvider.setAllCoins();
-      await dataProvider.periodicSetAllCoin();
-      _streamSubscription = dataProvider.setUserCoin();
-    } else {
-      _streamSubscription = dataProvider.setUserCoin();
+
+    if (!dataProvider.firstRun) return;
+
+    try {
+      dataProvider.setUserCoin();
+    } catch (e) {
+      print(e);
     }
   }
 
   @override
   void initState() {
+    setValues();
     super.initState();
-    setPreValues();
-  }
-
-  @override
-  void deactivate() {
-    _streamSubscription.cancel();
-    super.deactivate();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
       resizeToAvoidBottomInset: true,
       appBar: const HomeAppBar(),
       body: Column(

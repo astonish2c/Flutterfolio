@@ -111,7 +111,7 @@ class _BuyTabState extends State<BuyTab> {
                                 fontSize: 82,
                                 fontWeight: FontWeight.bold,
                               ),
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 hintStyle: TextStyle(
                                   fontSize: 82,
@@ -216,6 +216,7 @@ class _BuyTabState extends State<BuyTab> {
                   ? null
                   : () {
                       if (widget.indexTransaction == null) return submit();
+
                       context.read<DataProvider>().updateTransaction(
                             widget.coinModel,
                             widget.indexTransaction!,

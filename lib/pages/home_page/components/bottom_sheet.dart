@@ -8,18 +8,19 @@ import '../../../provider/data_provider.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/exchange_big_btn.dart';
 import 'home_tab_bar.dart';
+import 'package:provider/provider.dart';
 
 class TransactionBottomSheet extends StatelessWidget {
   const TransactionBottomSheet({
     Key? key,
     required this.coinModel,
     required this.index,
-    required this.dataProvider,
+    // required this.dataProvider,
     required this.popPage,
   }) : super(key: key);
 
   final CoinModel coinModel;
-  final DataProvider dataProvider;
+  // final DataProvider dataProvider;
   final Function popPage;
   final int index;
 
@@ -108,12 +109,13 @@ class TransactionBottomSheet extends StatelessWidget {
             bgColor: Colors.red[900],
             textColor: Colors.white,
             onTap: () async {
-              await dataProvider.removeTransaction(coin: coinModel, transactionIndex: index).then((value) {
-                Navigator.of(context).pop();
-                if (value == true) {
-                  popPage();
-                }
-              });
+              final bool value = await context.read<DataProvider>().removeTransaction(coin: coinModel, transactionIndex: index);
+
+              Navigator.of(context).pop();
+
+              if (value != true) return;
+
+              popPage();
             },
           ),
         ],
