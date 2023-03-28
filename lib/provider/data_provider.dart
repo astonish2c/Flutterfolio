@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, non_constant_identifier_names
 
 import 'dart:async';
 
@@ -10,12 +10,17 @@ import 'dart:convert';
 import '../model/coin_model.dart';
 
 class DataProvider with ChangeNotifier {
-  double totalUserBalance = 0.0;
-  bool firstRun = true;
-  bool apiHalt = false;
   int timerValue = 5;
 
-  Map<String, CoinModel> _coins = {};
+  double totalUserBalance = 0.0;
+  double pMarketChange = 0.0;
+
+  bool firstRun = true;
+  bool is_DataBase_Available = false;
+  bool isLoading = false;
+  bool hasError = false;
+
+  final Map<String, CoinModel> _coins = {};
 
   final Map<String, CoinModel> _userCoins = {};
 
@@ -27,76 +32,97 @@ class DataProvider with ChangeNotifier {
     return [..._userCoins.values];
   }
 
-  set resetCoins(Map<String, CoinModel> coins) {
-    _coins = coins;
-  }
-
   DatabaseReference dr = FirebaseDatabase.instance.ref();
 
   Future<void> setDbCoins() async {
+    Future<void> getPercentage() async {
+      try {
+        final mChangePercentage = await dr.child('mChangePercentage').get();
+
+        if (!mChangePercentage.exists) {
+          throw ('getting mChangePercentage failed.');
+        }
+
+        pMarketChange = mChangePercentage.value as double;
+
+        notifyListeners();
+      } catch (e) {
+        rethrow;
+      }
+    }
+
     try {
-      firstRun = false;
+      isLoading = true;
+
+      print('setDBCoins called');
+
+      await getPercentage();
 
       DataSnapshot ds = await dr.child('coins/').get();
 
-      if (!ds.exists) throw ('Fetching coins from firebase failed.');
+      if (!ds.exists) {
+        throw ('Fetching coins from firebase failed.');
+      }
 
       final Map<String, dynamic> coinsMapDynamic = Map<String, dynamic>.from(ds.value as Map<Object?, Object?>);
 
       final List<String> coinsKey = coinsMapDynamic.keys.toList();
 
-      for (int i = 0; i < coinsKey.length; i++) {
-        final Map<String, dynamic> coinMap = Map<String, dynamic>.from(coinsMapDynamic.values.toList()[i] as Map<Object?, Object?>);
+      if (_coins.values.length < coinsKey.length) {
+        for (int i = 0; i < coinsKey.length; i++) {
+          final Map<String, dynamic> coinMap = Map<String, dynamic>.from(coinsMapDynamic.values.toList()[i] as Map<Object?, Object?>);
 
-        CoinModel coin = CoinModel.fromJson(coinMap);
+          CoinModel coin = CoinModel.fromJson(coinMap);
 
-        _coins.putIfAbsent(
-          coin.symbol,
-          () => CoinModel(
-            currentPrice: coin.currentPrice,
-            name: coin.name,
-            symbol: coin.symbol,
-            image: coin.image,
-            priceDiff: coin.priceDiff,
-            color: Colors.blue,
-          ),
-        );
+          _coins.putIfAbsent(
+            coin.symbol,
+            () => CoinModel(
+              currentPrice: coin.currentPrice,
+              name: coin.name,
+              symbol: coin.symbol,
+              image: coin.image,
+              priceDiff: coin.priceDiff,
+              color: Colors.blue,
+            ),
+          );
+        }
+      } else {
+        for (int i = 0; i < coinsKey.length; i++) {
+          final Map<String, dynamic> coinMap = Map<String, dynamic>.from(coinsMapDynamic.values.toList()[i] as Map<Object?, Object?>);
+
+          CoinModel coin = CoinModel.fromJson(coinMap);
+
+          _coins.update(
+            coin.symbol,
+            (_) => CoinModel(
+              currentPrice: coin.currentPrice,
+              name: coin.name,
+              symbol: coin.symbol,
+              image: coin.image,
+              priceDiff: coin.priceDiff,
+              color: Colors.blue,
+            ),
+          );
+        }
       }
+
+      print("Fetching done from DB.");
+
+      isLoading = false;
+      is_DataBase_Available = true;
       notifyListeners();
     } catch (e) {
       rethrow;
     }
-
-    notifyListeners();
   }
 
-  Future<double> setMcPercentage() async {
-    try {
-      print('mChangePercentage called');
-
-      http.Response rMarketChange = await http.get(Uri.parse('https://api.coingecko.com/api/v3/global'));
-
-      if (rMarketChange.statusCode != 200) {
-        apiHalt = true;
-        throw ('API Call limit reached on McPercentage. Please try again later!');
-      }
-
-      Map<String, dynamic> vMarketChange = Map<String, dynamic>.from(json.decode(rMarketChange.body));
-
-      final double marketCapPercentage = (vMarketChange['data'] as Map<String, dynamic>)['market_cap_change_percentage_24h_usd'];
-
-      return marketCapPercentage;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  Future<void> setApiCoins(List<dynamic> coinsDynamic) async {
+  Future<void> setApiCoins(List<dynamic> coinsDynamic, double mChangePercentage) async {
     try {
       Map<String, dynamic> coinsJson = returnJsonData(coinsDynamic);
 
+      await dr.update({'mChangePercentage': mChangePercentage});
+
       await dr.child('coins/').update(coinsJson);
-      print('coins updated in firebase.');
 
       if (_coins.isEmpty) {
         for (var coin in coinsDynamic) {
@@ -115,30 +141,65 @@ class DataProvider with ChangeNotifier {
           );
         }
       }
+      is_DataBase_Available = true;
       notifyListeners();
     } catch (e) {
       print('$e');
     }
   }
 
-  Future<List<dynamic>> getApiCoins() async {
+  Future<void> getApiCoins() async {
+    Future<double> setMcPercentage() async {
+      try {
+        print('mChangePercentage called');
+
+        http.Response rMarketChange = await http.get(Uri.parse('https://api.coingecko.com/api/v3/global'));
+
+        if (rMarketChange.statusCode != 200) {
+          isLoading = false;
+          hasError = true;
+          notifyListeners();
+
+          throw ('Failed to fetch market data.');
+        }
+
+        Map<String, dynamic> vMarketChange = Map<String, dynamic>.from(json.decode(rMarketChange.body));
+
+        final double marketCapPercentage = (vMarketChange['data'] as Map<String, dynamic>)['market_cap_change_percentage_24h_usd'];
+
+        pMarketChange = marketCapPercentage;
+
+        return pMarketChange;
+      } catch (e) {
+        rethrow;
+      }
+    }
+
     try {
+      isLoading = true;
+      notifyListeners();
+
+      final double mChangePercentage = await setMcPercentage();
+
       print('Calling API');
 
       http.Response rCoins = await http.get(Uri.parse('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=1'));
 
       if (rCoins.statusCode != 200) {
-        apiHalt = true;
-        throw ('API Call limit reached on coins. Please try again later!');
+        isLoading = false;
+        hasError = true;
+        notifyListeners();
+
+        throw ('getApiCoins: ${rCoins.statusCode}');
       }
+
+      print('API call done');
 
       List<dynamic> coinsDynamic = json.decode(rCoins.body);
 
-      setApiCoins(coinsDynamic);
-
+      await setApiCoins(coinsDynamic, mChangePercentage);
+      isLoading = false;
       notifyListeners();
-
-      return coinsDynamic;
     } catch (e) {
       rethrow;
     }
@@ -213,6 +274,8 @@ class DataProvider with ChangeNotifier {
   }
 
   StreamSubscription setUserCoin() {
+    firstRun = false;
+
     StreamSubscription streamSubscription = dr.child('userCoins/').onValue.listen((event) {
       if (event.snapshot.value == null) return print('userCoins is empty in firebase.');
 
@@ -250,6 +313,7 @@ class DataProvider with ChangeNotifier {
       }
       calTotalUserBalance();
     });
+
     return streamSubscription;
   }
 

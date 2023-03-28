@@ -22,10 +22,11 @@ class _HoldingsPageState extends State<HoldingsPage> {
 
     if (!dataProvider.firstRun) return;
 
+    dataProvider.setUserCoin();
     try {
-      dataProvider.setUserCoin();
+      await dataProvider.setDbCoins();
     } catch (e) {
-      print(e);
+      print('$e');
     }
   }
 
