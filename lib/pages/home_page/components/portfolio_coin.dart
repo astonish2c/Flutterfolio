@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../../../model/coin_model.dart';
 import '../../../utils/constants.dart';
-import '../utils/home_price_column.dart';
+import 'portfolio_price_column.dart';
 
-class HomeCoinRow extends StatelessWidget {
-  const HomeCoinRow({
-    required this.coinModel,
+class PortfolioCoin extends StatelessWidget {
+  const PortfolioCoin({
+    required this.coin,
     Key? key,
   }) : super(key: key);
 
-  final CoinModel coinModel;
+  final CoinModel coin;
 
   @override
   Widget build(BuildContext context) {
@@ -25,19 +25,19 @@ class HomeCoinRow extends StatelessWidget {
               SizedBox(
                 width: 50,
                 height: 50,
-                child: Image.network(coinModel.image),
+                child: Image.network(coin.image),
               ),
               SizedBox(width: defaultPadding),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(coinModel.name.toCapitalized(), style: theme.textTheme.titleMedium),
+                  Text(coin.name.toCapitalized(), style: theme.textTheme.titleMedium),
                   SizedBox(height: defaultPadding / 4),
-                  Text(coinModel.symbol.toUpperCase(), style: theme.textTheme.bodyMedium),
+                  Text(coin.symbol.toUpperCase(), style: theme.textTheme.bodyMedium),
                 ],
               ),
               const Spacer(),
-              HomePriceColumn(cm: coinModel),
+              PortfolioPriceColumn(coin: coin),
             ],
           ),
         ),

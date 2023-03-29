@@ -10,7 +10,7 @@ import 'pages/home_page/home_page.dart';
 import 'pages/market_page/market_page.dart';
 import '../provider/data_provider.dart';
 import 'pages/home_page/components/transactions_screen.dart';
-import 'pages/home_page/components/home_items_list.dart';
+import 'pages/home_page/add_coins_page/add_coins_page.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,7 +50,7 @@ class App extends StatelessWidget {
           '/': (context) => const HoldingsPage(),
           MarketPage.routeName: (context) => const MarketPage(),
           TransactionsScreen.routeName: (context) => const TransactionsScreen(),
-          HomeItemsList.routeName: (context) => const HomeItemsList(),
+          AddCoinsPage.routeName: (context) => const AddCoinsPage(),
           HomeTabBar.routeName: (context) => const HomeTabBar(),
         },
       ),

@@ -1,28 +1,42 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
 import '../model/coin_model.dart';
 
-//BG color and FG color
-Color darkBlue = const Color(0xff142E48);
+Color bgColor = const Color(0xff142E48);
 Color lightBlue = const Color(0xff1976D2);
 
-//Button Color
-const Color settingsIcon = Colors.yellow;
+const Color lightYellow = Colors.yellow;
 
-//Padding for overall app
 double defaultPadding = 16;
 
-//Covert String to Num (removing and adding things)
-String convertStrToNum(double num) {
-  final String readyOutput = NumberFormat.decimalPattern().format(num); //now has comma in between
-  if (readyOutput == '0') {
-    if (num > 0) {
-      return num.toString();
+String numToCurrency({required double num, bool isCuurency = true}) {
+  if (num == 0.0) return isCuurency ? '\$0' : '0';
+
+  final l = log(num) / log(10);
+
+  if (l < 1) {
+    // change this logic to l < -5 or some other number as per requirement
+    String rounded = num.toStringAsFixed(-l.floor());
+
+    return isCuurency ? '\$$rounded' : rounded;
+  } else {
+    if (isCuurency) {
+      String s = NumberFormat.simpleCurrency().format(num);
+
+      s = s.replaceAll('.00', '');
+
+      return s;
     }
+
+    String s = NumberFormat.currency(symbol: '').format(num);
+
+    s = s.replaceAll('.00', '');
+
+    return s;
   }
-  return readyOutput;
 }
 
 void navigateToPage(BuildContext context, Widget getPage) {
@@ -48,8 +62,7 @@ void navigateToPage(BuildContext context, Widget getPage) {
   );
 }
 
-//Calculates Transaction expenditure of a coin
-void calExpenditure(CoinModel cm, bool isBought, double coinAmount, double totalValue) {
+void calTotalTransactions(CoinModel cm, bool isBought, double coinAmount, double totalValue) {
   if (!isBought) return;
 
   var transactions = cm.transactions as List<Transaction>;
@@ -74,8 +87,7 @@ extension DoubleCasingExtension on String {
   }
 
   String removeTrailingZerosAndNumberfy() {
-    return replaceAll(RegExp(r"([.]*0+)(?!.*\d)"), "" //remove all trailing 0's and extra decimals at end if any
-        );
+    return replaceAll(RegExp(r"([.]*0+)(?!.*\d)"), "");
   }
 }
 

@@ -8,17 +8,17 @@ import '../../../utils/constants.dart';
 class MarketPriceColumn extends StatelessWidget {
   const MarketPriceColumn({
     Key? key,
-    required this.cm,
+    required this.coin,
   }) : super(key: key);
 
-  final CoinModel cm;
+  final CoinModel coin;
 
   @override
   Widget build(BuildContext context) {
-    bool isNegative = double.parse(cm.priceDiff).isNegative;
+    bool isNegative = double.parse(coin.priceDiff).isNegative;
 
-    String readyCurrentPrice = '\$${convertStrToNum(cm.currentPrice)}';
-    String readyPriceDiff = '${isNegative ? '' : '+'}${convertPerToNum(cm.priceDiff)}%';
+    String readyCurrentPrice = numToCurrency(num: coin.currentPrice);
+    String readyPriceDiff = '${isNegative ? '' : '+'}${convertPerToNum(coin.priceDiff)}%';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,

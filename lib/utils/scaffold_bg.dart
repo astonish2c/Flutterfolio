@@ -15,7 +15,7 @@ class ScaffoldBG extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [darkBlue, lightBlue],
+          colors: [bgColor, lightBlue],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),

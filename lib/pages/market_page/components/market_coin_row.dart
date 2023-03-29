@@ -37,7 +37,7 @@ class MarketCoinRow extends StatelessWidget {
                 ],
               ),
               const Spacer(),
-              MarketPriceColumn(cm: coinModel),
+              MarketPriceColumn(coin: coinModel),
             ],
           ),
         ),

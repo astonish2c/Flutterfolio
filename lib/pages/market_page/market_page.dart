@@ -50,28 +50,26 @@ class _MarketPageState extends State<MarketPage> {
     return Scaffold(
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
-          : hasError
-              ? const Center(child: Text('Oh snap! you got Corona!'))
-              : SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 24, right: 16, left: 16),
-                    child: CustomScrollView(
-                      slivers: [
-                        SliverFillRemaining(
-                          hasScrollBody: true,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              const MarketChangeSection(),
-                              SizedBox(height: defaultPadding),
-                              const CoinsSection(),
-                            ],
-                          ),
-                        ),
-                      ],
+          : SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 24, right: 16, left: 16),
+                child: CustomScrollView(
+                  slivers: [
+                    SliverFillRemaining(
+                      hasScrollBody: true,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          const MarketChangeSection(),
+                          SizedBox(height: defaultPadding),
+                          const CoinsSection(),
+                        ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
+              ),
+            ),
       bottomNavigationBar: const NavBar(currentIndex: 1),
       floatingActionButton: isLoading
           ? const Text('')
@@ -81,30 +79,31 @@ class _MarketPageState extends State<MarketPage> {
                 try {
                   await context.read<DataProvider>().getApiCoins();
                 } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      elevation: 0,
-                      backgroundColor: Colors.transparent,
-                      content: Container(
-                        height: 90,
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Oh snap!',
-                              style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+                  await showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Text(
+                                'Ok',
+                                style: TextStyle(fontSize: 14),
+                              ),
                             ),
-                            const SizedBox(height: 16),
-                            Text('$e', style: const TextStyle(overflow: TextOverflow.ellipsis, fontSize: 14, color: Colors.white)),
-                          ],
+                          ),
+                        ],
+                        title: const Text(
+                          'Oh snap!',
+                          style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
                         ),
-                      ),
-                    ),
+                        content: Text('$e', style: const TextStyle(overflow: TextOverflow.ellipsis, fontSize: 14, color: Colors.black)),
+                      );
+                    },
                   );
                 }
               },
@@ -137,7 +136,7 @@ class MarketChangeSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final double pMarketChange = context.select((DataProvider dataProvider) => dataProvider.pMarketChange);
+    final double pMarketChange = context.select((DataProvider dataProvider) => dataProvider.marketCondition);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

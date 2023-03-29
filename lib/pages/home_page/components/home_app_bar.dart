@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '/provider/theme_provider.dart';
 import '/utils/custom_icon_button.dart';
-import 'home_items_list.dart';
+import '../add_coins_page/add_coins_page.dart';
 
 class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
   const HomeAppBar({
@@ -32,7 +32,7 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
       ),
       actions: [
         GestureDetector(
-          onTap: () => Navigator.pushNamed(context, HomeItemsList.routeName),
+          onTap: () => Navigator.pushNamed(context, AddCoinsPage.routeName),
           child: Row(
             children: [
               const Icon(

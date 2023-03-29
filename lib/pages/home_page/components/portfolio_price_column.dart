@@ -5,33 +5,33 @@ import '../../../model/coin_model.dart';
 import '../../../provider/theme_provider.dart';
 import '../../../utils/constants.dart';
 
-class HomePriceColumn extends StatelessWidget {
-  const HomePriceColumn({
+class PortfolioPriceColumn extends StatelessWidget {
+  const PortfolioPriceColumn({
     Key? key,
-    required this.cm,
+    required this.coin,
   }) : super(key: key);
 
-  final CoinModel cm;
+  final CoinModel coin;
 
   @override
   Widget build(BuildContext context) {
-    double coinAmount = 0.0;
+    double totalAmount = 0.0;
     double totalValue = 0.0;
 
-    List<Transaction> transactions = cm.transactions as List<Transaction>;
+    for (var transaction in coin.transactions!) {
+      final t = transaction;
 
-    for (var transaction in transactions) {
-      if (transaction.isSell) {
-        coinAmount -= transaction.amount;
-        totalValue -= transaction.buyPrice * transaction.amount;
+      if (t.isSell) {
+        totalAmount -= t.amount;
+        totalValue -= t.buyPrice * t.amount;
       } else {
-        coinAmount += transaction.amount;
-        totalValue += transaction.buyPrice * transaction.amount;
+        totalAmount += t.amount;
+        totalValue += t.buyPrice * t.amount;
       }
     }
 
-    String readyTotalValue = '\$${convertStrToNum(totalValue)}';
-    String readyCoinAmount = '${cm.symbol.toUpperCase()} ${coinAmount.toString().removeTrailingZeros()}'.toUpperCase();
+    String coinTotalValue = numToCurrency(num: totalValue, isCuurency: true);
+    String coinTotalAmount = '${coin.symbol.toUpperCase()} ${numToCurrency(num: totalAmount, isCuurency: false)}';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -39,7 +39,7 @@ class HomePriceColumn extends StatelessWidget {
         FittedBox(
           fit: BoxFit.scaleDown,
           child: Text(
-            readyTotalValue,
+            coinTotalValue,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.titleMedium,
@@ -55,7 +55,7 @@ class HomePriceColumn extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Text(
-                readyCoinAmount,
+                coinTotalAmount,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.end,

@@ -12,8 +12,8 @@ import '../model/coin_model.dart';
 class DataProvider with ChangeNotifier {
   int timerValue = 5;
 
-  double totalUserBalance = 0.0;
-  double pMarketChange = 0.0;
+  double userBalance = 0.0;
+  double marketCondition = 0.0;
 
   bool firstRun = true;
   bool is_DataBase_Available = false;
@@ -43,7 +43,7 @@ class DataProvider with ChangeNotifier {
           throw ('getting mChangePercentage failed.');
         }
 
-        pMarketChange = mChangePercentage.value as double;
+        marketCondition = mChangePercentage.value as double;
 
         notifyListeners();
       } catch (e) {
@@ -149,13 +149,13 @@ class DataProvider with ChangeNotifier {
   }
 
   Future<void> getApiCoins() async {
-    Future<double> setMcPercentage() async {
+    Future<double> setMarketCondition() async {
       try {
         print('mChangePercentage called');
 
-        http.Response rMarketChange = await http.get(Uri.parse('https://api.coingecko.com/api/v3/global'));
+        http.Response response = await http.get(Uri.parse('https://api.coingecko.com/api/v3/global'));
 
-        if (rMarketChange.statusCode != 200) {
+        if (response.statusCode != 200) {
           isLoading = false;
           hasError = true;
           notifyListeners();
@@ -163,13 +163,13 @@ class DataProvider with ChangeNotifier {
           throw ('Failed to fetch market data.');
         }
 
-        Map<String, dynamic> vMarketChange = Map<String, dynamic>.from(json.decode(rMarketChange.body));
+        Map<String, dynamic> vMarketChange = Map<String, dynamic>.from(json.decode(response.body));
 
         final double marketCapPercentage = (vMarketChange['data'] as Map<String, dynamic>)['market_cap_change_percentage_24h_usd'];
 
-        pMarketChange = marketCapPercentage;
+        marketCondition = marketCapPercentage;
 
-        return pMarketChange;
+        return marketCondition;
       } catch (e) {
         rethrow;
       }
@@ -179,26 +179,29 @@ class DataProvider with ChangeNotifier {
       isLoading = true;
       notifyListeners();
 
-      final double mChangePercentage = await setMcPercentage();
+      final double mChangePercentage = await setMarketCondition();
 
       print('Calling API');
 
-      http.Response rCoins = await http.get(Uri.parse('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=1'));
+      http.Response response = await http.get(Uri.parse('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=1'));
 
-      if (rCoins.statusCode != 200) {
+      if (response.statusCode != 200) {
         isLoading = false;
         hasError = true;
         notifyListeners();
 
-        throw ('getApiCoins: ${rCoins.statusCode}');
+        throw ('getApiCoins: ${response.statusCode}');
       }
 
       print('API call done');
 
-      List<dynamic> coinsDynamic = json.decode(rCoins.body);
+      List<dynamic> coinsDynamic = json.decode(response.body);
 
       await setApiCoins(coinsDynamic, mChangePercentage);
+
       isLoading = false;
+      if (hasError) hasError = false;
+
       notifyListeners();
     } catch (e) {
       rethrow;
@@ -413,21 +416,27 @@ class DataProvider with ChangeNotifier {
     final DatabaseReference coinRef = FirebaseDatabase.instance.ref('userCoins/${coin.symbol}');
     final DatabaseReference transactionRef = FirebaseDatabase.instance.ref('userCoins/${coin.symbol}/transactions/$transactionId');
 
-    if (coin.transactions!.length == 1) {
-      await coinRef.remove();
-      removeItem(coin);
-      calTotalUserBalance();
-      return true;
-    } else {
-      await transactionRef.remove();
-      _userCoins[coin.symbol.toLowerCase()]!.transactions!.removeAt(transactionIndex);
-      calTotalUserBalance();
-      return false;
-    }
-  }
+    try {
+      if (coin.transactions!.length == 1) {
+        await coinRef.remove();
 
-  void removeItem(CoinModel coinModel) {
-    _userCoins.remove(coinModel.symbol);
+        _userCoins.remove(coin.symbol);
+
+        calTotalUserBalance();
+
+        return true;
+      } else {
+        await transactionRef.remove();
+
+        _userCoins[coin.symbol.toLowerCase()]!.transactions!.removeAt(transactionIndex);
+
+        calTotalUserBalance();
+
+        return false;
+      }
+    } catch (e) {
+      rethrow;
+    }
   }
 
   void calTotalUserBalance() {
@@ -441,7 +450,7 @@ class DataProvider with ChangeNotifier {
         }
       }
     }
-    totalUserBalance = total;
+    userBalance = total;
     notifyListeners();
   }
 }

@@ -25,7 +25,7 @@ class TransactionsScreen extends StatelessWidget {
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     void popPage() {
-      Navigator.of(context).pop();
+      if (context.mounted) Navigator.of(context).pop();
     }
 
     return Scaffold(
@@ -81,18 +81,11 @@ class TransactionsScreen extends StatelessWidget {
                             await showModalBottomSheet(
                                 isScrollControlled: true,
                                 shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(24),
-                                    topRight: Radius.circular(24),
-                                  ),
+                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
                                 ),
                                 context: context,
                                 builder: (context) {
-                                  return TransactionBottomSheet(
-                                    coinModel: coinModel!,
-                                    index: index,
-                                    popPage: popPage,
-                                  );
+                                  return TransactionBottomSheet(coinModel: coinModel!, index: index, popPage: popPage);
                                 });
                           });
                     });

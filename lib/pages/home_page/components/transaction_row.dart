@@ -19,8 +19,8 @@ class TransactionRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
-    String value = '${transaction.isSell ? '-' : '+'}\$${convertStrToNum(transaction.buyPrice * transaction.amount)}';
-    String amount = '${transaction.isSell ? '-' : '+'}${transaction.amount.toString().removeTrailingZeros()} ${coinModel.symbol.toUpperCase()}';
+    String value = '${transaction.isSell ? '-' : '+'}${numToCurrency(num: transaction.buyPrice * transaction.amount)}';
+    String amount = '${transaction.isSell ? '-' : '+'}${numToCurrency(num: transaction.amount, isCuurency: false)} ${coinModel.symbol.toUpperCase()}';
 
     Color bgColorDay = transaction.isSell ? Colors.red : Colors.green;
 

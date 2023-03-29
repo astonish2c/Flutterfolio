@@ -124,7 +124,7 @@ class _SellTabState extends State<SellTab> {
                     ),
                     //Price per coin
                     Text(
-                      '\$${convertStrToNum(_priceValue)}',
+                      numToCurrency(num: _priceValue),
                       style: theme.textTheme.bodyLarge!.copyWith(fontSize: 18),
                     ),
                   ],

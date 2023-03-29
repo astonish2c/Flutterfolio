@@ -1,4 +1,3 @@
-import 'package:crypto_exchange_app/pages/home_page/components/sell_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -10,26 +9,27 @@ import '../../../utils/exchange_big_btn.dart';
 import 'home_tab_bar.dart';
 import 'package:provider/provider.dart';
 
-class TransactionBottomSheet extends StatelessWidget {
-  const TransactionBottomSheet({
-    Key? key,
-    required this.coinModel,
-    required this.index,
-    // required this.dataProvider,
-    required this.popPage,
-  }) : super(key: key);
+class TransactionBottomSheet extends StatefulWidget {
+  const TransactionBottomSheet({Key? key, required this.coinModel, required this.index, required this.popPage}) : super(key: key);
 
   final CoinModel coinModel;
-  // final DataProvider dataProvider;
   final Function popPage;
   final int index;
 
   @override
+  State<TransactionBottomSheet> createState() => _TransactionBottomSheetState();
+}
+
+class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
+  bool isLoading = false;
+
+  @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
+    final Transaction transaction = widget.coinModel.transactions![widget.index];
 
     return Container(
-      padding: EdgeInsets.only(left: defaultPadding * 1.5, right: defaultPadding * 1.5, bottom: defaultPadding * 1.5, top: defaultPadding * 2),
+      padding: const EdgeInsets.only(left: 24, right: 24, bottom: 24, top: 32),
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
       ),
@@ -44,7 +44,7 @@ class TransactionBottomSheet extends StatelessWidget {
           SizedBox(height: defaultPadding),
           BottomSheetRow(
             title1: 'Type',
-            title2: coinModel.transactions![index].isSell ? 'Sell' : 'Buy',
+            title2: transaction.isSell ? 'Sell' : 'Buy',
           ),
           const Divider(
             color: Colors.grey,
@@ -52,7 +52,7 @@ class TransactionBottomSheet extends StatelessWidget {
           const SizedBox(height: 8),
           BottomSheetRow(
             title1: 'Date',
-            title2: DateFormat('d, MMM, y, h:m a').format(coinModel.transactions![index].dateTime),
+            title2: DateFormat('d, MMM, y, h:m a').format(transaction.dateTime),
           ),
           const Divider(
             color: Colors.grey,
@@ -60,7 +60,7 @@ class TransactionBottomSheet extends StatelessWidget {
           const SizedBox(height: 8),
           BottomSheetRow(
             title1: 'Price Per Coin',
-            title2: '\$${convertStrToNum(coinModel.transactions![index].buyPrice)}',
+            title2: numToCurrency(num: transaction.buyPrice, isCuurency: true),
           ),
           const Divider(
             color: Colors.grey,
@@ -68,7 +68,7 @@ class TransactionBottomSheet extends StatelessWidget {
           const SizedBox(height: 8),
           BottomSheetRow(
             title1: 'Quantity',
-            title2: coinModel.transactions![index].amount.toString().removeTrailingZeros(),
+            title2: transaction.amount.toString().removeTrailingZeros(),
           ),
           const Divider(
             color: Colors.grey,
@@ -84,7 +84,7 @@ class TransactionBottomSheet extends StatelessWidget {
           const SizedBox(height: 8),
           BottomSheetRow(
             title1: 'Total Cost',
-            title2: '\$${convertStrToNum(coinModel.transactions![index].amount * coinModel.transactions![index].buyPrice)}',
+            title2: numToCurrency(num: transaction.amount * transaction.buyPrice, isCuurency: true),
           ),
           const Divider(
             color: Colors.grey,
@@ -96,28 +96,36 @@ class TransactionBottomSheet extends StatelessWidget {
             textColor: Colors.white,
             onTap: () {
               Navigator.of(context).pop();
-              if (coinModel.transactions![index].isSell) {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeTabBar(coinModel: coinModel, indexTransaction: index, initialPage: 1)));
+              if (transaction.isSell) {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeTabBar(coinModel: widget.coinModel, indexTransaction: widget.index, initialPage: 1)));
               } else {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeTabBar(coinModel: coinModel, indexTransaction: index, initialPage: 0)));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeTabBar(coinModel: widget.coinModel, indexTransaction: widget.index, initialPage: 0)));
               }
             },
           ),
           const SizedBox(height: 8),
-          ExchnageBigBtn(
-            text: 'Remove Transaction',
-            bgColor: Colors.red[900],
-            textColor: Colors.white,
-            onTap: () async {
-              final bool value = await context.read<DataProvider>().removeTransaction(coin: coinModel, transactionIndex: index);
+          isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : ExchnageBigBtn(
+                  text: 'Remove Transaction',
+                  bgColor: Colors.red[900],
+                  textColor: Colors.white,
+                  onTap: () async {
+                    setState(() {
+                      isLoading = true;
+                    });
 
-              Navigator.of(context).pop();
+                    final bool lastTransaction = await context.read<DataProvider>().removeTransaction(coin: widget.coinModel, transactionIndex: widget.index);
 
-              if (value != true) return;
+                    if (context.mounted) Navigator.of(context).pop();
 
-              popPage();
-            },
-          ),
+                    if (lastTransaction != true) return;
+
+                    widget.popPage();
+                  },
+                ),
         ],
       ),
     );

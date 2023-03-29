@@ -1,5 +1,8 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 
+import 'package:crypto_exchange_app/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

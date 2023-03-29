@@ -5,7 +5,7 @@ import '../../../model/coin_model.dart';
 import '../../../provider/data_provider.dart';
 import '../../../utils/constants.dart';
 import 'transactions_screen.dart';
-import 'home_coin_row.dart';
+import 'portfolio_coin.dart';
 
 class Portfolio extends StatefulWidget {
   const Portfolio({
@@ -59,7 +59,8 @@ class _PortfolioState extends State<Portfolio> {
                     itemCount: userCoins.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
-                          child: HomeCoinRow(coinModel: userCoins[index]),
+                          behavior: HitTestBehavior.translucent,
+                          child: PortfolioCoin(coin: userCoins[index]),
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(

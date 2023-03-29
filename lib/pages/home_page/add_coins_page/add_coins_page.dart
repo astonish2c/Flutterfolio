@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -6,22 +6,23 @@ import 'package:provider/provider.dart';
 import '../../../model/coin_model.dart';
 import '../../../provider/data_provider.dart';
 import '../../../provider/theme_provider.dart';
-import 'home_tab_bar.dart';
+import '../components/home_tab_bar.dart';
 import 'package:crypto_exchange_app/utils/custom_icon_button.dart';
 
-class HomeItemsList extends StatefulWidget {
+class AddCoinsPage extends StatefulWidget {
   static const routeName = 'Home_Items_List';
-  const HomeItemsList({super.key});
+  const AddCoinsPage({super.key});
 
   @override
-  State<HomeItemsList> createState() => _HomeItemsListState();
+  State<AddCoinsPage> createState() => _AddCoinsPageState();
 }
 
-class _HomeItemsListState extends State<HomeItemsList> {
+class _AddCoinsPageState extends State<AddCoinsPage> {
   final FocusNode _searchFocusNode = FocusNode();
 
   Future<void> checkDbStatus() async {
     final bool is_Database_Available = context.read<DataProvider>().is_DataBase_Available;
+    bool isSnackBarVisible = false;
 
     if (is_Database_Available) return;
 
@@ -49,7 +50,9 @@ class _HomeItemsListState extends State<HomeItemsList> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+
     final List<CoinModel> coins = context.read<DataProvider>().getCoins;
+
     final bool hasError = context.select((DataProvider dataProvider) => dataProvider.hasError);
     final bool isLoading = context.select((DataProvider dataProvider) => dataProvider.isLoading);
     final bool is_Database_Available = context.select((DataProvider dataProvider) => dataProvider.is_DataBase_Available);
@@ -70,35 +73,33 @@ class _HomeItemsListState extends State<HomeItemsList> {
         ),
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
-            : hasError
-                ? const Center(child: Text('Oh snap! you got Corona!'))
-                : SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 16, right: 16),
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: coins.isEmpty
-                                ? const Text('No coins available')
-                                : ListView.builder(
-                                    itemCount: coins.length,
-                                    itemBuilder: (context, index) {
-                                      return GestureDetector(
-                                        onTap: () {
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) => HomeTabBar(coinModel: coins[index], initialPage: 0),
-                                            ),
-                                          );
-                                        },
-                                        child: ListItem(coinModel: coins[index]),
+            : SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 16),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: coins.isEmpty
+                            ? const Text('No coins available')
+                            : ListView.builder(
+                                itemCount: coins.length,
+                                itemBuilder: (context, index) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => HomeTabBar(coinModel: coins[index], initialPage: 0),
+                                        ),
                                       );
-                                    }),
-                          ),
-                        ],
+                                    },
+                                    child: CoinItem(coinModel: coins[index]),
+                                  );
+                                }),
                       ),
-                    ),
+                    ],
                   ),
+                ),
+              ),
         floatingActionButton: is_Database_Available
             ? const Text('')
             : isLoading
@@ -109,30 +110,22 @@ class _HomeItemsListState extends State<HomeItemsList> {
                       try {
                         await context.read<DataProvider>().getApiCoins();
                       } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            elevation: 0,
-                            backgroundColor: Colors.transparent,
-                            content: Container(
-                              height: 90,
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Oh snap!',
-                                    style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(height: 16),
-                                  Text('$e', style: const TextStyle(overflow: TextOverflow.ellipsis, fontSize: 14, color: Colors.white)),
-                                ],
-                              ),
+                        //TODO: remove floating button while SnackBar shows
+
+                        AlertDialog(
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Ok'),
                             ),
+                          ],
+                          title: const Text(
+                            'Oh snap!',
+                            style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
                           ),
+                          content: Text('$e', style: const TextStyle(overflow: TextOverflow.ellipsis, fontSize: 14, color: Colors.white)),
                         );
                       }
                     },
@@ -140,10 +133,10 @@ class _HomeItemsListState extends State<HomeItemsList> {
   }
 }
 
-class ListItem extends StatelessWidget {
+class CoinItem extends StatelessWidget {
   final CoinModel coinModel;
 
-  const ListItem({
+  const CoinItem({
     Key? key,
     required this.coinModel,
   }) : super(key: key);
