@@ -32,7 +32,7 @@ class BuyTab extends StatefulWidget {
 class _BuyTabState extends State<BuyTab> {
   late TextEditingController _amountController, _priceController, _feeController, _noteController;
   late FocusNode _focusNode;
-  late double _priceValue;
+  late double _price;
 
   bool _isPriceSet = false;
   final bool _isFeeSet = false;
@@ -46,7 +46,7 @@ class _BuyTabState extends State<BuyTab> {
 
     _focusNode = FocusNode();
     _amountController = TextEditingController();
-    _priceValue = widget.coinModel.currentPrice;
+    _price = widget.coinModel.currentPrice;
     _priceController = TextEditingController(text: widget.coinModel.currentPrice.toString().removeTrailingZeros());
     _feeController = TextEditingController();
     _noteController = TextEditingController();
@@ -90,7 +90,7 @@ class _BuyTabState extends State<BuyTab> {
                           constraints: const BoxConstraints(
                             minHeight: 0,
                             minWidth: 0,
-                            maxWidth: 200,
+                            maxWidth: 300,
                           ),
                           child: IntrinsicWidth(
                             child: TextField(
@@ -126,7 +126,7 @@ class _BuyTabState extends State<BuyTab> {
                     ),
                     //Price per coin
                     Text(
-                      numToCurrency(num: _priceValue),
+                      currencyConverter(_price),
                       style: theme.textTheme.bodyLarge!.copyWith(fontSize: 18),
                     ),
                   ],
@@ -220,7 +220,7 @@ class _BuyTabState extends State<BuyTab> {
                       context.read<DataProvider>().updateTransaction(
                             widget.coinModel,
                             widget.indexTransaction!,
-                            Transaction(buyPrice: _priceValue, amount: double.parse(_amountController.text), dateTime: _selectedDate),
+                            Transaction(buyPrice: _price, amount: double.parse(_amountController.text), dateTime: _selectedDate),
                           );
 
                       Navigator.of(context).pop();
@@ -246,21 +246,11 @@ class _BuyTabState extends State<BuyTab> {
 
     final Transaction transaction = widget.coinModel.transactions![widget.indexTransaction!];
 
-    // if (initialPage == 1) {
     _amountController.text = transaction.amount.toString().removeTrailingZerosAndNumberfy();
     _selectedDate = transaction.dateTime;
     _isDateSet = true;
-    _priceValue = transaction.buyPrice;
+    _price = transaction.buyPrice;
     _isPriceSet = true;
-    // } else {
-
-    // amountController.text = '0';
-    // selectedDate = DateTime.now();
-    // isDateSet = false;
-    // priceValue = transaction.buyPrice;
-    // isPriceSet = false;
-
-    // }
   }
 
   bool checkUserInput(String value) {
@@ -454,7 +444,7 @@ class _BuyTabState extends State<BuyTab> {
   }
 
   Future<void> setPricePerCoin() async {
-    _isPriceSet ? _priceController.text = _priceValue.toString().removeTrailingZerosAndNumberfy() : _priceController.text = widget.coinModel.currentPrice.toString().removeTrailingZerosAndNumberfy();
+    _isPriceSet ? _priceController.text = _price.toString().removeTrailingZerosAndNumberfy() : _priceController.text = widget.coinModel.currentPrice.toString().removeTrailingZerosAndNumberfy();
 
     return await showModalBottomSheet(
       context: context,
@@ -512,7 +502,7 @@ class _BuyTabState extends State<BuyTab> {
                     if (checkUserInput(_priceController.value.text)) return;
 
                     setState(() {
-                      _priceValue = double.parse(_priceController.value.text);
+                      _price = double.parse(_priceController.value.text);
                       _isPriceSet = true;
                     });
 
@@ -536,7 +526,7 @@ class _BuyTabState extends State<BuyTab> {
   void submit() {
     context.read<DataProvider>().addUserCoin(
           CoinModel(
-            currentPrice: _priceValue,
+            currentPrice: _price,
             name: widget.coinModel.name,
             symbol: widget.coinModel.symbol,
             image: widget.coinModel.image,
@@ -544,7 +534,7 @@ class _BuyTabState extends State<BuyTab> {
             color: widget.coinModel.color,
             transactions: [
               Transaction(
-                buyPrice: _priceValue,
+                buyPrice: _price,
                 amount: double.parse(_amountController.text),
                 dateTime: _selectedDate,
                 isSell: false,

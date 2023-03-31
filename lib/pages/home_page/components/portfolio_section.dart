@@ -1,3 +1,4 @@
+import 'package:crypto_exchange_app/pages/market_page/market_page.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -69,12 +70,7 @@ class _PortfolioState extends State<Portfolio> {
                             );
                           });
                     })
-                : Center(
-                    child: Text(
-                      'No coins added yet!.',
-                      style: theme.textTheme.titleMedium,
-                    ),
-                  ),
+                : const CustomError(error: 'No coins added yet.'),
           ),
         ],
       ),

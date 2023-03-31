@@ -40,7 +40,7 @@ dependencies:
   device_preview: ^1.1.0
   intl: ^0.17.0
   pie_chart: ^5.3.2
-  flutter_svg: ^1.1.6
+  flutter_svg: ^2.0.4
   flutter_screenutil: ^5.6.0
   flutter_native_splash: ^2.2.16
   firebase_core: ^2.4.1
@@ -49,6 +49,8 @@ dependencies:
   http: ^0.13.5
   json_serializable: ^6.6.0
   fpdart: ^0.5.0
+  shimmer: ^2.0.0
+  connectivity_plus: ^3.0.3
 
 dev_dependencies:
   flutter_test:
@@ -76,6 +78,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/svg/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -1,11 +1,10 @@
-// ignore_for_file: avoid_print, non_constant_identifier_names
-
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:firebase_database/firebase_database.dart' hide Transaction;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 import '../model/coin_model.dart';
 
@@ -16,9 +15,18 @@ class DataProvider with ChangeNotifier {
   double marketCondition = 0.0;
 
   bool firstRun = true;
-  bool is_DataBase_Available = false;
-  bool isLoading = false;
-  bool hasError = false;
+  bool isDatabaseAvailable = false;
+
+  bool isLoadingDatabase = false;
+  bool hasErrorDatabase = false;
+
+  bool isLoadingMarket = true;
+  bool hasErrorMarket = false;
+  bool isRetry = false;
+
+  bool isLoadingUserCoin = false;
+  bool hasErrorUserCoin = false;
+  bool isFirstRunUser = true;
 
   final Map<String, CoinModel> _coins = {};
 
@@ -32,14 +40,34 @@ class DataProvider with ChangeNotifier {
     return [..._userCoins.values];
   }
 
+  void setFirstRun() {
+    firstRun = false;
+    notifyListeners();
+  }
+
   DatabaseReference dr = FirebaseDatabase.instance.ref();
 
   Future<void> setDbCoins() async {
     Future<void> getPercentage() async {
       try {
-        final mChangePercentage = await dr.child('mChangePercentage').get();
+        final mChangePercentage = await dr.child('mChangePercentage').get().timeout(
+          const Duration(seconds: 10),
+          onTimeout: () {
+            isLoadingDatabase = false;
+            hasErrorDatabase = true;
+            isDatabaseAvailable = false;
+            notifyListeners();
+
+            throw ('Timeout: Make sure your internet is connected.');
+          },
+        );
 
         if (!mChangePercentage.exists) {
+          isLoadingDatabase = false;
+          hasErrorDatabase = true;
+          isDatabaseAvailable = false;
+          notifyListeners();
+
           throw ('getting mChangePercentage failed.');
         }
 
@@ -52,7 +80,18 @@ class DataProvider with ChangeNotifier {
     }
 
     try {
-      isLoading = true;
+      final connectivityResult = await (Connectivity().checkConnectivity());
+
+      if (connectivityResult == ConnectivityResult.none) {
+        hasErrorMarket = true;
+        isLoadingMarket = false;
+
+        notifyListeners();
+        throw ('Please connect to a network and try again');
+      }
+      if (hasErrorDatabase) hasErrorDatabase = false;
+      isLoadingDatabase = true;
+      notifyListeners();
 
       print('setDBCoins called');
 
@@ -61,6 +100,9 @@ class DataProvider with ChangeNotifier {
       DataSnapshot ds = await dr.child('coins/').get();
 
       if (!ds.exists) {
+        isDatabaseAvailable = false;
+        notifyListeners();
+
         throw ('Fetching coins from firebase failed.');
       }
 
@@ -108,8 +150,12 @@ class DataProvider with ChangeNotifier {
 
       print("Fetching done from DB.");
 
-      isLoading = false;
-      is_DataBase_Available = true;
+      isLoadingDatabase = false;
+      isLoadingMarket = false;
+      if (hasErrorDatabase) hasErrorDatabase = false;
+      isDatabaseAvailable = true;
+      isRetry = true;
+
       notifyListeners();
     } catch (e) {
       rethrow;
@@ -141,7 +187,7 @@ class DataProvider with ChangeNotifier {
           );
         }
       }
-      is_DataBase_Available = true;
+      isDatabaseAvailable = true;
       notifyListeners();
     } catch (e) {
       print('$e');
@@ -153,11 +199,20 @@ class DataProvider with ChangeNotifier {
       try {
         print('mChangePercentage called');
 
-        http.Response response = await http.get(Uri.parse('https://api.coingecko.com/api/v3/global'));
+        http.Response response = await http.get(Uri.parse('https://api.coingecko.com/api/v3/global')).timeout(
+          const Duration(seconds: 10),
+          onTimeout: () {
+            isLoadingMarket = false;
+            hasErrorMarket = true;
+            notifyListeners();
+
+            throw ('Timeout: make sure your internet is working.');
+          },
+        );
 
         if (response.statusCode != 200) {
-          isLoading = false;
-          hasError = true;
+          isLoadingMarket = false;
+          hasErrorMarket = true;
           notifyListeners();
 
           throw ('Failed to fetch market data.');
@@ -176,18 +231,38 @@ class DataProvider with ChangeNotifier {
     }
 
     try {
-      isLoading = true;
+      await Future.delayed(Duration.zero);
+
+      isLoadingMarket = true;
       notifyListeners();
+
+      final connectivityResult = await (Connectivity().checkConnectivity());
+
+      if (connectivityResult == ConnectivityResult.none) {
+        hasErrorMarket = true;
+        isLoadingMarket = false;
+
+        notifyListeners();
+        throw ('Please connect to a network and try again');
+      }
 
       final double mChangePercentage = await setMarketCondition();
 
       print('Calling API');
 
-      http.Response response = await http.get(Uri.parse('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=1'));
+      http.Response response = await http.get(Uri.parse('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=1')).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          isLoadingMarket = false;
+          hasErrorMarket = true;
+          notifyListeners();
+          throw ('Timeout: make sure your internet is working.');
+        },
+      );
 
       if (response.statusCode != 200) {
-        isLoading = false;
-        hasError = true;
+        isLoadingMarket = false;
+        hasErrorMarket = true;
         notifyListeners();
 
         throw ('getApiCoins: ${response.statusCode}');
@@ -199,8 +274,8 @@ class DataProvider with ChangeNotifier {
 
       await setApiCoins(coinsDynamic, mChangePercentage);
 
-      isLoading = false;
-      if (hasError) hasError = false;
+      isLoadingMarket = false;
+      if (hasErrorMarket) hasErrorMarket = false;
 
       notifyListeners();
     } catch (e) {
@@ -246,41 +321,27 @@ class DataProvider with ChangeNotifier {
     return listJsonData;
   }
 
-  Future<void> setUserCoins() async {
-    final DataSnapshot ds = await dr.child('userCoins/').get();
+  Future<void> setUserCoin() async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) {
+      hasErrorUserCoin = true;
+      isLoadingUserCoin = false;
 
-    if (!ds.exists) throw ('Fetching userCoins from firebase failed.');
-
-    final Map<String, dynamic> dUserCoins = Map<String, dynamic>.from(ds.value as Map<Object?, Object?>);
-
-    final List<String> coinsKey = dUserCoins.keys.toList();
-
-    for (int i = 0; i < coinsKey.length; i++) {
-      final Map<String, dynamic> coinMap = Map<String, dynamic>.from(dUserCoins.values.toList()[i] as Map<Object?, Object?>);
-
-      CoinModel coin = CoinModel.fromJson(coinMap);
-
-      _userCoins.putIfAbsent(
-        coin.symbol,
-        () => CoinModel(
-          currentPrice: coin.currentPrice,
-          name: coin.name,
-          symbol: coin.symbol,
-          image: coin.image,
-          priceDiff: coin.priceDiff,
-          color: Colors.blue,
-        ),
-      );
+      notifyListeners();
+      throw ('Please connect to a network and try again');
     }
+
+    if (hasErrorUserCoin) hasErrorUserCoin = false;
+    isLoadingUserCoin = true;
     notifyListeners();
-    print('');
-  }
 
-  StreamSubscription setUserCoin() {
-    firstRun = false;
-
-    StreamSubscription streamSubscription = dr.child('userCoins/').onValue.listen((event) {
-      if (event.snapshot.value == null) return print('userCoins is empty in firebase.');
+    dr.child('userCoins/').onValue.listen((event) {
+      if (event.snapshot.value == null) {
+        isFirstRunUser = false;
+        isLoadingUserCoin = false;
+        notifyListeners();
+        return print('userCoins is empty in firebase.');
+      }
 
       final Map<String, dynamic> coinsMapDynamic = Map<String, dynamic>.from(event.snapshot.value as Map<Object?, Object?>);
 
@@ -314,10 +375,12 @@ class DataProvider with ChangeNotifier {
           ),
         );
       }
+
+      isFirstRunUser = false;
+      isLoadingUserCoin = false;
+
       calTotalUserBalance();
     });
-
-    return streamSubscription;
   }
 
   void addUserCoin(CoinModel coinModel) {

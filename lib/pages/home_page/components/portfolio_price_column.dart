@@ -15,23 +15,24 @@ class PortfolioPriceColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double totalAmount = 0.0;
-    double totalValue = 0.0;
+    double sumAmount = 0.0;
+    double sumCost = 0.0;
 
     for (var transaction in coin.transactions!) {
       final t = transaction;
 
       if (t.isSell) {
-        totalAmount -= t.amount;
-        totalValue -= t.buyPrice * t.amount;
+        sumAmount -= t.amount;
+        sumCost -= t.buyPrice * t.amount;
       } else {
-        totalAmount += t.amount;
-        totalValue += t.buyPrice * t.amount;
+        sumAmount += t.amount;
+        sumCost += t.buyPrice * t.amount;
       }
     }
 
-    String coinTotalValue = numToCurrency(num: totalValue, isCuurency: true);
-    String coinTotalAmount = '${coin.symbol.toUpperCase()} ${numToCurrency(num: totalAmount, isCuurency: false)}';
+    String totalCost = currencyConverter(sumCost);
+
+    String totalAmount = '${coin.symbol.toUpperCase()} ${currencyConverter(sumAmount, isCurrency: false)}';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -39,7 +40,7 @@ class PortfolioPriceColumn extends StatelessWidget {
         FittedBox(
           fit: BoxFit.scaleDown,
           child: Text(
-            coinTotalValue,
+            totalCost,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.titleMedium,
@@ -55,7 +56,7 @@ class PortfolioPriceColumn extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Text(
-                coinTotalAmount,
+                totalAmount,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.end,

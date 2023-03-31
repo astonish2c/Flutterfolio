@@ -209,7 +209,6 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
               TextButton(
                 style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: Size.zero),
                 onPressed: () async {
-                  //The function that we will call later
                   Future<DateTime> selectDateAndTime() async {
                     DateTime selectedDateTime = DateTime.now();
 
@@ -266,7 +265,6 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
             ],
           ),
           const SizedBox(height: 24),
-          //Add to Portfolio
           ExchnageBigBtn(
             text: 'Add to Portfolio',
             bgColor: Colors.blue,

@@ -60,7 +60,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
           const SizedBox(height: 8),
           BottomSheetRow(
             title1: 'Price Per Coin',
-            title2: numToCurrency(num: transaction.buyPrice, isCuurency: true),
+            title2: currencyConverter(transaction.buyPrice),
           ),
           const Divider(
             color: Colors.grey,
@@ -68,7 +68,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
           const SizedBox(height: 8),
           BottomSheetRow(
             title1: 'Quantity',
-            title2: transaction.amount.toString().removeTrailingZeros(),
+            title2: currencyConverter(transaction.amount, isCurrency: false),
           ),
           const Divider(
             color: Colors.grey,
@@ -84,7 +84,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
           const SizedBox(height: 8),
           BottomSheetRow(
             title1: 'Total Cost',
-            title2: numToCurrency(num: transaction.amount * transaction.buyPrice, isCuurency: true),
+            title2: currencyConverter(transaction.amount * transaction.buyPrice),
           ),
           const Divider(
             color: Colors.grey,

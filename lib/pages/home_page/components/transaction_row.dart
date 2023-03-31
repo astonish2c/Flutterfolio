@@ -9,18 +9,16 @@ import '../../../utils/constants.dart';
 class TransactionRow extends StatelessWidget {
   const TransactionRow({
     Key? key,
-    required this.coinModel,
+    required this.coin,
     required this.transaction,
   }) : super(key: key);
 
-  final CoinModel coinModel;
+  final CoinModel coin;
   final Transaction transaction;
 
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
-    String value = '${transaction.isSell ? '-' : '+'}${numToCurrency(num: transaction.buyPrice * transaction.amount)}';
-    String amount = '${transaction.isSell ? '-' : '+'}${numToCurrency(num: transaction.amount, isCuurency: false)} ${coinModel.symbol.toUpperCase()}';
 
     Color bgColorDay = transaction.isSell ? Colors.red : Colors.green;
 
@@ -72,11 +70,11 @@ class TransactionRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    value,
+                    '${transaction.isSell ? '-' : '+'}${currencyConverter(transaction.amount * transaction.buyPrice)}',
                     style: textTheme.titleMedium,
                   ),
                   Text(
-                    amount,
+                    '${transaction.isSell ? '-' : '+'}${currencyConverter(transaction.amount, isCurrency: false)}',
                     style: textTheme.bodyMedium!.copyWith(color: bgColorDay, fontWeight: FontWeight.bold),
                   ),
                 ],

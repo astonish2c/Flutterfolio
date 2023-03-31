@@ -31,7 +31,7 @@ class Balance extends StatelessWidget {
             fit: BoxFit.scaleDown,
             child: Consumer<DataProvider>(
               builder: (context, value, child) => Text(
-                numToCurrency(num: value.userBalance, isCuurency: true),
+                currencyConverter(value.userBalance),
                 maxLines: 1,
                 style: theme.textTheme.titleLarge,
               ),

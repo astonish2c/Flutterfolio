@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -12,31 +10,29 @@ const Color lightYellow = Colors.yellow;
 
 double defaultPadding = 16;
 
-String numToCurrency({required double num, bool isCuurency = true}) {
-  if (num == 0.0) return isCuurency ? '\$0' : '0';
+String currencyConverter(double num, {bool isCurrency = true}) {
+  String formattedString;
+  int decimalDigits;
 
-  final l = log(num) / log(10);
-
-  if (l < 1) {
-    // change this logic to l < -5 or some other number as per requirement
-    String rounded = num.toStringAsFixed(-l.floor());
-
-    return isCuurency ? '\$$rounded' : rounded;
+  if (num < 1.1) {
+    decimalDigits = num.toString().split('.').last.length;
   } else {
-    if (isCuurency) {
-      String s = NumberFormat.simpleCurrency().format(num);
+    String lastDigit = num.toString().split('.').last;
 
-      s = s.replaceAll('.00', '');
-
-      return s;
+    if (lastDigit.startsWith("0")) {
+      decimalDigits = 0;
+    } else {
+      decimalDigits = 2;
     }
-
-    String s = NumberFormat.currency(symbol: '').format(num);
-
-    s = s.replaceAll('.00', '');
-
-    return s;
   }
+
+  formattedString = NumberFormat.currency(
+    symbol: isCurrency ? '\$' : '',
+    decimalDigits: decimalDigits,
+    locale: 'en_US',
+  ).format(num);
+
+  return formattedString;
 }
 
 void navigateToPage(BuildContext context, Widget getPage) {

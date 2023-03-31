@@ -76,7 +76,7 @@ class TransactionsScreen extends StatelessWidget {
                     itemCount: coinModel!.transactions!.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
-                          child: TransactionRow(coinModel: coinModel!, transaction: coinModel!.transactions![index]),
+                          child: TransactionRow(coin: coinModel!, transaction: coinModel!.transactions![index]),
                           onTap: () async {
                             await showModalBottomSheet(
                                 isScrollControlled: true,

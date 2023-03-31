@@ -9,7 +9,6 @@ class ThemeProvider with ChangeNotifier {
   void toggleThemeMode() {
     isDark = !isDark;
     _themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
-    // print('toggled Theme Mode, current _themeMode value is ${_themeMode}');
     notifyListeners();
   }
 }

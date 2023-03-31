@@ -1,7 +1,9 @@
-// ignore_for_file: non_constant_identifier_names, avoid_print
+// ignore_for_file: non_constant_identifier_names, avoid_print, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:crypto_exchange_app/pages/market_page/market_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../model/coin_model.dart';
 import '../../../provider/data_provider.dart';
@@ -21,8 +23,7 @@ class _AddCoinsPageState extends State<AddCoinsPage> {
   final FocusNode _searchFocusNode = FocusNode();
 
   Future<void> checkDbStatus() async {
-    final bool is_Database_Available = context.read<DataProvider>().is_DataBase_Available;
-    bool isSnackBarVisible = false;
+    final bool is_Database_Available = context.read<DataProvider>().isDatabaseAvailable;
 
     if (is_Database_Available) return;
 
@@ -53,9 +54,8 @@ class _AddCoinsPageState extends State<AddCoinsPage> {
 
     final List<CoinModel> coins = context.read<DataProvider>().getCoins;
 
-    final bool hasError = context.select((DataProvider dataProvider) => dataProvider.hasError);
-    final bool isLoading = context.select((DataProvider dataProvider) => dataProvider.isLoading);
-    final bool is_Database_Available = context.select((DataProvider dataProvider) => dataProvider.is_DataBase_Available);
+    final bool isLoading = context.select((DataProvider dataProvider) => dataProvider.isLoadingDatabase);
+    final bool is_Database_Available = context.select((DataProvider dataProvider) => dataProvider.isDatabaseAvailable);
 
     return Scaffold(
         appBar: AppBar(
@@ -71,35 +71,76 @@ class _AddCoinsPageState extends State<AddCoinsPage> {
           ),
           title: Text('Select Coin', style: theme.textTheme.titleMedium!.copyWith(fontSize: 18)),
         ),
-        body: isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 16),
+        body: Padding(
+          padding: const EdgeInsets.only(left: 16, right: 16),
+          child: isLoading
+              ? Shimmer.fromColors(
+                  baseColor: Colors.blue,
+                  highlightColor: Colors.black,
                   child: Column(
                     children: [
                       Expanded(
-                        child: coins.isEmpty
-                            ? const Text('No coins available')
-                            : ListView.builder(
-                                itemCount: coins.length,
-                                itemBuilder: (context, index) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) => HomeTabBar(coinModel: coins[index], initialPage: 0),
-                                        ),
-                                      );
-                                    },
-                                    child: CoinItem(coinModel: coins[index]),
-                                  );
-                                }),
+                        child: ListView.separated(
+                          physics: BouncingScrollPhysics(),
+                          itemCount: 12,
+                          itemBuilder: (context, index) => Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Skelton(
+                                height: 50,
+                                width: 50,
+                                borderCircle: 32,
+                              ),
+                              SizedBox(width: 16),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Skelton(width: 60),
+                                  SizedBox(height: 16 / 4),
+                                  const Skelton(width: 30),
+                                ],
+                              ),
+                              const Spacer(),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  const Skelton(width: 60),
+                                  SizedBox(height: 16 / 4),
+                                  const Skelton(width: 40),
+                                ],
+                              ),
+                            ],
+                          ),
+                          separatorBuilder: (BuildContext context, int index) => SizedBox(height: 32),
+                        ),
                       ),
                     ],
                   ),
+                )
+              : Column(
+                  children: [
+                    Expanded(
+                      child: coins.isEmpty
+                          ? const Text('No coins available')
+                          : ListView.builder(
+                              physics: const BouncingScrollPhysics(),
+                              itemCount: coins.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => HomeTabBar(coinModel: coins[index], initialPage: 0),
+                                      ),
+                                    );
+                                  },
+                                  child: CoinItem(coinModel: coins[index]),
+                                );
+                              }),
+                    ),
+                  ],
                 ),
-              ),
+        ),
         floatingActionButton: is_Database_Available
             ? const Text('')
             : isLoading
@@ -110,8 +151,6 @@ class _AddCoinsPageState extends State<AddCoinsPage> {
                       try {
                         await context.read<DataProvider>().getApiCoins();
                       } catch (e) {
-                        //TODO: remove floating button while SnackBar shows
-
                         AlertDialog(
                           actions: [
                             TextButton(

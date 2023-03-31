@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/coin_model.dart';
@@ -17,8 +18,7 @@ class MarketPriceColumn extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isNegative = double.parse(coin.priceDiff).isNegative;
 
-    String readyCurrentPrice = numToCurrency(num: coin.currentPrice);
-    String readyPriceDiff = '${isNegative ? '' : '+'}${convertPerToNum(coin.priceDiff)}%';
+    String priceStatus = '${isNegative ? '' : '+'}${convertPerToNum(coin.priceDiff)}%';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -26,7 +26,7 @@ class MarketPriceColumn extends StatelessWidget {
         FittedBox(
           fit: BoxFit.scaleDown,
           child: Text(
-            readyCurrentPrice,
+            currencyConverter(coin.currentPrice),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.titleMedium,
@@ -43,7 +43,7 @@ class MarketPriceColumn extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Text(
-                readyPriceDiff,
+                priceStatus,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.end,

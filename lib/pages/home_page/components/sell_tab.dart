@@ -88,7 +88,7 @@ class _SellTabState extends State<SellTab> {
                           constraints: const BoxConstraints(
                             minHeight: 0,
                             minWidth: 0,
-                            maxWidth: 200,
+                            maxWidth: 300,
                           ),
                           child: IntrinsicWidth(
                             child: TextField(
@@ -124,7 +124,7 @@ class _SellTabState extends State<SellTab> {
                     ),
                     //Price per coin
                     Text(
-                      numToCurrency(num: _priceValue),
+                      '\$$_priceValue',
                       style: theme.textTheme.bodyLarge!.copyWith(fontSize: 18),
                     ),
                   ],
@@ -243,21 +243,11 @@ class _SellTabState extends State<SellTab> {
 
     final Transaction transaction = widget.coinModel.transactions![widget.indexTransaction!];
 
-    // if (initialPage == 1) {
     _amountController.text = transaction.amount.toString().removeTrailingZerosAndNumberfy();
     _selectedDate = transaction.dateTime;
     _isDateSet = true;
     _priceValue = transaction.buyPrice;
     _isPriceSet = true;
-    // } else {
-
-    // amountController.text = '0';
-    // selectedDate = DateTime.now();
-    // isDateSet = false;
-    // priceValue = transaction.buyPrice;
-    // isPriceSet = false;
-
-    // }
   }
 
   bool checkUserInput(String value) {

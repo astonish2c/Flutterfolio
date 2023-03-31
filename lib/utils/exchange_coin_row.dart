@@ -95,19 +95,8 @@ class CustomTextBtn extends StatelessWidget {
     return TextButton(
       onPressed: onTap ?? () {},
       style: theme.textButtonTheme.style,
-      // TextButton.styleFrom(
-      //   minimumSize: Size.zero,
-      //   visualDensity: VisualDensity.standard,
-      //   // backgroundColor: bgColor ?? theme.textButtonTheme.style,
-      //   padding: padding ?? EdgeInsets.symmetric(horizontal: defaultPadding / 2, vertical: defaultPadding * 0.6),
-      // ),
       child: Text(
         text,
-        // TextStyle(
-        //   // color: textColor ?? Colors.blue,
-        //   fontSize: fontSize ?? 16,
-        //   fontWeight: FontWeight.bold,
-        // ),
       ),
     );
   }
