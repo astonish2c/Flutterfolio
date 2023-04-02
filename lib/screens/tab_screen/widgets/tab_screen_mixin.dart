@@ -50,7 +50,7 @@ bool checkUserInput(String value) {
   return false;
 }
 
-void submit({
+Future<void> submit({
   required BuildContext context,
   required double price,
   required CoinModel coin,
@@ -58,8 +58,8 @@ void submit({
   required DateTime selectedDate,
   required bool? isPushHomePage,
   required bool isSell,
-}) {
-  context.read<DataProvider>().addUserCoin(
+}) async {
+  await context.read<DataProvider>().addUserCoin(
         CoinModel(
           currentPrice: price,
           name: coin.name,
@@ -77,15 +77,16 @@ void submit({
           ],
         ),
       );
+  if (context.mounted) {
+    Navigator.of(context).pop();
 
-  Navigator.of(context).pop();
+    if (isPushHomePage != null) return;
 
-  if (isPushHomePage != null) return;
-
-  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HoldingsPage()));
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HoldingsPage()));
+  }
 }
 
-void addOrUpdate({
+Future<void> addOrUpdate({
   required BuildContext context,
   required int? indexTransaction,
   required CoinModel coin,
@@ -94,9 +95,9 @@ void addOrUpdate({
   required double price,
   required DateTime selectedDate,
   required bool isSell,
-}) {
+}) async {
   if (indexTransaction == null) {
-    submit(
+    await submit(
       coin: coin,
       amountController: amountController,
       context: context,
@@ -108,7 +109,7 @@ void addOrUpdate({
     return;
   }
 
-  context.read<DataProvider>().updateTransaction(
+  await context.read<DataProvider>().updateTransaction(
       coin,
       indexTransaction,
       Transaction(
@@ -118,7 +119,32 @@ void addOrUpdate({
         isSell: isSell,
       ));
 
-  Navigator.of(context).pop();
+  if (context.mounted) {
+    Navigator.of(context).pop();
 
-  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => TransactionsScreen(coin: coin)));
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => TransactionsScreen(coin: coin)));
+  }
+}
+
+void showAddLimit(BuildContext context) {
+  ScaffoldMessenger.of(context).removeCurrentSnackBar();
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      duration: const Duration(seconds: 2),
+      content: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(color: Colors.red[700], borderRadius: BorderRadius.circular(12)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            Text('Sorry!', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            SizedBox(height: 16),
+            Text('Transactions with less than 10\$ can not be added.', style: TextStyle(fontSize: 14)),
+          ],
+        ),
+      ),
+    ),
+  );
 }

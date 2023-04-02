@@ -8,7 +8,10 @@ import '/provider/theme_provider.dart';
 class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
   const HomeAppBar({
     Key? key,
+    required this.hasErrorUserCoin,
   }) : super(key: key);
+
+  final bool hasErrorUserCoin;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -30,28 +33,6 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
         'CryptoLand',
         style: Theme.of(context).textTheme.titleMedium,
       ),
-      actions: [
-        GestureDetector(
-          onTap: () => Navigator.pushNamed(context, AddCoinsScreen.routeName),
-          child: Row(
-            children: [
-              const Icon(
-                color: Colors.black,
-                size: 25,
-                Icons.add,
-              ),
-              Center(
-                child: Text(
-                  'Add',
-                  style: Theme.of(context).textTheme.titleMedium,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              const SizedBox(width: 16),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }

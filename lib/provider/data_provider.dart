@@ -53,7 +53,14 @@ class DataProvider with ChangeNotifier {
   final Uri uriApiMarketStatus = Uri.parse('https://api.coingecko.com/api/v3/global');
 
   Future<void> setUserCoin() async {
-    await checkConnectivity(loadingField: isLoadingUserCoin, errorField: hasErrorUserCoin, notifyListeners: callNotifyListeners);
+    final ConnectivityResult connectivityResult = await (Connectivity().checkConnectivity());
+
+    if (connectivityResult == ConnectivityResult.none) {
+      hasErrorUserCoin = true;
+      isLoadingUserCoin = false;
+      notifyListeners();
+      throw ('Please connect to a network and try again');
+    }
 
     if (hasErrorUserCoin) hasErrorUserCoin = false;
     isLoadingUserCoin = true;
@@ -73,7 +80,7 @@ class DataProvider with ChangeNotifier {
 
   Future<void> setDatabaseCoins() async {
     try {
-      await checkConnectivity(errorField: hasErrorDatabase, loadingField: isLoadingDatabase, notifyListeners: callNotifyListeners);
+      await checkConnectivity(errorField: hasErrorDatabase, loadingField: isLoadingDatabase);
 
       if (hasErrorDatabase) hasErrorDatabase = false;
       isLoadingDatabase = true;
@@ -99,12 +106,20 @@ class DataProvider with ChangeNotifier {
 
   Future<void> getApiCoins() async {
     try {
+      final ConnectivityResult connectivityResult = await (Connectivity().checkConnectivity());
+
+      if (connectivityResult == ConnectivityResult.none) {
+        hasErrorMarket = true;
+        isLoadingMarket = false;
+        notifyListeners();
+        throw ('Please connect to a network and try again');
+      }
       await Future.delayed(Duration.zero);
 
       isLoadingMarket = true;
       notifyListeners();
 
-      await checkConnectivity(loadingField: isLoadingMarket, errorField: hasErrorMarket, notifyListeners: callNotifyListeners);
+      await checkConnectivity(loadingField: isLoadingMarket, errorField: hasErrorMarket);
 
       final double mChangePercentage = await setMarketStatus();
 
@@ -200,14 +215,14 @@ class DataProvider with ChangeNotifier {
     }
   }
 
-  void addUserCoin(CoinModel coinModel) {
+  Future<void> addUserCoin(CoinModel coinModel) async {
     final String coinUrl = 'userCoins/${coinModel.symbol}';
     final String symbol = coinModel.symbol;
 
     if (_userCoins.containsKey(coinModel.symbol)) {
-      addTransaction(coinModel.transactions![0], coinUrl, symbol);
+      await addTransaction(coinModel.transactions![0], coinUrl, symbol);
     } else {
-      addCoin(coinModel);
+      await addCoin(coinModel);
     }
   }
 
@@ -338,7 +353,7 @@ class DataProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> checkConnectivity({required bool loadingField, required bool errorField, required Function notifyListeners}) async {
+  Future<void> checkConnectivity({required bool loadingField, required bool errorField}) async {
     final ConnectivityResult connectivityResult = await (Connectivity().checkConnectivity());
 
     if (connectivityResult == ConnectivityResult.none) {
@@ -400,5 +415,58 @@ class DataProvider with ChangeNotifier {
     hasErrorDatabase = true;
     isDatabaseAvailable = false;
     notifyListeners();
+  }
+
+  List<Transaction> getTransactions({required CoinModel coin}) {
+    return _userCoins[coin.symbol]!.transactions!;
+  }
+
+  StreamSubscription<ConnectivityResult> listenConnectivity(BuildContext context) {
+    Connectivity connectivity = Connectivity();
+
+    StreamSubscription<ConnectivityResult> subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            duration: const Duration(seconds: 2),
+            backgroundColor: Colors.blue[900],
+            content: const SnackBarContainer(message: 'No internet connected'),
+          ),
+        );
+      } else {
+        if (isFirstRunUser) return;
+
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            duration: const Duration(seconds: 2),
+            backgroundColor: Colors.blue[900],
+            content: const SnackBarContainer(message: 'Internet connected'),
+          ),
+        );
+      }
+    });
+    return subscription;
+  }
+}
+
+class SnackBarContainer extends StatelessWidget {
+  const SnackBarContainer({
+    super.key,
+    required this.message,
+  });
+
+  final String message;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.blue[900],
+      ),
+      child: Text(
+        message,
+        style: const TextStyle(color: Colors.white),
+      ),
+    );
   }
 }

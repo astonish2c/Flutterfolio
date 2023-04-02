@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:decimal/decimal.dart';
 
 import '../model/coin_model.dart';
 
@@ -11,31 +12,14 @@ const Color lightYellow = Colors.yellow;
 double defaultPadding = 16;
 
 String currencyConverter(double num, {bool isCurrency = true}) {
-  late String formattedString;
-  late int decimalDigits;
+  // late String formattedString;
+  // late int decimalDigits;
 
-  if (num > 1) {
-    decimalDigits = num.toString().split('.').last.length;
-  } else {
-    if (num == 0) return '\$0.0';
+  // if (num > 10) {
+  //   if (num <= 100) {
+  //     decimalDigits = num.toString().split('.').last.length;
+  //   }
 
-    String afterDecimal = num.toString().split('.').last;
-
-    late int indexNonZero;
-
-    for (int i = 0; i < afterDecimal.length; i++) {
-      int digit = int.parse(afterDecimal[i]);
-
-      if (digit > 0) {
-        indexNonZero = i;
-
-        break;
-      }
-    }
-
-    decimalDigits = indexNonZero + 3;
-  }
-  // } else {
   //   String lastDigit = num.toString().split('.').last;
 
   //   if (lastDigit.startsWith("0")) {
@@ -43,13 +27,79 @@ String currencyConverter(double num, {bool isCurrency = true}) {
   //   } else {
   //     decimalDigits = 2;
   //   }
+  // } else {
+  //   if (num == 0 || double.tryParse(num.toString()) == null) return '\$$num';
+
+  //   String afterDecimal = (Decimal.parse(num.toString())).toString().split('.').last;
+
+  //   late int indexNonZero;
+
+  //   for (int i = 0; i < afterDecimal.length; i++) {
+  //     int digit = int.parse(afterDecimal[i]);
+
+  //     if (digit > 0) {
+  //       indexNonZero = i;
+
+  //       break;
+  //     }
+  //   }
+  //   decimalDigits = indexNonZero + 2;
+
+  //   if (afterDecimal.endsWith('.00')) {
+  //     decimalDigits = 0;
+  //   }
   // }
 
-  formattedString = NumberFormat.currency(
-    symbol: isCurrency ? '\$' : '',
-    decimalDigits: decimalDigits,
-    locale: 'en_US',
-  ).format(num);
+  // formattedString = NumberFormat.currency(
+  //   symbol: isCurrency ? '\$' : '',
+  //   decimalDigits: decimalDigits,
+  //   locale: 'en_US',
+  // ).format(num);
+
+  // return formattedString;
+  if (!isCurrency) {
+    return convertToQuantity(num);
+  } else {
+    if (num < 0.01) {
+      if (num == 0 || double.tryParse(num.toString()) == null) return '\$$num';
+      late String formattedString;
+      late int decimalDigits;
+
+      String afterDecimal = (Decimal.parse(num.toString())).toString().split('.').last;
+
+      late int indexNonZero;
+
+      for (int i = 0; i < afterDecimal.length; i++) {
+        int digit = int.parse(afterDecimal[i]);
+
+        if (digit > 0) {
+          indexNonZero = i;
+
+          break;
+        }
+      }
+      decimalDigits = indexNonZero + 2;
+
+      if (afterDecimal.endsWith('.00')) {
+        decimalDigits = 0;
+      }
+
+      formattedString = NumberFormat.currency(
+        symbol: isCurrency ? '\$' : '',
+        decimalDigits: decimalDigits,
+        locale: 'en_US',
+      ).format(num);
+
+      return formattedString;
+    }
+    return NumberFormat.simpleCurrency().format(num);
+  }
+}
+
+String convertToQuantity(double num) {
+  final String stringNum = num.toString();
+
+  final String formattedString = Decimal.parse(stringNum).toString();
 
   return formattedString;
 }
@@ -77,15 +127,17 @@ void navigateToPage(BuildContext context, Widget getPage) {
   );
 }
 
-void calTotalTransactions(CoinModel cm, bool isBought, double coinAmount, double totalValue) {
-  if (!isBought) return;
+double calTotalTransactions(CoinModel coin) {
+  var transactions = coin.transactions as List<Transaction>;
 
-  var transactions = cm.transactions as List<Transaction>;
+  double totalCost = 0;
 
   for (var transaction in transactions) {
-    coinAmount += transaction.amount;
-    totalValue += transaction.buyPrice * transaction.amount;
+    final double totalValue = transaction.buyPrice * transaction.amount;
+    totalCost += totalValue;
   }
+
+  return totalCost;
 }
 
 extension StringCasingExtension on String {

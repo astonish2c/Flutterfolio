@@ -34,7 +34,10 @@ class TabScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
           SizedBox(
             height: 25,
             width: 25,
-            child: Image.network(coinModel.image),
+            child: Image.network(
+              coinModel.image,
+              errorBuilder: (context, error, stackTrace) => Image.asset('assets/images/no-wifi.png'),
+            ),
           ),
           const SizedBox(width: 4),
           Text(

@@ -75,11 +75,12 @@ class _AddCoinsScreenState extends State<AddCoinsScreen> {
                               itemBuilder: (context, index) {
                                 return GestureDetector(
                                   onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => TabScreen(coinModel: coins[index], initialPage: 0),
-                                      ),
-                                    );
+                                    Navigator.of(context).pushNamed(TabScreen.routeName, arguments: {'coinModel': coins[index], 'initialPage': 0});
+                                    // Navigator.of(context).push(
+                                    //   MaterialPageRoute(
+                                    // builder: (context) => TabScreen(coinModel: coins[index], initialPage: 0),
+                                    //   ),
+                                    // );
                                   },
                                   child: AddCoinsItem(coinModel: coins[index]),
                                 );

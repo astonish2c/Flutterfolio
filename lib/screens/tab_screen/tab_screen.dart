@@ -1,7 +1,11 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/coin_model.dart';
+import '../../provider/data_provider.dart';
 import '../../provider/theme_provider.dart';
 import 'components/tab_screen_buy.dart';
 import 'components/tab_screen_appBar.dart';
@@ -10,12 +14,7 @@ import 'components/tab_screen_sell.dart';
 class TabScreen extends StatefulWidget {
   static const routeName = 'Home_Tab_Bar';
 
-  final int? initialPage;
-  final CoinModel? coinModel;
-  final int? indexTransaction;
-  final bool? pushHomePage;
-
-  const TabScreen({super.key, this.coinModel, this.indexTransaction, this.pushHomePage, this.initialPage});
+  const TabScreen({super.key});
 
   @override
   State<TabScreen> createState() => _TabScreenState();
@@ -24,21 +23,41 @@ class TabScreen extends StatefulWidget {
 class _TabScreenState extends State<TabScreen> with TickerProviderStateMixin {
   final FocusNode _focusNode = FocusNode();
   late TabController _tabController;
+  late StreamSubscription<ConnectivityResult> _subscription;
+
+  late CoinModel _coin;
+  late int _initialPage;
+
+  late bool? _isPushHomePage;
+  late int? _indexTransaction;
 
   @override
   void initState() {
+    _subscription = context.read<DataProvider>().listenConnectivity(context);
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    final Map<String, dynamic> args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+    _coin = args['coinModel'] as CoinModel;
+    _initialPage = args['initialPage'] as int;
+    _isPushHomePage = args['isPushHomePage'];
+    _indexTransaction = args['indexTransaction'];
+
     _tabController = TabController(
-      initialIndex: widget.initialPage!,
+      initialIndex: _initialPage,
       length: 2,
       vsync: this,
     );
-    super.initState();
+    super.didChangeDependencies();
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     _focusNode.dispose();
+    _subscription.cancel();
     super.dispose();
   }
 
@@ -61,22 +80,22 @@ class _TabScreenState extends State<TabScreen> with TickerProviderStateMixin {
       onTap: () => _focusNode.unfocus(),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: TabScreenAppBar(coinModel: widget.coinModel!, tabBar: _tabBar),
+        appBar: TabScreenAppBar(coinModel: _coin, tabBar: _tabBar),
         body: SafeArea(
           child: TabBarView(
             controller: _tabController,
             children: [
               BuyTab(
-                coin: widget.coinModel!,
-                indexTransaction: widget.indexTransaction,
-                isPushHomePage: widget.pushHomePage,
-                initialPage: widget.initialPage!,
+                coin: _coin,
+                indexTransaction: _indexTransaction,
+                isPushHomePage: _isPushHomePage,
+                initialPage: _initialPage,
               ),
               SellTab(
-                coin: widget.coinModel!,
-                indexTransaction: widget.indexTransaction,
-                isPushHomePage: widget.pushHomePage,
-                initialPage: widget.initialPage!,
+                coin: _coin,
+                indexTransaction: _indexTransaction,
+                isPushHomePage: _isPushHomePage,
+                initialPage: _initialPage,
               ),
             ],
           ),

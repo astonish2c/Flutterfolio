@@ -17,7 +17,7 @@ class HomePriceColumn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String totalCost = currencyConverter(double.parse(calTotalCost(coin)));
-    final String totalAmount = '${coin.symbol.toUpperCase()} ${currencyConverter(double.parse(calTotalCost(coin)), isCurrency: false)}';
+    final String totalAmount = '${coin.symbol.toUpperCase()} ${currencyConverter(double.parse(calTotalAmount(coin)), isCurrency: false)}';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,

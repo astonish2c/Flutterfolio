@@ -25,7 +25,7 @@ class HomeCoinItem extends StatelessWidget {
               SizedBox(
                 width: 50,
                 height: 50,
-                child: Image.network(coin.image),
+                child: Image.network(coin.image, errorBuilder: (context, error, stackTrace) => Image.asset('assets/images/no-wifi.png')),
               ),
               const SizedBox(width: 16),
               Column(

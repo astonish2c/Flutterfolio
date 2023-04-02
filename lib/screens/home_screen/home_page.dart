@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,10 +22,20 @@ class HoldingsPage extends StatefulWidget {
 }
 
 class _HoldingsPageState extends State<HoldingsPage> {
+  late StreamSubscription<ConnectivityResult> _subscription;
+
   @override
   void initState() {
+    _subscription = context.read<DataProvider>().listenConnectivity(context);
     setValues(context: context);
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
   }
 
   @override
@@ -32,11 +45,14 @@ class _HoldingsPageState extends State<HoldingsPage> {
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: const HomeAppBar(),
+      appBar: HomeAppBar(hasErrorUserCoin: hasErrorUserCoin),
       body: isLoadingUserCoin
           ? const HomeShimmer()
           : hasErrorUserCoin
-              ? const MarketCustomError(error: 'Please make sure your internet is connected and try again.')
+              ? const MarketCustomError(
+                  error: 'Please make sure your internet is connected and try again.',
+                  pngPath: 'assets/images/no-wifi.png',
+                )
               : Column(
                   children: const [
                     HomeBalance(),

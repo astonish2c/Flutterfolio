@@ -27,6 +27,8 @@ double addMarketStatus(http.Response response) {
 }
 
 void addMapUserCoin({required DatabaseEvent event, required Map<String, CoinModel> userCoins}) {
+  if (event.snapshot.value == null) return;
+
   final Map<String, dynamic> coinsMapDynamic = Map<String, dynamic>.from(event.snapshot.value as Map<Object?, Object?>);
 
   final List<String> coinsKey = coinsMapDynamic.keys.toList();

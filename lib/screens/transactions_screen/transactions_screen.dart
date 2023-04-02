@@ -43,7 +43,7 @@ class TransactionsScreen extends StatelessWidget {
             SizedBox(
               height: 25,
               width: 25,
-              child: Image.network(coin!.image),
+              child: Image.network(coin!.image, errorBuilder: (context, error, stackTrace) => Image.asset('assets/images/no-wifi.png')),
             ),
             const SizedBox(width: 4),
             Text(
@@ -69,13 +69,20 @@ class TransactionsScreen extends StatelessWidget {
             SizedBox(height: defaultPadding),
             Expanded(
               child: Builder(builder: (context) {
-                context.watch<DataProvider>().userCoins;
+                context.select((DataProvider dataProvider) => dataProvider.userBalance);
 
+                List<Transaction> localTransactions = coin!.transactions!;
+
+                localTransactions.sort((a, b) {
+                  return b.dateTime.compareTo(a.dateTime);
+                });
                 return ListView.builder(
-                    itemCount: coin!.transactions!.length,
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: localTransactions.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
-                          child: TransactionsItem(coin: coin!, transaction: coin!.transactions![index]),
+                          behavior: HitTestBehavior.translucent,
+                          child: TransactionsItem(coin: coin!, transaction: localTransactions[index]),
                           onTap: () async {
                             await showModalBottomSheet(
                                 isScrollControlled: true,
@@ -84,7 +91,7 @@ class TransactionsScreen extends StatelessWidget {
                                 ),
                                 context: context,
                                 builder: (context) {
-                                  return TransactionsBottomSheet(coinModel: coin!, index: index, popPage: popPage);
+                                  return TransactionsBottomSheet(coin: coin!, indexTransaction: index, popPage: popPage);
                                 });
                           });
                     });
@@ -93,12 +100,9 @@ class TransactionsScreen extends StatelessWidget {
             const SizedBox(height: 16),
             CustomBigBtn(
                 text: 'Add Transaction',
+                bgColor: Colors.blue[900],
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => TabScreen(coinModel: coin, pushHomePage: false, initialPage: 0),
-                    ),
-                  );
+                  Navigator.of(context).pushNamed(TabScreen.routeName, arguments: {'coinModel': coin, 'isPushHomePage': false, 'initialPage': 0});
                 }),
           ]),
         ),

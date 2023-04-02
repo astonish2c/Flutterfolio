@@ -10,11 +10,11 @@ import '../widgets/transactions_bottom_sheet_row.dart';
 import 'package:provider/provider.dart';
 
 class TransactionsBottomSheet extends StatefulWidget {
-  const TransactionsBottomSheet({Key? key, required this.coinModel, required this.index, required this.popPage}) : super(key: key);
+  const TransactionsBottomSheet({Key? key, required this.coin, required this.indexTransaction, required this.popPage}) : super(key: key);
 
-  final CoinModel coinModel;
+  final CoinModel coin;
   final Function popPage;
-  final int index;
+  final int indexTransaction;
 
   @override
   State<TransactionsBottomSheet> createState() => _TransactionsBottomSheetState();
@@ -26,7 +26,7 @@ class _TransactionsBottomSheetState extends State<TransactionsBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
-    final Transaction transaction = widget.coinModel.transactions![widget.index];
+    final Transaction transaction = widget.coin.transactions![widget.indexTransaction];
 
     return Container(
       padding: const EdgeInsets.only(left: 24, right: 24, bottom: 24, top: 32),
@@ -97,27 +97,34 @@ class _TransactionsBottomSheetState extends State<TransactionsBottomSheet> {
             onTap: () {
               Navigator.of(context).pop();
               if (transaction.isSell) {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => TabScreen(coinModel: widget.coinModel, indexTransaction: widget.index, initialPage: 1)));
+                Navigator.of(context).pushNamed(TabScreen.routeName, arguments: {
+                  'coinModel': widget.coin,
+                  'indexTransaction': widget.indexTransaction,
+                  'initialPage': 1,
+                });
               } else {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => TabScreen(coinModel: widget.coinModel, indexTransaction: widget.index, initialPage: 0)));
+                Navigator.of(context).pushNamed(TabScreen.routeName, arguments: {
+                  'coinModel': widget.coin,
+                  'indexTransaction': widget.indexTransaction,
+                  'initialPage': 0,
+                });
               }
             },
           ),
           const SizedBox(height: 8),
-          isLoading
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : CustomBigBtn(
-                  text: 'Remove Transaction',
-                  bgColor: Colors.red[900],
-                  textColor: Colors.white,
-                  onTap: () async {
+          CustomBigBtn(
+            text: 'Remove Transaction',
+            bgColor: Colors.red[900],
+            textColor: Colors.white,
+            child: isLoading ? const SizedBox(height: 25, width: 25, child: CircularProgressIndicator(color: Colors.white)) : null,
+            onTap: isLoading
+                ? null
+                : () async {
                     setState(() {
                       isLoading = true;
                     });
 
-                    final bool lastTransaction = await context.read<DataProvider>().removeTransaction(coin: widget.coinModel, transactionIndex: widget.index);
+                    final bool lastTransaction = await context.read<DataProvider>().removeTransaction(coin: widget.coin, transactionIndex: widget.indexTransaction);
 
                     if (context.mounted) Navigator.of(context).pop();
 
@@ -125,7 +132,7 @@ class _TransactionsBottomSheetState extends State<TransactionsBottomSheet> {
 
                     widget.popPage();
                   },
-                ),
+          ),
         ],
       ),
     );

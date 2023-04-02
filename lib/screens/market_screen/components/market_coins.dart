@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../custom_widgets/helper_methods.dart';
 import '../../../model/coin_model.dart';
 import '../../../provider/data_provider.dart';
+import '../../tab_screen/tab_screen.dart';
 import 'market_price_column.dart';
 
 class MarketCoins extends StatelessWidget {
@@ -14,7 +15,7 @@ class MarketCoins extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final List<CoinModel> coins = context.read<DataProvider>().getCoins;
+    final List<CoinModel> localCoins = context.read<DataProvider>().getCoins;
 
     return Padding(
       padding: const EdgeInsets.only(top: 24, right: 16, left: 16),
@@ -58,35 +59,46 @@ class MarketCoins extends StatelessWidget {
                 Expanded(
                   child: ListView.builder(
                     physics: const BouncingScrollPhysics(),
-                    itemCount: coins.length,
+                    itemCount: localCoins.length,
                     itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: defaultPadding / 2),
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 50,
-                                  height: 50,
-                                  child: Image.network(coins[index].image),
-                                ),
-                                SizedBox(width: defaultPadding),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(coins[index].name.toCapitalized(), style: textTheme.titleMedium),
-                                    SizedBox(height: defaultPadding / 4),
-                                    Text(coins[index].symbol.toUpperCase(), style: textTheme.bodyMedium),
-                                  ],
-                                ),
-                                const Spacer(),
-                                MarketPriceColumn(coin: coins[index]),
-                              ],
+                      return GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () {
+                          Navigator.of(context).pushNamed(TabScreen.routeName, arguments: {'coinModel': localCoins[index], 'initialPage': 0});
+                        },
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: defaultPadding / 2),
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 50,
+                                    height: 50,
+                                    child: Image.network(
+                                      localCoins[index].image,
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return Image.asset('assets/images/no-wifi.png');
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(width: defaultPadding),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(localCoins[index].name.toCapitalized(), style: textTheme.titleMedium),
+                                      SizedBox(height: defaultPadding / 4),
+                                      Text(localCoins[index].symbol.toUpperCase(), style: textTheme.bodyMedium),
+                                    ],
+                                  ),
+                                  const Spacer(),
+                                  MarketPriceColumn(coin: localCoins[index]),
+                                ],
+                              ),
                             ),
-                          ),
-                          const Divider(),
-                        ],
+                            const Divider(),
+                          ],
+                        ),
                       );
                     },
                   ),

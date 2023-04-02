@@ -26,6 +26,8 @@ class BuyTab extends StatefulWidget {
 }
 
 class _BuyTabState extends State<BuyTab> with TabScreenMixin {
+  bool _isLoadingAdd = false;
+
   late TextEditingController _amountController, _priceController;
   late double _price;
   late FocusNode _focusNode;
@@ -75,18 +77,30 @@ class _BuyTabState extends State<BuyTab> with TabScreenMixin {
         const SizedBox(height: 12),
         Container(
           width: double.infinity,
+          height: 50,
           margin: EdgeInsets.only(left: 12, right: 12, bottom: keyboardSize + 24),
           child: ValueListenableBuilder(
             valueListenable: _amountController,
             builder: (context, value, child) => TextButton(
               style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
                 backgroundColor: checkUserInput(value.text) ? Colors.white : Colors.blue[900],
-                minimumSize: Size.zero,
               ),
-              onPressed: checkUserInput(value.text)
+              onPressed: checkUserInput(value.text) || _isLoadingAdd
                   ? null
-                  : () => addOrUpdate(
+                  : () async {
+                      setState(() {
+                        _isLoadingAdd = true;
+                      });
+
+                      if (double.parse(_amountController.text) * _price < 10.0) {
+                        showAddLimit(context);
+                        setState(() {
+                          _isLoadingAdd = false;
+                        });
+                        return;
+                      }
+
+                      await addOrUpdate(
                         context: context,
                         coin: widget.coin,
                         amountController: _amountController,
@@ -95,14 +109,25 @@ class _BuyTabState extends State<BuyTab> with TabScreenMixin {
                         isSell: false,
                         price: _price,
                         selectedDate: _selectedDate,
+                      );
+                      setState(() {
+                        _isLoadingAdd = false;
+                      });
+                    },
+              child: _isLoadingAdd
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(color: Colors.white),
+                    )
+                  : Text(
+                      'Add Transaction',
+                      style: TextStyle(
+                        color: checkUserInput(value.text) ? Colors.black12 : Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
                       ),
-              child: Text(
-                'Add Transaction',
-                style: TextStyle(
-                  color: checkUserInput(value.text) ? Colors.black12 : Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+                    ),
             ),
           ),
         ),

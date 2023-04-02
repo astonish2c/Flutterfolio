@@ -26,6 +26,7 @@ class SellTab extends StatefulWidget {
 }
 
 class _SellTabState extends State<SellTab> with TabScreenMixin {
+  bool _isLoadingAdd = false;
   late TextEditingController _amountController, _priceController;
   late FocusNode _focusNode;
   late double _priceValue;
@@ -82,9 +83,21 @@ class _SellTabState extends State<SellTab> with TabScreenMixin {
               backgroundColor: checkUserInput(value.text) ? Colors.white : Colors.blue[900],
               minimumSize: Size.zero,
             ),
-            onPressed: checkUserInput(value.text)
+            onPressed: checkUserInput(value.text) || _isLoadingAdd
                 ? null
-                : () => addOrUpdate(
+                : () async {
+                    setState(() {
+                      _isLoadingAdd = true;
+                    });
+                    if (double.parse(_amountController.text) * _priceValue < 10.0) {
+                      showAddLimit(context);
+                      setState(() {
+                        _isLoadingAdd = false;
+                      });
+                      return;
+                    }
+
+                    await addOrUpdate(
                       coin: widget.coin,
                       amountController: _amountController,
                       context: context,
@@ -93,11 +106,21 @@ class _SellTabState extends State<SellTab> with TabScreenMixin {
                       isSell: true,
                       price: _priceValue,
                       selectedDate: _selectedDate,
-                    ),
-            child: Text(
-              'Add Transaction',
-              style: TextStyle(color: checkUserInput(value.text) ? Colors.black12 : Colors.white, fontWeight: FontWeight.bold),
-            ),
+                    );
+                    setState(() {
+                      _isLoadingAdd = false;
+                    });
+                  },
+            child: _isLoadingAdd
+                ? const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(color: Colors.white),
+                  )
+                : Text(
+                    'Add Transaction',
+                    style: TextStyle(color: checkUserInput(value.text) ? Colors.black12 : Colors.white, fontWeight: FontWeight.bold),
+                  ),
           ),
         ),
       ),
