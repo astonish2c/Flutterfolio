@@ -1,16 +1,18 @@
-import 'package:crypto_exchange_app/pages/home_page/components/home_tab_bar.dart';
-import 'package:crypto_exchange_app/provider/theme_provider.dart';
+import 'package:crypto_exchange_app/custom_widgets/helper_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import 'utils/custom_theme.dart';
-import 'pages/home_page/home_page.dart';
-import 'pages/market_page/market_page.dart';
+import '/screens/home_screen/home_page.dart';
+import '/provider/theme_provider.dart';
+import 'screens/add_coins_screen/add_coins_Screen.dart';
+import 'screens/tab_screen/tab_screen.dart';
+import 'screens/transactions_screen/transactions_screen.dart';
+import 'screens/market_screen/market_screen.dart';
+import 'custom_widgets/custom_theme.dart';
 import '../provider/data_provider.dart';
-import 'pages/home_page/components/transactions_screen.dart';
-import 'pages/home_page/add_coins_page/add_coins_page.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,6 +41,10 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Color(0xffeff2f5),
+      statusBarBrightness: Brightness.dark,
+    ));
     return Consumer<ThemeProvider>(
       builder: (context, value, child) => MaterialApp(
         title: 'Crypto Firebase',
@@ -48,10 +54,10 @@ class App extends StatelessWidget {
         themeMode: value.themeMode,
         routes: {
           '/': (context) => const HoldingsPage(),
-          MarketPage.routeName: (context) => const MarketPage(),
+          MarketScreen.routeName: (context) => const MarketScreen(),
           TransactionsScreen.routeName: (context) => const TransactionsScreen(),
-          AddCoinsPage.routeName: (context) => const AddCoinsPage(),
-          HomeTabBar.routeName: (context) => const HomeTabBar(),
+          AddCoinsScreen.routeName: (context) => const AddCoinsScreen(),
+          TabScreen.routeName: (context) => const TabScreen(),
         },
       ),
     );
