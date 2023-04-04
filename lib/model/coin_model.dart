@@ -31,7 +31,7 @@ class CoinModel {
       image: json['image'],
       priceDiff: json["price_change_percentage_24h"].toString(),
       color: Colors.blue,
-      market_cap_rank: json["market_cap_rank"] ?? 0,
+      market_cap_rank: json["market_cap_rank"],
     );
   }
 

@@ -67,7 +67,7 @@ class _TabScreenState extends State<TabScreen> with TickerProviderStateMixin {
 
   TabBar get _tabBar => TabBar(
         controller: _tabController,
-        labelColor: context.watch<ThemeProvider>().isDark ? Colors.white : Colors.black,
+        labelColor: Theme.of(context).colorScheme.onPrimary,
         tabs: const [
           Tab(text: 'Buy'),
           Tab(text: 'Sell'),

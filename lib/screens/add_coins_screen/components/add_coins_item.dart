@@ -22,7 +22,13 @@ class AddCoinsItem extends StatelessWidget {
           leading: SizedBox(
             height: 30,
             width: 30,
-            child: Image.network(coinModel.image),
+            child: Image.network(
+              coinModel.image,
+              errorBuilder: (context, error, stackTrace) => Image.asset(
+                'assets/images/no-wifi.png',
+                color: theme.colorScheme.onSecondaryContainer,
+              ),
+            ),
           ),
           title: Row(
             children: [

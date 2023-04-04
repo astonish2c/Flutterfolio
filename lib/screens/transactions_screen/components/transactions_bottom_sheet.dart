@@ -25,7 +25,7 @@ class _TransactionsBottomSheetState extends State<TransactionsBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
+    final ThemeData theme = Theme.of(context);
     final Transaction transaction = widget.coin.transactions![widget.indexTransaction];
 
     return Container(
@@ -39,7 +39,7 @@ class _TransactionsBottomSheetState extends State<TransactionsBottomSheet> {
         children: [
           Text(
             'Transaction Details',
-            style: textTheme.titleMedium!.copyWith(fontSize: 20),
+            style: theme.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
           ),
           SizedBox(height: defaultPadding),
           TransactionsBottomSheetRow(
@@ -94,29 +94,30 @@ class _TransactionsBottomSheetState extends State<TransactionsBottomSheet> {
             text: 'Edit Transaction',
             bgColor: Colors.blue[900],
             textColor: Colors.white,
-            onTap: () {
-              Navigator.of(context).pop();
-              if (transaction.isSell) {
-                Navigator.of(context).pushNamed(TabScreen.routeName, arguments: {
-                  'coinModel': widget.coin,
-                  'indexTransaction': widget.indexTransaction,
-                  'initialPage': 1,
-                });
-              } else {
-                Navigator.of(context).pushNamed(TabScreen.routeName, arguments: {
-                  'coinModel': widget.coin,
-                  'indexTransaction': widget.indexTransaction,
-                  'initialPage': 0,
-                });
-              }
-            },
+            onTap: isLoading
+                ? null
+                : () {
+                    Navigator.of(context).pop();
+                    if (transaction.isSell) {
+                      Navigator.of(context).pushNamed(TabScreen.routeName, arguments: {
+                        'coinModel': widget.coin,
+                        'indexTransaction': widget.indexTransaction,
+                        'initialPage': 1,
+                      });
+                    } else {
+                      Navigator.of(context).pushNamed(TabScreen.routeName, arguments: {
+                        'coinModel': widget.coin,
+                        'indexTransaction': widget.indexTransaction,
+                        'initialPage': 0,
+                      });
+                    }
+                  },
           ),
           const SizedBox(height: 8),
           CustomBigBtn(
             text: 'Remove Transaction',
             bgColor: Colors.red[900],
             textColor: Colors.white,
-            child: isLoading ? const SizedBox(height: 25, width: 25, child: CircularProgressIndicator(color: Colors.white)) : null,
             onTap: isLoading
                 ? null
                 : () async {
@@ -128,10 +129,11 @@ class _TransactionsBottomSheetState extends State<TransactionsBottomSheet> {
 
                     if (context.mounted) Navigator.of(context).pop();
 
-                    if (lastTransaction != true) return;
+                    if (!lastTransaction) return;
 
                     widget.popPage();
                   },
+            child: isLoading ? const SizedBox(height: 25, width: 25, child: CircularProgressIndicator(color: Colors.white)) : null,
           ),
         ],
       ),

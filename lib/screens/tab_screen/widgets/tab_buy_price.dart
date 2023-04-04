@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class TabBuyPrice extends StatelessWidget {
+class TabBuyPrice extends StatefulWidget {
   const TabBuyPrice({
     super.key,
     required this.priceController,
@@ -13,31 +13,32 @@ class TabBuyPrice extends StatelessWidget {
   final Function updatePrice;
 
   @override
+  State<TabBuyPrice> createState() => _TabBuyPriceState();
+}
+
+class _TabBuyPriceState extends State<TabBuyPrice> {
+  @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 16, right: 16, top: 24, bottom: keyboardSize + 16),
+      padding: EdgeInsets.only(left: 16, right: 16, top: 24, bottom: widget.keyboardSize + 16),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
-            controller: priceController,
+            controller: widget.priceController,
             autofocus: true,
             keyboardType: TextInputType.number,
             onChanged: (value) {
-              priceController.value = TextEditingValue(
+              widget.priceController.value = TextEditingValue(
                 text: value,
                 selection: TextSelection(baseOffset: value.length, extentOffset: value.length),
               );
             },
-            style: const TextStyle(),
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.all(16),
               filled: true,
               label: const Text('Price Per Coin'),
-              labelStyle: const TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-              hintStyle: const TextStyle(),
+              labelStyle: const TextStyle(fontWeight: FontWeight.bold),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: const BorderSide(
@@ -63,7 +64,7 @@ class TabBuyPrice extends StatelessWidget {
                 minimumSize: const Size.fromHeight(50),
               ),
               onPressed: () {
-                updatePrice();
+                widget.updatePrice();
               },
               child: const Text(
                 'Update Price',

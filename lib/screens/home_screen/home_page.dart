@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 
+import '../../provider/theme_provider.dart';
 import '/custom_widgets/custom_alert_dialog.dart';
 import '../../provider/data_provider.dart';
 import '../../custom_widgets/nav_bar.dart';
@@ -42,6 +44,7 @@ class _HoldingsPageState extends State<HoldingsPage> {
   Widget build(BuildContext context) {
     final bool isLoadingUserCoin = context.select((DataProvider dataProvider) => dataProvider.isLoadingUserCoin);
     final bool hasErrorUserCoin = context.select((DataProvider dataProvider) => dataProvider.hasErrorUserCoin);
+    final ThemeData theme = Theme.of(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -66,7 +69,11 @@ class _HoldingsPageState extends State<HoldingsPage> {
       floatingActionButton: !hasErrorUserCoin
           ? const Text('')
           : FloatingActionButton(
-              child: const Icon(Icons.refresh),
+              backgroundColor: theme.colorScheme.primary,
+              child: Icon(
+                Icons.refresh,
+                color: theme.colorScheme.onSecondary,
+              ),
               onPressed: () async {
                 final dataProvider = context.read<DataProvider>();
                 try {

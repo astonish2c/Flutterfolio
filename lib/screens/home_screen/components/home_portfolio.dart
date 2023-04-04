@@ -45,7 +45,7 @@ class _HomePortfolioState extends State<HomePortfolio> {
     final List<CoinModel> localUserCoins = userCoins;
 
     localUserCoins.sort((a, b) {
-      return calTotalTransactions(b).compareTo(calTotalTransactions(a));
+      return calTotalCost(b).compareTo(calTotalCost(a));
     });
 
     return Padding(
@@ -56,7 +56,7 @@ class _HomePortfolioState extends State<HomePortfolio> {
             children: [
               Text(
                 'My Portfolio',
-                style: theme.textTheme.titleLarge!.copyWith(fontSize: 24),
+                style: theme.textTheme.titleMedium!.copyWith(fontSize: 24),
               ),
             ],
           ),
@@ -80,14 +80,14 @@ class _HomePortfolioState extends State<HomePortfolio> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
-                        height: 150,
-                        width: 150,
-                        child: Image.asset('assets/images/sad.png'),
+                        height: 130,
+                        width: 130,
+                        child: Image.asset('assets/images/sad.png', color: theme.colorScheme.onSecondaryContainer),
                       ),
                       const SizedBox(height: 24),
                       Text(
                         'No transactions yet.',
-                        style: theme.textTheme.titleMedium!.copyWith(color: Colors.black.withOpacity(0.8)),
+                        style: theme.textTheme.titleMedium,
                       ),
                       const SizedBox(height: 32),
                       InkWell(

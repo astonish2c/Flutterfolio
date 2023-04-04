@@ -14,33 +14,29 @@ class MarketCustomError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          pngPath == null
-              ? SvgPicture.asset(
-                  '$svgPath',
-                  width: 140,
-                  height: 140,
-                  color: Colors.black.withOpacity(0.4),
-                )
-              : SizedBox(
-                  width: 150,
-                  height: 150,
-                  child: Image.asset('$pngPath'),
-                ),
+          SizedBox(
+            width: 150,
+            height: 150,
+            child: Image.asset(
+              '$pngPath',
+              color: theme.colorScheme.onSecondaryContainer,
+            ),
+          ),
           const SizedBox(height: 16),
           Text(
             '''$error''',
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  color: Colors.black.withOpacity(
-                    0.7,
-                  ),
-                  fontWeight: FontWeight.w500,
-                ),
+            style: theme.textTheme.titleMedium!.copyWith(
+              color: theme.colorScheme.onSecondaryContainer,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ],
       ),

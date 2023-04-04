@@ -334,19 +334,31 @@ class DataProvider with ChangeNotifier {
     }
   }
 
-  void calTotalUserBalance() {
-    double total = 0.0;
+  bool calTotalUserBalance() {
+    double totalBuy = 0.0;
+
+    double totalSell = 0.0;
+
     for (var coin in userCoins) {
       for (var transaction in coin.transactions!) {
         if (transaction.isSell) {
-          total -= transaction.amount * transaction.buyPrice;
+          totalSell += transaction.amount * transaction.buyPrice;
         } else {
-          total += transaction.amount * transaction.buyPrice;
+          totalBuy += transaction.amount * transaction.buyPrice;
         }
       }
     }
-    userBalance = total;
+
+    double result = totalBuy - totalSell;
+
+    userBalance = result;
     notifyListeners();
+
+    if (result.toString().contains('-')) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   void callNotifyListeners() {

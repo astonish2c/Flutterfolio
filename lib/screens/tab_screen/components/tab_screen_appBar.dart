@@ -18,7 +18,7 @@ class TabScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final ThemeData theme = Theme.of(context);
 
     return AppBar(
       automaticallyImplyLeading: false,
@@ -26,7 +26,7 @@ class TabScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: CustomIconButton(
         icon: Icons.keyboard_arrow_left,
         size: 25,
-        color: context.watch<ThemeProvider>().isDark ? Colors.white : Colors.black,
+        color: theme.colorScheme.onPrimary,
         onPressed: () => Navigator.of(context).pop(),
       ),
       title: Row(
@@ -36,18 +36,21 @@ class TabScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
             width: 25,
             child: Image.network(
               coinModel.image,
-              errorBuilder: (context, error, stackTrace) => Image.asset('assets/images/no-wifi.png'),
+              errorBuilder: (context, error, stackTrace) => Image.asset(
+                'assets/images/no-wifi.png',
+                color: theme.colorScheme.onSecondaryContainer,
+              ),
             ),
           ),
           const SizedBox(width: 4),
           Text(
             coinModel.symbol.toUpperCase(),
-            style: textTheme.titleMedium!.copyWith(fontSize: 18),
+            style: theme.textTheme.titleMedium!.copyWith(fontSize: 18, color: theme.colorScheme.onPrimary),
           ),
           const SizedBox(width: 4),
           Text(
             coinModel.name.toCapitalized(),
-            style: textTheme.bodyMedium,
+            style: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onPrimary),
           ),
         ],
       ),

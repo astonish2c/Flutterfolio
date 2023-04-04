@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:decimal/decimal.dart';
+import 'package:provider/provider.dart';
 
+import '../../../provider/data_provider.dart';
 import '/screens/tab_screen/widgets/tab_buy_price.dart';
 import '/screens/tab_screen/widgets/tab_screen_mixin.dart';
 import '../widgets/tab_transaction_details.dart';
@@ -26,14 +29,14 @@ class BuyTab extends StatefulWidget {
 }
 
 class _BuyTabState extends State<BuyTab> with TabScreenMixin {
-  bool _isLoadingAdd = false;
-
   late TextEditingController _amountController, _priceController;
   late double _price;
   late FocusNode _focusNode;
 
+  bool _isLoadingAdd = false;
   bool _isPriceSet = false;
   bool _isDateSet = false;
+  bool _isUpdateTransaction = false;
 
   DateTime _selectedDate = DateTime.now();
 
@@ -42,10 +45,10 @@ class _BuyTabState extends State<BuyTab> with TabScreenMixin {
     super.initState();
     _focusNode = FocusNode();
     _amountController = TextEditingController();
-    _price = widget.coin.currentPrice;
-    _priceController = TextEditingController(text: widget.coin.currentPrice.toString().removeTrailingZeros());
+    _price = findCurrentPrice(coin: widget.coin, context: context);
+    _priceController = TextEditingController(text: widget.coin.currentPrice.toString());
 
-    setPreValues();
+    setTransactonValues();
   }
 
   @override
@@ -121,7 +124,7 @@ class _BuyTabState extends State<BuyTab> with TabScreenMixin {
                       child: CircularProgressIndicator(color: Colors.white),
                     )
                   : Text(
-                      'Add Transaction',
+                      _isUpdateTransaction ? 'Update Transaction' : 'Add Transaction',
                       style: TextStyle(
                         color: checkUserInput(value.text) ? Colors.black12 : Colors.white,
                         fontWeight: FontWeight.bold,
@@ -135,15 +138,19 @@ class _BuyTabState extends State<BuyTab> with TabScreenMixin {
     );
   }
 
-  void setPreValues() {
+  void setTransactonValues() {
+    _amountController = TextEditingController();
+
     if (widget.indexTransaction == null) return;
 
     final Transaction transaction = widget.coin.transactions![widget.indexTransaction!];
 
     _amountController.text = transaction.amount.toString().removeTrailingZerosAndNumberfy();
     _selectedDate = transaction.dateTime;
-    _isDateSet = true;
     _price = transaction.buyPrice;
+
+    _isUpdateTransaction = true;
+    _isDateSet = true;
     _isPriceSet = true;
   }
 
@@ -156,17 +163,19 @@ class _BuyTabState extends State<BuyTab> with TabScreenMixin {
 
   Future<void> setPricePerCoin() async {
     void updatePrice() {
-      if (checkUserInput(_priceController.value.text)) return;
+      if (checkUserInput(removeDoller(_priceController.value.text, removeComma: true)) || _priceController.value.text.isEmpty) return print('Wrong input.');
 
       setState(() {
-        _price = double.parse(_priceController.value.text);
+        _price = Decimal.parse(removeDoller(_priceController.value.text, removeComma: true)).toDouble();
         _isPriceSet = true;
       });
 
       Navigator.of(context).pop();
+
+      return;
     }
 
-    _isPriceSet ? _priceController.text = _price.toString().removeTrailingZerosAndNumberfy() : _priceController.text = widget.coin.currentPrice.toString().removeTrailingZerosAndNumberfy();
+    _isPriceSet ? _priceController.text = currencyConverter(_price) : _priceController.text = removeDoller(currencyConverter(widget.coin.currentPrice), removeComma: true);
 
     return await showModalBottomSheet(
       context: context,

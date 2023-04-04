@@ -11,11 +11,16 @@ class HomeBalance extends StatelessWidget {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
 
+    final bool isSellMore = context.read<DataProvider>().calTotalUserBalance();
+    final double userBalance = context.select((DataProvider dataProvider) => dataProvider.userBalance);
+
+    final userBalanceSet = userBalance == 0 ? '\$0.00' : currencyConverter(userBalance);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       margin: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: theme.backgroundColor),
+      decoration: BoxDecoration(color: theme.colorScheme.primaryContainer),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -24,17 +29,15 @@ class HomeBalance extends StatelessWidget {
             textAlign: TextAlign.start,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: theme.textTheme.bodyMedium,
+            style: theme.textTheme.bodyMedium!.copyWith(fontSize: 16),
           ),
           const SizedBox(height: 8),
           FittedBox(
             fit: BoxFit.scaleDown,
-            child: Consumer<DataProvider>(
-              builder: (context, value, child) => Text(
-                currencyConverter(value.userBalance),
-                maxLines: 1,
-                style: theme.textTheme.titleLarge,
-              ),
+            child: Text(
+              isSellMore ? '-$userBalanceSet' : userBalanceSet,
+              maxLines: 1,
+              style: theme.textTheme.titleLarge!.copyWith(fontSize: 32),
             ),
           ),
           const SizedBox(height: 8),

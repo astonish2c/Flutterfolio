@@ -33,6 +33,43 @@ mixin TabScreenMixin<T extends StatefulWidget> on State<T> {
   }
 }
 
+double findCurrentPrice({required BuildContext context, required CoinModel coin}) {
+  final List<CoinModel> coins = context.read<DataProvider>().getCoins;
+
+  final coinSymbol = coin.symbol;
+
+  late CoinModel foundCoin;
+
+  for (int i = 0; i < coins.length; i++) {
+    foundCoin = coins.firstWhere((element) => element.symbol == coinSymbol);
+  }
+
+  return foundCoin.currentPrice;
+}
+
+String removeDoller(String dollerDouble, {bool removeComma = false}) {
+  String input = dollerDouble;
+
+  if (input.isEmpty) return '';
+
+  if (input.contains(',') && removeComma) {
+    input = input.replaceAll(',', '');
+  }
+
+  if (input[0].contains('\$')) {
+    final inputListChar = input.split('');
+    inputListChar.removeAt(0);
+
+    final fixed = inputListChar.join().toString();
+
+    input = fixed;
+
+    return input;
+  } else {
+    return dollerDouble;
+  }
+}
+
 bool checkUserInput(String value) {
   if (value.isEmpty) {
     return true;

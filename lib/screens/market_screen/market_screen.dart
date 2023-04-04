@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:crypto_exchange_app/custom_widgets/helper_methods.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../custom_widgets/custom_alert_dialog.dart';
@@ -58,7 +60,42 @@ class _MarketScreenState extends State<MarketScreen> {
     final bool hasErrorMarket = context.select((DataProvider dataProvider) => dataProvider.hasErrorMarket);
     final bool isDbAvailable = context.select((DataProvider dataProvider) => dataProvider.isDatabaseAvailable);
 
+    final ThemeData theme = Theme.of(context);
+
     return Scaffold(
+      appBar: AppBar(
+        title: hasErrorMarket || isLoadingMarket
+            ? const Text('')
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'in the past 24 hours',
+                        style: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onPrimary),
+                      ),
+                      Text(
+                        marketStatus < 0 ? 'Market is down' : 'Market is up',
+                        style: theme.textTheme.titleMedium!.copyWith(fontSize: 26, color: theme.colorScheme.onPrimary),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: marketStatus < 0 ? Colors.red : Colors.green,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      marketStatus < 0 ? '${convertPerToNum(marketStatus.toString())}%' : '+${convertPerToNum(marketStatus.toString())}%',
+                      style: theme.textTheme.bodyMedium!.copyWith(color: Colors.black),
+                    ),
+                  ),
+                ],
+              ),
+      ),
       body: SafeArea(
         child: isLoadingMarket
             ? const MarketShimmer()
@@ -75,7 +112,11 @@ class _MarketScreenState extends State<MarketScreen> {
       floatingActionButton: isLoadingMarket
           ? const Text('')
           : FloatingActionButton(
-              child: const Icon(Icons.refresh),
+              backgroundColor: theme.colorScheme.primary,
+              child: Icon(
+                Icons.refresh,
+                color: theme.colorScheme.onSecondary,
+              ),
               onPressed: () async {
                 try {
                   await context.read<DataProvider>().getApiCoins();

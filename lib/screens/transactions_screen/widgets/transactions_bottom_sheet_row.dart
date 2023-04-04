@@ -11,7 +11,7 @@ class TransactionsBottomSheetRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
+    final ThemeData theme = Theme.of(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -20,11 +20,11 @@ class TransactionsBottomSheetRow extends StatelessWidget {
         children: [
           Text(
             title1,
-            style: textTheme.bodyMedium,
+            style: theme.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
           ),
           Text(
             title2,
-            style: textTheme.titleSmall!.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.titleSmall,
           ),
         ],
       ),

@@ -1,10 +1,8 @@
-import 'package:crypto_exchange_app/custom_widgets/helper_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
-
+import 'package:flutter/services.dart';
 import '/screens/home_screen/home_page.dart';
 import '/provider/theme_provider.dart';
 import 'screens/add_coins_screen/add_coins_Screen.dart';
@@ -41,16 +39,12 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Color(0xffeff2f5),
-      statusBarBrightness: Brightness.dark,
-    ));
     return Consumer<ThemeProvider>(
       builder: (context, value, child) => MaterialApp(
         title: 'Crypto Firebase',
         debugShowCheckedModeBanner: false,
-        theme: lightThemeData,
-        darkTheme: darkThemeData,
+        theme: ThemeData.from(colorScheme: lightColorScheme),
+        darkTheme: ThemeData.from(colorScheme: darkColorScheme),
         themeMode: value.themeMode,
         routes: {
           '/': (context) => const HoldingsPage(),

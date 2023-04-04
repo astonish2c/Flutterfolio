@@ -57,6 +57,7 @@ void addMapUserCoin({required DatabaseEvent event, required Map<String, CoinMode
         image: coin.image,
         priceDiff: coin.priceDiff,
         color: Colors.blue,
+        market_cap_rank: coin.market_cap_rank,
         transactions: transactions,
       ),
     );
@@ -83,6 +84,7 @@ void addDbCoins({required DataSnapshot dataSnapshot, required Map<String, CoinMo
           image: coin.image,
           priceDiff: coin.priceDiff,
           color: Colors.blue,
+          market_cap_rank: coin.market_cap_rank,
         ),
       );
     }
@@ -101,6 +103,7 @@ void addDbCoins({required DataSnapshot dataSnapshot, required Map<String, CoinMo
           image: coin.image,
           priceDiff: coin.priceDiff,
           color: Colors.blue,
+          market_cap_rank: coin.market_cap_rank,
         ),
       );
     }

@@ -7,6 +7,8 @@ class CustomAlertDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
     return AlertDialog(
       actions: [
         TextButton(
@@ -22,15 +24,15 @@ class CustomAlertDialog extends StatelessWidget {
           ),
         ),
       ],
-      title: const Text(
+      title: Text(
         'Oh snap!',
-        style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
+        style: TextStyle(fontSize: 18, color: theme.colorScheme.onPrimaryContainer, fontWeight: FontWeight.bold),
       ),
       content: SizedBox(
         width: double.infinity,
         child: Text(
           '''$error''',
-          style: const TextStyle(fontSize: 14, color: Colors.black),
+          style: TextStyle(fontSize: 14, color: theme.colorScheme.onPrimaryContainer),
         ),
       ),
     );

@@ -26,7 +26,7 @@ class MarketPriceColumn extends StatelessWidget {
         FittedBox(
           fit: BoxFit.scaleDown,
           child: Text(
-            currencyConverter(coin.currentPrice),
+            currencyConverter(coin.currentPrice, isCurrency: true),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.titleMedium,

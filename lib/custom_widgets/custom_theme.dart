@@ -1,132 +1,69 @@
 import 'package:flutter/material.dart';
 
-ThemeData darkThemeData = ThemeData(
-  brightness: Brightness.dark,
-  scaffoldBackgroundColor: Colors.black12,
-  fontFamily: 'Montserrat',
-  backgroundColor: Colors.white.withOpacity(0.1),
-  appBarTheme: const AppBarTheme(
-    color: Colors.transparent,
-    elevation: 0,
-  ),
-  bottomNavigationBarTheme: BottomNavigationBarThemeData(
-    backgroundColor: Colors.black12,
-    elevation: 12,
-    type: BottomNavigationBarType.fixed,
-    selectedIconTheme: selectedIconThemeData,
-    unselectedIconTheme: darkUnselectedIconThemeData,
-    selectedItemColor: Colors.blue[900],
-    unselectedItemColor: Colors.white70,
-    selectedLabelStyle: const TextStyle(
-      fontSize: 12,
-    ),
-    unselectedLabelStyle: const TextStyle(
-      fontSize: 10,
-    ),
-    showUnselectedLabels: true,
-  ),
-  primaryIconTheme: darkIconThemeData,
-  textButtonTheme: TextButtonThemeData(
-    style: TextButton.styleFrom(
-      backgroundColor: Colors.blue[900],
-      foregroundColor: Colors.white,
-      textStyle: const TextStyle(
-        fontSize: 12,
-      ),
-      visualDensity: VisualDensity.standard,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      minimumSize: Size.zero,
-    ),
-  ),
-  textTheme: const TextTheme(
-    bodyMedium: TextStyle(
-      color: Colors.white54,
-    ),
-    bodyLarge: TextStyle(
-      color: Colors.white54,
-      fontSize: 28,
-    ),
-    bodySmall: TextStyle(
-      color: Colors.white54,
-    ),
-    titleMedium: TextStyle(
-      fontWeight: FontWeight.bold,
-    ),
-    titleLarge: TextStyle(
-      color: Colors.white70,
-      fontSize: 38,
-    ),
-  ),
-);
-
-ThemeData lightThemeData = ThemeData(
+const lightColorScheme = ColorScheme(
   brightness: Brightness.light,
-  scaffoldBackgroundColor: const Color(0xffeff2f5),
-  fontFamily: 'Montserrat',
-  backgroundColor: Colors.blue[900]!.withOpacity(0.1),
-  appBarTheme: const AppBarTheme(
-    color: Colors.transparent,
-    elevation: 0,
-  ),
-  bottomNavigationBarTheme: BottomNavigationBarThemeData(
-    backgroundColor: const Color(0xffeff2f5),
-    elevation: 12,
-    type: BottomNavigationBarType.fixed,
-    selectedIconTheme: selectedIconThemeData,
-    unselectedIconTheme: lightUnselectedIconThemeData,
-    selectedItemColor: Colors.blue[900],
-    unselectedItemColor: Colors.black45,
-    selectedLabelStyle: const TextStyle(
-      fontSize: 12,
-    ),
-    unselectedLabelStyle: const TextStyle(
-      fontSize: 10,
-    ),
-    showUnselectedLabels: true,
-  ),
-  primaryIconTheme: lightIconThemeData,
-  textButtonTheme: TextButtonThemeData(
-    style: TextButton.styleFrom(
-      backgroundColor: Colors.blue[900],
-      foregroundColor: Colors.white,
-      textStyle: const TextStyle(
-        fontSize: 12,
-      ),
-      visualDensity: VisualDensity.standard,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      minimumSize: Size.zero,
-    ),
-  ),
-  textTheme: const TextTheme(
-    bodyMedium: TextStyle(
-      color: Colors.black54,
-    ),
-    bodyLarge: TextStyle(
-      color: Colors.black54,
-      fontSize: 28,
-    ),
-    titleMedium: TextStyle(
-      fontWeight: FontWeight.bold,
-    ),
-    titleLarge: TextStyle(
-      color: Colors.black87,
-      fontSize: 38,
-    ),
-  ),
+  primary: Color(0xFF2B5BB5),
+  onPrimary: Color(0xFFFFFFFF),
+  primaryContainer: Color.fromARGB(255, 235, 240, 255),
+  onPrimaryContainer: Color(0xFF001945),
+  secondary: Color(0xFF575E71),
+  onSecondary: Color(0xFFFFFFFF),
+  secondaryContainer: Color(0xFFDCE2F9),
+  onSecondaryContainer: Color(0xFF141B2C),
+  tertiary: Color(0xFF725572),
+  onTertiary: Color(0xFFFFFFFF),
+  tertiaryContainer: Color(0xFFFDD7FA),
+  onTertiaryContainer: Color(0xFF2A132C),
+  error: Color(0xFFBA1A1A),
+  errorContainer: Color(0xFFFFDAD6),
+  onError: Color(0xFFFFFFFF),
+  onErrorContainer: Color(0xFF410002),
+  background: Color(0xFFFEFBFF),
+  onBackground: Color(0xFF1B1B1F),
+  surface: Color(0xFFFEFBFF),
+  onSurface: Color(0xFF1B1B1F),
+  surfaceVariant: Color(0xFFE1E2EC),
+  onSurfaceVariant: Color(0xFF44464F),
+  outline: Color(0xFF757780),
+  onInverseSurface: Color(0xFFF2F0F4),
+  inverseSurface: Color(0xFF303034),
+  inversePrimary: Color(0xFFB0C6FF),
+  shadow: Color(0xFF000000),
+  surfaceTint: Color(0xFF2B5BB5),
+  outlineVariant: Color(0xFFC5C6D0),
+  scrim: Color(0xFF000000),
 );
 
-IconThemeData lightIconThemeData = const IconThemeData(
-  color: Colors.black,
-);
-IconThemeData darkIconThemeData = const IconThemeData(
-  color: Colors.white54,
-);
-IconThemeData selectedIconThemeData = const IconThemeData(
-  color: Color(0xff3459e7),
-);
-IconThemeData lightUnselectedIconThemeData = const IconThemeData(
-  color: Colors.black38,
-);
-IconThemeData darkUnselectedIconThemeData = const IconThemeData(
-  color: Colors.white54,
+const darkColorScheme = ColorScheme(
+  brightness: Brightness.dark,
+  primary: Color.fromARGB(255, 179, 179, 179),
+  onPrimary: Color(0xFFFFFFFF),
+  primaryContainer: Color(0xFF44464F),
+  onPrimaryContainer: Color(0xFFD9E2FF),
+  secondary: Color(0xFFC0C6DC),
+  onSecondary: Color(0xFF293042),
+  secondaryContainer: Color(0xFF404659),
+  onSecondaryContainer: Color(0xFFDCE2F9),
+  tertiary: Color(0xFFE0BBDD),
+  onTertiary: Color(0xFF412742),
+  tertiaryContainer: Color(0xFF593D5A),
+  onTertiaryContainer: Color(0xFFFDD7FA),
+  error: Color(0xFFFFB4AB),
+  errorContainer: Color(0xFF93000A),
+  onError: Color(0xFF690005),
+  onErrorContainer: Color(0xFFFFDAD6),
+  background: Color(0xFF1B1B1F),
+  onBackground: Color(0xFFE3E2E6),
+  surface: Color(0xFF1B1B1F),
+  onSurface: Color(0xFFE3E2E6),
+  surfaceVariant: Color(0xFF44464F),
+  onSurfaceVariant: Color(0xFFC5C6D0),
+  outline: Color(0xFF8F9099),
+  onInverseSurface: Color(0xFF1B1B1F),
+  inverseSurface: Color(0xFFE3E2E6),
+  inversePrimary: Color(0xFF2B5BB5),
+  shadow: Color(0xFF000000),
+  surfaceTint: Color(0xFFB0C6FF),
+  outlineVariant: Color(0xFF44464F),
+  scrim: Color(0xFF000000),
 );

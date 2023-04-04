@@ -18,11 +18,13 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return AppBar(
       centerTitle: true,
       leading: Consumer<ThemeProvider>(
         builder: (context, value, child) => CustomIconButton(
           size: 25,
+          color: theme.colorScheme.onPrimary,
           onPressed: () {
             value.toggleThemeMode();
           },
@@ -31,7 +33,7 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
       ),
       title: Text(
         'CryptoLand',
-        style: Theme.of(context).textTheme.titleMedium,
+        style: theme.textTheme.titleMedium!.apply(color: theme.colorScheme.onPrimary),
       ),
     );
   }

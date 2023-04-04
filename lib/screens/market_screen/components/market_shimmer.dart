@@ -10,9 +10,11 @@ class MarketShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
     return Shimmer.fromColors(
-      baseColor: Colors.blue,
-      highlightColor: Colors.black,
+      baseColor: theme.colorScheme.primary,
+      highlightColor: theme.colorScheme.onPrimary,
       child: Padding(
         padding: const EdgeInsets.only(top: 24, right: 16, left: 16),
         child: Column(

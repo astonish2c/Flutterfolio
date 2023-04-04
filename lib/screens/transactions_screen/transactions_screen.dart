@@ -19,7 +19,7 @@ class TransactionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
+    final ThemeData theme = Theme.of(context);
 
     void popPage() {
       if (!context.mounted) return;
@@ -33,7 +33,7 @@ class TransactionsScreen extends StatelessWidget {
         leading: Consumer<ThemeProvider>(
           builder: (context, value, child) => CustomIconButton(
             icon: Icons.arrow_back_ios,
-            color: value.isDark ? Colors.white : Colors.black,
+            color: theme.colorScheme.onPrimary,
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
@@ -43,17 +43,26 @@ class TransactionsScreen extends StatelessWidget {
             SizedBox(
               height: 25,
               width: 25,
-              child: Image.network(coin!.image, errorBuilder: (context, error, stackTrace) => Image.asset('assets/images/no-wifi.png')),
+              child: Image.network(
+                coin!.image,
+                errorBuilder: (context, error, stackTrace) => Image.asset(
+                  'assets/images/no-wifi.png',
+                  color: theme.colorScheme.onSecondaryContainer,
+                ),
+              ),
             ),
             const SizedBox(width: 4),
             Text(
               coin!.symbol.toUpperCase(),
-              style: textTheme.titleMedium!.copyWith(fontSize: 18),
+              style: theme.textTheme.titleMedium!.copyWith(
+                fontSize: 18,
+                color: theme.colorScheme.onPrimary,
+              ),
             ),
             const SizedBox(width: 4),
             Text(
               coin!.name.toCapitalized(),
-              style: textTheme.bodyMedium,
+              style: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onPrimary),
             ),
           ],
         ),
@@ -64,7 +73,7 @@ class TransactionsScreen extends StatelessWidget {
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(
               'Transactions',
-              style: textTheme.titleMedium!.copyWith(fontSize: 22),
+              style: theme.textTheme.titleMedium!.copyWith(fontSize: 22),
             ),
             SizedBox(height: defaultPadding),
             Expanded(
@@ -85,6 +94,7 @@ class TransactionsScreen extends StatelessWidget {
                           child: TransactionsItem(coin: coin!, transaction: localTransactions[index]),
                           onTap: () async {
                             await showModalBottomSheet(
+                                backgroundColor: theme.colorScheme.primaryContainer,
                                 isScrollControlled: true,
                                 shape: const RoundedRectangleBorder(
                                   borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),

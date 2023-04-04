@@ -25,7 +25,13 @@ class HomeCoinItem extends StatelessWidget {
               SizedBox(
                 width: 50,
                 height: 50,
-                child: Image.network(coin.image, errorBuilder: (context, error, stackTrace) => Image.asset('assets/images/no-wifi.png')),
+                child: Image.network(
+                  coin.image,
+                  errorBuilder: (context, error, stackTrace) => Image.asset(
+                    'assets/images/no-wifi.png',
+                    color: theme.colorScheme.onSecondaryContainer,
+                  ),
+                ),
               ),
               const SizedBox(width: 16),
               Column(
@@ -33,7 +39,7 @@ class HomeCoinItem extends StatelessWidget {
                 children: [
                   Text(coin.name.toCapitalized(), style: theme.textTheme.titleMedium),
                   const SizedBox(height: 16 / 4),
-                  Text(coin.symbol.toUpperCase(), style: theme.textTheme.bodyMedium),
+                  Text(coin.symbol.toUpperCase(), style: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onPrimaryContainer.withOpacity(0.4))),
                 ],
               ),
               const Spacer(),

@@ -11,9 +11,11 @@ class HomeShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
     return Shimmer.fromColors(
-      baseColor: Colors.blue,
-      highlightColor: Colors.black,
+      baseColor: theme.colorScheme.primary,
+      highlightColor: theme.colorScheme.onPrimary,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Column(

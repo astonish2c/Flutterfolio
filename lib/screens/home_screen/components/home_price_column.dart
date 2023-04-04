@@ -1,9 +1,10 @@
+import 'package:crypto_exchange_app/screens/tab_screen/widgets/tab_screen_mixin.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/coin_model.dart';
 import '../../../provider/theme_provider.dart';
-import '../../../custom_widgets/helper_methods.dart';
+import '../../../custom_widgets/helper_methods.dart' hide calTotalCost;
 import '../helper_methods.dart';
 
 class HomePriceColumn extends StatelessWidget {
@@ -16,8 +17,12 @@ class HomePriceColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String totalCost = currencyConverter(double.parse(calTotalCost(coin)));
-    final String totalAmount = '${coin.symbol.toUpperCase()} ${currencyConverter(double.parse(calTotalAmount(coin)), isCurrency: false)}';
+    final bool isSell = calTotalCost(coin).contains('-');
+
+    final String totalCost = '${isSell ? '-' : ''}${currencyConverter(double.parse(calTotalCost(coin)))}';
+    final String totalAmount = '${coin.symbol.toUpperCase()} ${isSell ? '-' : ''}${removeDoller(currencyConverter(double.parse(calTotalAmount(coin))))}';
+
+    final ThemeData theme = Theme.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -28,7 +33,7 @@ class HomePriceColumn extends StatelessWidget {
             totalCost,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.titleMedium,
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(color: isSell ? theme.colorScheme.error : theme.textTheme.titleMedium!.color),
           ),
         ),
         SizedBox(height: defaultPadding / 4),
@@ -45,7 +50,7 @@ class HomePriceColumn extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.end,
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: theme.textTheme.bodyMedium!.copyWith(color: isSell ? theme.colorScheme.error : theme.textTheme.bodyMedium!.color),
               ),
             ),
           ),

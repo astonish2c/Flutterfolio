@@ -54,11 +54,11 @@ class _AddCoinsScreenState extends State<AddCoinsScreen> {
             builder: (context, value, child) => CustomIconButton(
               icon: Icons.keyboard_arrow_left,
               size: 25,
-              color: value.isDark ? Colors.white : Colors.black,
+              color: theme.colorScheme.onPrimary,
               onPressed: () => Navigator.of(context).pop(),
             ),
           ),
-          title: Text('Select Coin', style: theme.textTheme.titleMedium!.copyWith(fontSize: 18)),
+          title: Text('Select Coin', style: theme.textTheme.titleMedium!.copyWith(fontSize: 18, color: theme.colorScheme.onPrimary)),
         ),
         body: Padding(
           padding: const EdgeInsets.only(left: 16, right: 16),
@@ -76,11 +76,6 @@ class _AddCoinsScreenState extends State<AddCoinsScreen> {
                                 return GestureDetector(
                                   onTap: () {
                                     Navigator.of(context).pushNamed(TabScreen.routeName, arguments: {'coinModel': coins[index], 'initialPage': 0});
-                                    // Navigator.of(context).push(
-                                    //   MaterialPageRoute(
-                                    // builder: (context) => TabScreen(coinModel: coins[index], initialPage: 0),
-                                    //   ),
-                                    // );
                                   },
                                   child: AddCoinsItem(coinModel: coins[index]),
                                 );
