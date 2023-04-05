@@ -15,6 +15,8 @@ class DataProvider with ChangeNotifier {
   double userBalance = 0.0;
   double marketStatus = 0.0;
 
+  bool isSellMore = false;
+
   bool firstRun = true;
   bool isDatabaseAvailable = false;
 
@@ -334,7 +336,7 @@ class DataProvider with ChangeNotifier {
     }
   }
 
-  bool calTotalUserBalance() {
+  void calTotalUserBalance() {
     double totalBuy = 0.0;
 
     double totalSell = 0.0;
@@ -352,13 +354,13 @@ class DataProvider with ChangeNotifier {
     double result = totalBuy - totalSell;
 
     userBalance = result;
-    notifyListeners();
 
     if (result.toString().contains('-')) {
-      return true;
+      isSellMore = true;
     } else {
-      return false;
+      isSellMore = false;
     }
+    notifyListeners();
   }
 
   void callNotifyListeners() {

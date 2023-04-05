@@ -71,7 +71,6 @@ class MarketShimmer extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const Divider(),
                   ],
                 ),
                 separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 16),

@@ -5,15 +5,12 @@ import 'package:number_display/number_display.dart';
 
 import '../model/coin_model.dart';
 
-Color bgColor = const Color(0xff142E48);
-Color lightBlue = const Color(0xff1976D2);
-
 const Color lightYellow = Colors.yellow;
 
 double defaultPadding = 16;
 
 String currencyConverter(double num, {bool isCurrency = true, bool isSell = false}) {
-  if (num == 0) return '\$num';
+  if (num == 0) return '\$$num';
 
   double localNum = num;
 

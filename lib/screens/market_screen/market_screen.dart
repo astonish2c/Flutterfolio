@@ -64,6 +64,7 @@ class _MarketScreenState extends State<MarketScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: hasErrorMarket || isLoadingMarket
             ? const Text('')
             : Row(
@@ -74,11 +75,11 @@ class _MarketScreenState extends State<MarketScreen> {
                     children: [
                       Text(
                         'in the past 24 hours',
-                        style: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onPrimary),
+                        style: theme.textTheme.bodyMedium,
                       ),
                       Text(
                         marketStatus < 0 ? 'Market is down' : 'Market is up',
-                        style: theme.textTheme.titleMedium!.copyWith(fontSize: 26, color: theme.colorScheme.onPrimary),
+                        style: theme.textTheme.titleMedium!.copyWith(fontSize: 26),
                       ),
                     ],
                   ),

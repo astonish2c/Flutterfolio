@@ -26,7 +26,7 @@ class MarketCustomError extends StatelessWidget {
             height: 150,
             child: Image.asset(
               '$pngPath',
-              color: theme.colorScheme.onSecondaryContainer,
+              color: theme.colorScheme.onPrimaryContainer,
             ),
           ),
           const SizedBox(height: 16),
@@ -34,7 +34,6 @@ class MarketCustomError extends StatelessWidget {
             '''$error''',
             textAlign: TextAlign.center,
             style: theme.textTheme.titleMedium!.copyWith(
-              color: theme.colorScheme.onSecondaryContainer,
               fontWeight: FontWeight.w500,
             ),
           ),

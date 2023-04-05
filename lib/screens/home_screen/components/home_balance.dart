@@ -4,14 +4,19 @@ import 'package:provider/provider.dart';
 import '../../../provider/data_provider.dart';
 import '../../../custom_widgets/helper_methods.dart';
 
-class HomeBalance extends StatelessWidget {
+class HomeBalance extends StatefulWidget {
   const HomeBalance({Key? key}) : super(key: key);
 
+  @override
+  State<HomeBalance> createState() => _HomeBalanceState();
+}
+
+class _HomeBalanceState extends State<HomeBalance> {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
 
-    final bool isSellMore = context.read<DataProvider>().calTotalUserBalance();
+    final bool isSellMore = context.select((DataProvider dataProvider) => dataProvider.isSellMore);
     final double userBalance = context.select((DataProvider dataProvider) => dataProvider.userBalance);
 
     final userBalanceSet = userBalance == 0 ? '\$0.00' : currencyConverter(userBalance);

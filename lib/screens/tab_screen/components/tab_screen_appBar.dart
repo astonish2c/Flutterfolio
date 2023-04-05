@@ -26,7 +26,6 @@ class TabScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: CustomIconButton(
         icon: Icons.keyboard_arrow_left,
         size: 25,
-        color: theme.colorScheme.onPrimary,
         onPressed: () => Navigator.of(context).pop(),
       ),
       title: Row(
@@ -45,12 +44,12 @@ class TabScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
           const SizedBox(width: 4),
           Text(
             coinModel.symbol.toUpperCase(),
-            style: theme.textTheme.titleMedium!.copyWith(fontSize: 18, color: theme.colorScheme.onPrimary),
+            style: theme.textTheme.titleMedium,
           ),
           const SizedBox(width: 4),
           Text(
             coinModel.name.toCapitalized(),
-            style: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onPrimary),
+            style: theme.textTheme.bodyMedium,
           ),
         ],
       ),

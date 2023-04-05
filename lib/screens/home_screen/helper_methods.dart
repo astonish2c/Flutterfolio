@@ -5,16 +5,25 @@ import '../../model/coin_model.dart';
 import '../../provider/data_provider.dart';
 
 String calTotalAmount(CoinModel coin) {
-  double totalAmount = 0.0;
+  double totalAmountBuy = 0.0;
+
+  double totalAmountSell = 0.0;
 
   for (var transaction in coin.transactions!) {
     if (transaction.isSell) {
-      totalAmount -= transaction.amount;
+      totalAmountSell += transaction.amount;
     } else {
-      totalAmount += transaction.amount;
+      totalAmountBuy += transaction.amount;
     }
   }
-  return totalAmount.toString();
+
+  final double resultAmount = totalAmountBuy - totalAmountSell;
+
+  if (double.tryParse(resultAmount.toString()) != null) {
+    return resultAmount.toString();
+  } else {
+    return '0.00';
+  }
 }
 
 String calTotalCost(CoinModel coin) {

@@ -83,8 +83,8 @@ class _SellTabState extends State<SellTab> with TabScreenMixin {
           builder: (context, value, child) => TextButton(
             style: TextButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               backgroundColor: checkUserInput(value.text) ? Colors.white : Colors.blue[900],
-              minimumSize: Size.zero,
             ),
             onPressed: checkUserInput(value.text) || _isLoadingAdd
                 ? null

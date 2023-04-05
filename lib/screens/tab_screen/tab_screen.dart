@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 
 import '../../model/coin_model.dart';
 import '../../provider/data_provider.dart';
-import '../../provider/theme_provider.dart';
 import 'components/tab_screen_buy.dart';
 import 'components/tab_screen_appBar.dart';
 import 'components/tab_screen_sell.dart';
@@ -67,7 +66,6 @@ class _TabScreenState extends State<TabScreen> with TickerProviderStateMixin {
 
   TabBar get _tabBar => TabBar(
         controller: _tabController,
-        labelColor: Theme.of(context).colorScheme.onPrimary,
         tabs: const [
           Tab(text: 'Buy'),
           Tab(text: 'Sell'),

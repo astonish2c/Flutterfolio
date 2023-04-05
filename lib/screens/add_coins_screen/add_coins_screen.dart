@@ -54,11 +54,10 @@ class _AddCoinsScreenState extends State<AddCoinsScreen> {
             builder: (context, value, child) => CustomIconButton(
               icon: Icons.keyboard_arrow_left,
               size: 25,
-              color: theme.colorScheme.onPrimary,
               onPressed: () => Navigator.of(context).pop(),
             ),
           ),
-          title: Text('Select Coin', style: theme.textTheme.titleMedium!.copyWith(fontSize: 18, color: theme.colorScheme.onPrimary)),
+          title: Text('Select Coin', style: theme.textTheme.titleMedium!.copyWith(fontSize: 18)),
         ),
         body: Padding(
           padding: const EdgeInsets.only(left: 16, right: 16),

@@ -33,7 +33,6 @@ class TransactionsScreen extends StatelessWidget {
         leading: Consumer<ThemeProvider>(
           builder: (context, value, child) => CustomIconButton(
             icon: Icons.arrow_back_ios,
-            color: theme.colorScheme.onPrimary,
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
@@ -56,13 +55,12 @@ class TransactionsScreen extends StatelessWidget {
               coin!.symbol.toUpperCase(),
               style: theme.textTheme.titleMedium!.copyWith(
                 fontSize: 18,
-                color: theme.colorScheme.onPrimary,
               ),
             ),
             const SizedBox(width: 4),
             Text(
               coin!.name.toCapitalized(),
-              style: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onPrimary),
+              style: theme.textTheme.bodyMedium,
             ),
           ],
         ),

@@ -86,6 +86,7 @@ class _BuyTabState extends State<BuyTab> with TabScreenMixin {
             valueListenable: _amountController,
             builder: (context, value, child) => TextButton(
               style: TextButton.styleFrom(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 backgroundColor: checkUserInput(value.text) ? Colors.white : Colors.blue[900],
               ),
               onPressed: checkUserInput(value.text) || _isLoadingAdd

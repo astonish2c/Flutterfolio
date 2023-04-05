@@ -90,16 +90,15 @@ class _HomePortfolioState extends State<HomePortfolio> {
                         style: theme.textTheme.titleMedium,
                       ),
                       const SizedBox(height: 32),
-                      InkWell(
-                        onTap: () => Navigator.of(context).pushNamed(AddCoinsScreen.routeName),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 18),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pushNamed(AddCoinsScreen.routeName),
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 18),
                           child: Text(
                             'Add transaction',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.blue[900],
                             ),
                           ),
                         ),

@@ -43,8 +43,8 @@ class App extends StatelessWidget {
       builder: (context, value, child) => MaterialApp(
         title: 'Crypto Firebase',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData.from(colorScheme: lightColorScheme),
-        darkTheme: ThemeData.from(colorScheme: darkColorScheme),
+        theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
+        darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
         themeMode: value.themeMode,
         routes: {
           '/': (context) => const HoldingsPage(),

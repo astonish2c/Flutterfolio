@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 
-import '../../provider/theme_provider.dart';
-import '/custom_widgets/custom_alert_dialog.dart';
+import '../../custom_widgets/custom_alert_dialog.dart';
 import '../../provider/data_provider.dart';
 import '../../custom_widgets/nav_bar.dart';
 import '../market_screen/widgets/market_custom_error.dart';
