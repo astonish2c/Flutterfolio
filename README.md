@@ -53,4 +53,4 @@
 
 <h2>Contact</h2>
 
-<p>If you have any questions or comments about Crypto Wallet, please feel free to contact us at <a href="mailto:crypto.wallet@example.com">crypto.wallet@example.com</a>. We would love to hear from you!</p>
+<p>If you have any questions or comments about Crypto Wallet, please feel free to contact us at <a href="mailto:astonish2c@gmail.com">astonish2c@gmail.com</a>. We would love to hear from you!</p>
