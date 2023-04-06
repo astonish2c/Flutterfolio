@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/coin_model.dart';
-import '../../provider/data_provider.dart';
+
+import '../../provider/utils/helper_methods.dart';
 import 'components/tab_screen_buy.dart';
 import 'components/tab_screen_appBar.dart';
 import 'components/tab_screen_sell.dart';
@@ -32,7 +33,7 @@ class _TabScreenState extends State<TabScreen> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    _subscription = context.read<DataProvider>().listenConnectivity(context);
+    _subscription = listenConnectivity(context);
     super.initState();
   }
 

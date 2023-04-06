@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:crypto_exchange_app/provider/user_coins_provider.dart';
 import 'package:firebase_database/firebase_database.dart' hide Transaction;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -59,6 +61,57 @@ void addMapUserCoin({required DatabaseEvent event, required Map<String, CoinMode
         color: Colors.blue,
         market_cap_rank: coin.market_cap_rank,
         transactions: transactions,
+      ),
+    );
+  }
+}
+
+StreamSubscription<ConnectivityResult> listenConnectivity(BuildContext context) {
+  final bool isFirstRunUser = context.read<UserCoinsProvider>().isFirstRunUser;
+
+  Connectivity connectivity = Connectivity();
+
+  StreamSubscription<ConnectivityResult> subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+    if (result == ConnectivityResult.none) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          duration: const Duration(seconds: 2),
+          backgroundColor: Colors.blue[900],
+          content: const SnackBarContainer(message: 'No internet connected'),
+        ),
+      );
+    } else {
+      if (isFirstRunUser) return;
+
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          duration: const Duration(seconds: 2),
+          backgroundColor: Colors.blue[900],
+          content: const SnackBarContainer(message: 'Internet connected'),
+        ),
+      );
+    }
+  });
+  return subscription;
+}
+
+class SnackBarContainer extends StatelessWidget {
+  const SnackBarContainer({
+    super.key,
+    required this.message,
+  });
+
+  final String message;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.blue[900],
+      ),
+      child: Text(
+        message,
+        style: const TextStyle(color: Colors.white),
       ),
     );
   }

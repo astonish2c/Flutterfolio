@@ -1,12 +1,10 @@
-import 'package:crypto_exchange_app/screens/add_coins_screen/add_coins_screen.dart';
+import 'package:crypto_exchange_app/provider/user_coins_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
-import '../../../custom_widgets/custom_big_btn.dart';
+import '/screens/add_coins_screen/add_coins_screen.dart';
 import '../../../model/coin_model.dart';
-import '../../../provider/data_provider.dart';
 import '../../../custom_widgets/helper_methods.dart';
-import '../../market_screen/widgets/market_custom_error.dart';
 import '../../transactions_screen/transactions_screen.dart';
 import 'home_coin_item.dart';
 
@@ -39,7 +37,7 @@ class _HomePortfolioState extends State<HomePortfolio> {
 
   @override
   Widget build(BuildContext context) {
-    final List<CoinModel> userCoins = context.watch<DataProvider>().userCoins;
+    final List<CoinModel> userCoins = context.watch<UserCoinsProvider>().userCoins;
     final ThemeData theme = Theme.of(context);
 
     final List<CoinModel> localUserCoins = userCoins;

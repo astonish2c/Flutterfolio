@@ -1,9 +1,9 @@
+import 'package:crypto_exchange_app/provider/all_coins_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../custom_widgets/helper_methods.dart';
 import '../../../model/coin_model.dart';
-import '../../../provider/data_provider.dart';
 import '../../tab_screen/tab_screen.dart';
 import 'market_price_column.dart';
 
@@ -15,7 +15,7 @@ class MarketCoins extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final List<CoinModel> localCoins = context.read<DataProvider>().getCoins;
+    final List<CoinModel> localCoins = context.read<AllCoinsProvider>().getCoins;
 
     return CustomScrollView(
       slivers: [
@@ -65,7 +65,7 @@ class MarketCoins extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const Divider(),
+                      const Divider(thickness: 0.2),
                     ],
                   ),
                 );

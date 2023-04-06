@@ -1,3 +1,5 @@
+import 'package:crypto_exchange_app/provider/all_coins_provider.dart';
+import 'package:crypto_exchange_app/provider/user_coins_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -6,7 +8,7 @@ import '../../custom_widgets/custom_icon_btn.dart';
 import 'components/transactions_bottom_sheet.dart';
 import '../../custom_widgets/helper_methods.dart';
 import '../../model/coin_model.dart';
-import '../../provider/data_provider.dart';
+
 import '../../provider/theme_provider.dart';
 import '../../custom_widgets/custom_big_btn.dart';
 import 'components/transactions_item.dart';
@@ -76,7 +78,7 @@ class TransactionsScreen extends StatelessWidget {
             SizedBox(height: defaultPadding),
             Expanded(
               child: Builder(builder: (context) {
-                context.select((DataProvider dataProvider) => dataProvider.userBalance);
+                context.select((UserCoinsProvider userCoinsProvider) => userCoinsProvider.userBalance);
 
                 List<Transaction> localTransactions = coin!.transactions!;
 

@@ -1,13 +1,16 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:crypto_exchange_app/provider/all_coins_provider.dart';
+import 'package:crypto_exchange_app/provider/user_coins_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 
 import '../../custom_widgets/custom_alert_dialog.dart';
-import '../../provider/data_provider.dart';
+
 import '../../custom_widgets/nav_bar.dart';
+import '../../provider/utils/helper_methods.dart';
 import '../market_screen/widgets/market_custom_error.dart';
 import 'components/home_app_bar.dart';
 import 'components/home_balance.dart';
@@ -27,7 +30,7 @@ class _HoldingsPageState extends State<HoldingsPage> {
 
   @override
   void initState() {
-    _subscription = context.read<DataProvider>().listenConnectivity(context);
+    _subscription = listenConnectivity(context);
     setValues(context: context);
 
     super.initState();
@@ -41,8 +44,8 @@ class _HoldingsPageState extends State<HoldingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isLoadingUserCoin = context.select((DataProvider dataProvider) => dataProvider.isLoadingUserCoin);
-    final bool hasErrorUserCoin = context.select((DataProvider dataProvider) => dataProvider.hasErrorUserCoin);
+    final bool isLoadingUserCoin = context.select((UserCoinsProvider userCoinsProvider) => userCoinsProvider.isLoadingUserCoin);
+    final bool hasErrorUserCoin = context.select((UserCoinsProvider userCoinsProvider) => userCoinsProvider.hasErrorUserCoin);
     final ThemeData theme = Theme.of(context);
 
     return Scaffold(
@@ -74,13 +77,15 @@ class _HoldingsPageState extends State<HoldingsPage> {
                 color: theme.colorScheme.onSecondary,
               ),
               onPressed: () async {
-                final dataProvider = context.read<DataProvider>();
+                final UserCoinsProvider userCoinsProvider = context.read<UserCoinsProvider>();
+                final AllCoinsProvider allCoinsProvider = context.read<AllCoinsProvider>();
+
                 try {
                   setState(() {
-                    dataProvider.hasErrorDatabase = false;
+                    allCoinsProvider.hasErrorDatabase = false;
                   });
-                  await dataProvider.setUserCoin();
-                  await dataProvider.setDatabaseCoins();
+                  await userCoinsProvider.setUserCoin();
+                  await allCoinsProvider.setDatabaseCoins();
                 } catch (e) {
                   await showDialog(
                     context: context,

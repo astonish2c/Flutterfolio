@@ -1,13 +1,13 @@
+import 'package:crypto_exchange_app/provider/user_coins_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '/screens/tab_screen/tab_screen.dart';
 import '../../../model/coin_model.dart';
-import '../../../provider/data_provider.dart';
 import '../../../custom_widgets/helper_methods.dart';
 import '../../../custom_widgets/custom_big_btn.dart';
 import '../widgets/transactions_bottom_sheet_row.dart';
-import 'package:provider/provider.dart';
 
 class TransactionsBottomSheet extends StatefulWidget {
   const TransactionsBottomSheet({Key? key, required this.coin, required this.indexTransaction, required this.popPage}) : super(key: key);
@@ -125,7 +125,7 @@ class _TransactionsBottomSheetState extends State<TransactionsBottomSheet> {
                       isLoading = true;
                     });
 
-                    final bool lastTransaction = await context.read<DataProvider>().removeTransaction(coin: widget.coin, transactionIndex: widget.indexTransaction);
+                    final bool lastTransaction = await context.read<UserCoinsProvider>().removeTransaction(coin: widget.coin, transactionIndex: widget.indexTransaction);
 
                     if (context.mounted) Navigator.of(context).pop();
 

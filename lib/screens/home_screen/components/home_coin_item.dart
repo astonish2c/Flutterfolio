@@ -47,7 +47,7 @@ class HomeCoinItem extends StatelessWidget {
             ],
           ),
         ),
-        const Divider(),
+        const Divider(thickness: 0.2),
       ],
     );
   }

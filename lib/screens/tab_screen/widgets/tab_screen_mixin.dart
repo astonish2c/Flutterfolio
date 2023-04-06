@@ -1,8 +1,9 @@
+import 'package:crypto_exchange_app/provider/all_coins_provider.dart';
+import 'package:crypto_exchange_app/provider/user_coins_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/coin_model.dart';
-import '../../../provider/data_provider.dart';
 import '../../home_screen/home_page.dart';
 import '../../transactions_screen/transactions_screen.dart';
 
@@ -34,7 +35,7 @@ mixin TabScreenMixin<T extends StatefulWidget> on State<T> {
 }
 
 double findCurrentPrice({required BuildContext context, required CoinModel coin}) {
-  final List<CoinModel> coins = context.read<DataProvider>().getCoins;
+  final List<CoinModel> coins = context.read<AllCoinsProvider>().getCoins;
 
   final coinSymbol = coin.symbol;
 
@@ -96,7 +97,7 @@ Future<void> submit({
   required bool? isPushHomePage,
   required bool isSell,
 }) async {
-  await context.read<DataProvider>().addUserCoin(
+  await context.read<UserCoinsProvider>().addUserCoin(
         CoinModel(
           currentPrice: price,
           name: coin.name,
@@ -146,7 +147,7 @@ Future<void> addOrUpdate({
     return;
   }
 
-  await context.read<DataProvider>().updateTransaction(
+  await context.read<UserCoinsProvider>().updateTransaction(
       coin,
       indexTransaction,
       Transaction(

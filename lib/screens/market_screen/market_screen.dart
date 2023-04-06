@@ -2,13 +2,15 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto_exchange_app/custom_widgets/helper_methods.dart';
+import 'package:crypto_exchange_app/provider/all_coins_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../custom_widgets/custom_alert_dialog.dart';
 import '../../custom_widgets/nav_bar.dart';
-import '../../provider/data_provider.dart';
+
+import '../../provider/utils/helper_methods.dart';
 import 'components/market_coins.dart';
 import 'components/market_shimmer.dart';
 import 'widgets/market_custom_error.dart';
@@ -30,8 +32,8 @@ class _MarketScreenState extends State<MarketScreen> {
   void initState() {
     super.initState();
     getApiCoins();
-    _subscription = context.read<DataProvider>().listenConnectivity(context);
-    marketStatus = context.read<DataProvider>().marketStatus;
+    _subscription = listenConnectivity(context);
+    marketStatus = context.read<AllCoinsProvider>().marketStatus;
   }
 
   @override
@@ -41,14 +43,14 @@ class _MarketScreenState extends State<MarketScreen> {
   }
 
   Future<void> getApiCoins() async {
-    final readDataProvider = context.read<DataProvider>();
+    final AllCoinsProvider readAllCoinsProvider = context.read<AllCoinsProvider>();
 
-    final bool isDatabaseAvailable = readDataProvider.isDatabaseAvailable;
+    final bool isDatabaseAvailable = readAllCoinsProvider.isDatabaseAvailable;
 
-    if (isDatabaseAvailable || !readDataProvider.firstRun) return;
+    if (isDatabaseAvailable || !readAllCoinsProvider.firstRun) return;
 
     try {
-      await context.read<DataProvider>().getApiCoins();
+      await readAllCoinsProvider.getApiCoins();
     } catch (e) {
       print(e);
     }
@@ -56,9 +58,9 @@ class _MarketScreenState extends State<MarketScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isLoadingMarket = context.select((DataProvider dataProvider) => dataProvider.isLoadingMarket);
-    final bool hasErrorMarket = context.select((DataProvider dataProvider) => dataProvider.hasErrorMarket);
-    final bool isDbAvailable = context.select((DataProvider dataProvider) => dataProvider.isDatabaseAvailable);
+    final bool isLoadingMarket = context.select((AllCoinsProvider allCoinsProvider) => allCoinsProvider.isLoadingMarket);
+    final bool hasErrorMarket = context.select((AllCoinsProvider allCoinsProvider) => allCoinsProvider.hasErrorMarket);
+    final bool isDbAvailable = context.select((AllCoinsProvider allCoinsProvider) => allCoinsProvider.isDatabaseAvailable);
 
     final ThemeData theme = Theme.of(context);
 
@@ -120,7 +122,7 @@ class _MarketScreenState extends State<MarketScreen> {
               ),
               onPressed: () async {
                 try {
-                  await context.read<DataProvider>().getApiCoins();
+                  await context.read<AllCoinsProvider>().getApiCoins();
                 } catch (e) {
                   await showDialog(
                     context: context,

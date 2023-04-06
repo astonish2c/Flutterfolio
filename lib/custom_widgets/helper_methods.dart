@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:decimal/decimal.dart';
-import 'package:number_display/number_display.dart';
 
 import '../model/coin_model.dart';
 
@@ -32,15 +31,15 @@ String currencyConverter(double num, {bool isCurrency = true, bool isSell = fals
     final int digit = int.parse(numAfterDecimalPoint[i]);
 
     if (i == 0 && digit > 0) {
-      if (localNum > 1) {
+      if (localNum >= 1) {
         allowedDecimalDigits = 2;
-      } else if (localNum > 0.1) {
+      } else if (localNum >= 0.1) {
         allowedDecimalDigits = 3;
       }
 
       break;
     } else if (digit > 0) {
-      if (localNum < 0.1) {
+      if (localNum <= 0.1) {
         allowedDecimalDigits = i + 3;
       } else {
         allowedDecimalDigits = i + 1;

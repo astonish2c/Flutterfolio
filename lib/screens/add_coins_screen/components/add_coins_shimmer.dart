@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../custom_widgets/shimmer_skelton.dart';
-import '../../market_screen/market_screen.dart';
 
 class AddCoinsShimmer extends StatelessWidget {
   const AddCoinsShimmer({

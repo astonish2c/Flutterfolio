@@ -1,8 +1,9 @@
+import 'package:crypto_exchange_app/provider/all_coins_provider.dart';
+import 'package:crypto_exchange_app/provider/user_coins_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/coin_model.dart';
-import '../../provider/data_provider.dart';
 
 String calTotalAmount(CoinModel coin) {
   double totalAmountBuy = 0.0;
@@ -40,13 +41,14 @@ String calTotalCost(CoinModel coin) {
 }
 
 Future<void> setValues({required BuildContext context}) async {
-  DataProvider dataProvider = context.read<DataProvider>();
+  AllCoinsProvider allCoinsProvider = context.read<AllCoinsProvider>();
+  UserCoinsProvider userCoinsProvider = context.read<UserCoinsProvider>();
 
-  if (!dataProvider.isFirstRunUser) return;
+  if (!userCoinsProvider.isFirstRunUser) return;
 
   try {
-    await dataProvider.setUserCoin();
-    await dataProvider.setDatabaseCoins();
+    await userCoinsProvider.setUserCoin();
+    await allCoinsProvider.setDatabaseCoins();
   } catch (e) {
     print(e);
   }

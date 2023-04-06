@@ -1,7 +1,7 @@
+import 'package:crypto_exchange_app/provider/user_coins_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../provider/data_provider.dart';
 import '../../../custom_widgets/helper_methods.dart';
 
 class HomeBalance extends StatefulWidget {
@@ -16,8 +16,8 @@ class _HomeBalanceState extends State<HomeBalance> {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
 
-    final bool isSellMore = context.select((DataProvider dataProvider) => dataProvider.isSellMore);
-    final double userBalance = context.select((DataProvider dataProvider) => dataProvider.userBalance);
+    final bool isSellMore = context.select((UserCoinsProvider dataProvider) => dataProvider.isSellMore);
+    final double userBalance = context.select((UserCoinsProvider dataProvider) => dataProvider.userBalance);
 
     final userBalanceSet = userBalance == 0 ? '\$0.00' : currencyConverter(userBalance);
 

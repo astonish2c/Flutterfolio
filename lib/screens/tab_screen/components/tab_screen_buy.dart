@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:decimal/decimal.dart';
 import 'package:provider/provider.dart';
 
-import '../../../provider/data_provider.dart';
 import '/screens/tab_screen/widgets/tab_buy_price.dart';
 import '/screens/tab_screen/widgets/tab_screen_mixin.dart';
 import '../widgets/tab_transaction_details.dart';

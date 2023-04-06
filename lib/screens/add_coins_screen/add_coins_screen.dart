@@ -1,3 +1,4 @@
+import 'package:crypto_exchange_app/provider/all_coins_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -5,7 +6,7 @@ import '../../custom_widgets/custom_alert_dialog.dart';
 import '/screens/tab_screen/tab_screen.dart';
 import '/custom_widgets/custom_icon_btn.dart';
 import '../../model/coin_model.dart';
-import '../../provider/data_provider.dart';
+
 import '../../provider/theme_provider.dart';
 
 import 'components/add_coins_item.dart';
@@ -41,10 +42,10 @@ class _AddCoinsScreenState extends State<AddCoinsScreen> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
-    final List<CoinModel> coins = context.read<DataProvider>().getCoins;
+    final List<CoinModel> coins = context.read<AllCoinsProvider>().getCoins;
 
-    final bool isLoadingDatabase = context.select((DataProvider dataProvider) => dataProvider.isLoadingDatabase);
-    final bool isDatabaseAvailable = context.select((DataProvider dataProvider) => dataProvider.isDatabaseAvailable);
+    final bool isLoadingDatabase = context.select((AllCoinsProvider dataProvider) => dataProvider.isLoadingDatabase);
+    final bool isDatabaseAvailable = context.select((AllCoinsProvider dataProvider) => dataProvider.isDatabaseAvailable);
 
     return Scaffold(
         appBar: AppBar(
@@ -91,7 +92,7 @@ class _AddCoinsScreenState extends State<AddCoinsScreen> {
                     child: const Icon(Icons.refresh),
                     onPressed: () async {
                       try {
-                        await context.read<DataProvider>().getApiCoins();
+                        await context.read<AllCoinsProvider>().getApiCoins();
                       } catch (e) {
                         await showDialog(
                           context: context,
