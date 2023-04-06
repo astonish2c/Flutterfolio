@@ -45,6 +45,10 @@ class AllCoinsProvider with ChangeNotifier {
 
       await getMarketStatus();
 
+      DataSnapshot marketDataSnapshot = await dr.child('mChangePercentage').get();
+
+      marketStatus = double.parse(marketDataSnapshot.value.toString());
+
       DataSnapshot dataSnapshot = await dr.child('coins/').get();
 
       if (!dataSnapshot.exists) {
@@ -63,7 +67,7 @@ class AllCoinsProvider with ChangeNotifier {
 
   Future<void> getApiCoins() async {
     try {
-      final ConnectivityResult connectivityResult = await (Connectivity().checkConnectivity());
+      final ConnectivityResult connectivityResult = await Connectivity().checkConnectivity();
 
       if (connectivityResult == ConnectivityResult.none) {
         hasErrorMarket = true;

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto_exchange_app/custom_widgets/helper_methods.dart';
 import 'package:crypto_exchange_app/provider/all_coins_provider.dart';
+import 'package:crypto_exchange_app/provider/user_coins_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -25,15 +26,15 @@ class MarketScreen extends StatefulWidget {
 }
 
 class _MarketScreenState extends State<MarketScreen> {
-  late double marketStatus;
   late StreamSubscription<ConnectivityResult> _subscription;
 
   @override
   void initState() {
     super.initState();
-    getApiCoins();
+
     _subscription = listenConnectivity(context);
-    marketStatus = context.read<AllCoinsProvider>().marketStatus;
+
+    getApiCoins();
   }
 
   @override
@@ -58,11 +59,13 @@ class _MarketScreenState extends State<MarketScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
     final bool isLoadingMarket = context.select((AllCoinsProvider allCoinsProvider) => allCoinsProvider.isLoadingMarket);
     final bool hasErrorMarket = context.select((AllCoinsProvider allCoinsProvider) => allCoinsProvider.hasErrorMarket);
     final bool isDbAvailable = context.select((AllCoinsProvider allCoinsProvider) => allCoinsProvider.isDatabaseAvailable);
-
-    final ThemeData theme = Theme.of(context);
+    final double marketStatus = context.select((AllCoinsProvider allCoinsProvider) => allCoinsProvider.marketStatus);
+    final bool hasErrorUserCoin = context.select((UserCoinsProvider userCoinsProvider) => userCoinsProvider.hasErrorUserCoin);
 
     return Scaffold(
       appBar: AppBar(
@@ -100,15 +103,15 @@ class _MarketScreenState extends State<MarketScreen> {
               ),
       ),
       body: SafeArea(
-        child: isLoadingMarket
-            ? const MarketShimmer()
-            : hasErrorMarket
-                ? isDbAvailable
-                    ? MarketCoins(marketStatus: marketStatus)
-                    : const MarketCustomError(
-                        error: 'Please make sure your internet is connected and try again.',
-                        pngPath: 'assets/images/no-wifi.png',
-                      )
+        child: hasErrorUserCoin
+            ? isDbAvailable
+                ? MarketCoins(marketStatus: marketStatus)
+                : const MarketCustomError(
+                    error: 'Please make sure your internet is connected and try again.',
+                    pngPath: 'assets/images/no-wifi.png',
+                  )
+            : isLoadingMarket
+                ? const MarketShimmer()
                 : MarketCoins(marketStatus: marketStatus),
       ),
       bottomNavigationBar: const NavBar(currentIndex: 1),
@@ -122,7 +125,12 @@ class _MarketScreenState extends State<MarketScreen> {
               ),
               onPressed: () async {
                 try {
-                  await context.read<AllCoinsProvider>().getApiCoins();
+                  if (hasErrorUserCoin) {
+                    await context.read<UserCoinsProvider>().setUserCoin();
+                  }
+                  if (mounted) {
+                    await context.read<AllCoinsProvider>().getApiCoins();
+                  }
                 } catch (e) {
                   await showDialog(
                     context: context,
