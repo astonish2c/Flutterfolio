@@ -26,6 +26,7 @@ class MarketCustomError extends StatelessWidget {
             height: 150,
             child: Image.asset(
               '$pngPath',
+              color: theme.colorScheme.onPrimaryContainer,
             ),
           ),
           const SizedBox(height: 16),

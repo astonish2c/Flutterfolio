@@ -53,9 +53,8 @@ class App extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: Hive.box('themeBox').listenable(),
       builder: (context, box, _) {
-        final bool isDarkTheme = box.get('isDarkTheme');
+        final bool isDarkTheme = box.get('isDarkTheme') ?? false;
 
-        print('App Build');
         return MaterialApp(
           title: 'Crypto Firebase',
           debugShowCheckedModeBanner: false,
