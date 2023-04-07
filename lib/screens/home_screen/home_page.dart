@@ -5,7 +5,6 @@ import 'package:crypto_exchange_app/provider/all_coins_provider.dart';
 import 'package:crypto_exchange_app/provider/user_coins_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/services.dart';
 
 import '../../custom_widgets/custom_alert_dialog.dart';
 
@@ -30,8 +29,8 @@ class _HoldingsPageState extends State<HoldingsPage> {
 
   @override
   void initState() {
-    _subscription = listenConnectivity(context);
     setValues(context: context);
+    _subscription = listenConnectivity(context);
 
     super.initState();
   }
