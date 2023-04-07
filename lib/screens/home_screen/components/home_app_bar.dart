@@ -22,10 +22,10 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
     return AppBar(
       centerTitle: true,
       leading: Consumer<ThemeProvider>(
-        builder: (context, value, child) => CustomIconButton(
+        builder: (context, themeProvider, child) => CustomIconButton(
           size: 25,
           onPressed: () {
-            value.toggleThemeMode();
+            themeProvider.toggleThemeMode();
           },
           icon: Icons.dark_mode,
         ),

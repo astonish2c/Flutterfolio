@@ -40,7 +40,6 @@ class TransactionsItem extends StatelessWidget {
                   ),
                   child: Icon(
                     transaction.isSell ? Icons.arrow_upward : Icons.arrow_downward_rounded,
-                    color: value.isDark ? Colors.white : Colors.black,
                   ),
                 ),
               ),

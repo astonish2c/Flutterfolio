@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class ThemeProvider with ChangeNotifier {
-  bool isDark = false;
-  ThemeMode _themeMode = ThemeMode.light;
+  // final bool _isDarkTheme = false;
+  late bool _isDarkTheme;
 
-  get themeMode => _themeMode;
+  Future<void> toggleThemeMode() async {
+    // _isDarkTheme = !_isDarkTheme;
 
-  void toggleThemeMode() {
-    isDark = !isDark;
-    _themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
+    Box box = await Hive.openBox('themeBox');
+
+    _isDarkTheme = box.get('isDarkTheme') ?? false;
+
+    _isDarkTheme = !_isDarkTheme;
+
+    await box.put('isDarkTheme', _isDarkTheme);
+
     notifyListeners();
   }
 }
