@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../custom_widgets/custom_alert_dialog.dart';
-
 import '../../custom_widgets/nav_bar.dart';
 import '../../provider/utils/helper_methods.dart';
 import '../market_screen/widgets/market_custom_error.dart';
@@ -16,15 +15,18 @@ import 'components/home_balance.dart';
 import 'components/home_portfolio.dart';
 import 'components/home_shimmer.dart';
 import 'helper_methods.dart';
+import 'components/home_drawer.dart';
 
-class HoldingsPage extends StatefulWidget {
-  const HoldingsPage({super.key});
+class HomeScreen extends StatefulWidget {
+  static const routeName = 'Holdings-Page';
+
+  const HomeScreen({super.key});
 
   @override
-  State<HoldingsPage> createState() => _HoldingsPageState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HoldingsPageState extends State<HoldingsPage> {
+class _HomeScreenState extends State<HomeScreen> {
   late StreamSubscription<ConnectivityResult> _subscription;
 
   @override
@@ -67,6 +69,7 @@ class _HoldingsPageState extends State<HoldingsPage> {
                   ],
                 ),
       bottomNavigationBar: const NavBar(currentIndex: 0),
+      drawer: const Drawer(child: HomeDrawer()),
       floatingActionButton: !hasErrorUserCoin
           ? const Text('')
           : FloatingActionButton(

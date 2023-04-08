@@ -36,7 +36,7 @@ class _NavBarState extends State<NavBar> {
             _selectedIndex = value;
           });
           if (_selectedIndex == 0) {
-            navigateToPage(context, const HoldingsPage());
+            navigateToPage(context, const HomeScreen());
           }
           if (_selectedIndex == 1) {
             navigateToPage(context, const MarketScreen());
