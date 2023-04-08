@@ -120,7 +120,7 @@ Future<void> submit({
 
     if (isPushHomePage != null) return;
 
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HoldingsPage()));
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreen()));
   }
 }
 

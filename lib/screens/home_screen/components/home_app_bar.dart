@@ -21,19 +21,21 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
     final theme = Theme.of(context);
     return AppBar(
       centerTitle: true,
-      leading: Consumer<ThemeProvider>(
-        builder: (context, themeProvider, child) => CustomIconButton(
-          size: 25,
-          onPressed: () {
-            themeProvider.toggleThemeMode();
-          },
-          icon: Icons.dark_mode,
-        ),
-      ),
       title: Text(
         'CryptoLand',
         style: theme.textTheme.titleMedium,
       ),
+      actions: [
+        Consumer<ThemeProvider>(
+          builder: (context, themeProvider, child) => CustomIconButton(
+            size: 25,
+            onPressed: () {
+              themeProvider.toggleThemeMode();
+            },
+            icon: Icons.dark_mode,
+          ),
+        ),
+      ],
     );
   }
 }

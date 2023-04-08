@@ -38,7 +38,12 @@ class UserCoinsProvider with ChangeNotifier {
     notifyListeners();
 
     dr.child('userCoins/').onValue.listen((event) {
-      if (event.snapshot.value == null) setNullFailedFields();
+      if (event.snapshot.value == null) {
+        isFirstRunUser = false;
+        isLoadingUserCoin = false;
+        notifyListeners();
+        return;
+      }
 
       addMapUserCoin(event: event, userCoins: _userCoins);
 
@@ -200,11 +205,6 @@ class UserCoinsProvider with ChangeNotifier {
   }
 
   void setNullFailedFields() {
-    isFirstRunUser = false;
-    isLoadingUserCoin = false;
-    notifyListeners();
-    print('userCoins is empty in firebase.');
-
     return;
   }
 }
