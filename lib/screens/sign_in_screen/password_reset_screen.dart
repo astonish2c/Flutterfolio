@@ -31,6 +31,22 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Spacer(),
+            SizedBox(
+              height: 120,
+              width: 120,
+              child: Image.asset(
+                'assets/images/happiness.png',
+                color: theme.colorScheme.onPrimaryContainer,
+              ),
+            ),
+            const SizedBox(height: 24),
+            FittedBox(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text('We have got your back', style: theme.textTheme.displaySmall),
+              ),
+            ),
+            const SizedBox(height: 56),
             TextField(
               controller: _emailController,
               decoration: const InputDecoration(
@@ -77,7 +93,7 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                 },
               ),
             ),
-            const Spacer(),
+            const Spacer(flex: 2),
           ],
         ),
       ),

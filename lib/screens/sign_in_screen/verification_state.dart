@@ -44,14 +44,14 @@ class _VerificationStateState extends State<VerificationState> {
   }
 
   Future<void> sendEmailVerification() async {
-    final User user = FirebaseAuth.instance.currentUser!;
+    final User? user = FirebaseAuth.instance.currentUser;
 
     try {
       setState(() {
         _canSendEmailVerification = false;
       });
 
-      await user.sendEmailVerification();
+      await user?.sendEmailVerification();
 
       _timerRemainingSeconds = scheduledSendEmailVerification();
 
@@ -64,15 +64,15 @@ class _VerificationStateState extends State<VerificationState> {
   }
 
   void checkEmailVerification() {
-    final User user = FirebaseAuth.instance.currentUser!;
+    final User? user = FirebaseAuth.instance.currentUser;
 
-    user.reload();
+    user?.reload();
 
     setState(() {
-      _isEmailVerified = user.emailVerified;
+      _isEmailVerified = user?.emailVerified ?? false;
     });
 
-    if (user.emailVerified) {
+    if (user?.emailVerified ?? false) {
       _timerCheckEmailVerification?.cancel();
     }
   }

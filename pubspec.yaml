@@ -59,6 +59,7 @@ dependencies:
   build_runner: ^2.3.3
   firebase_auth: ^4.4.0
   email_validator: ^2.1.17
+  url_launcher: ^6.1.10
   
 dev_dependencies:
   flutter_test:

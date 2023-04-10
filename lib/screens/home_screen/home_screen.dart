@@ -37,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
+      extendBody: true,
       appBar: HomeAppBar(hasErrorUserCoin: hasErrorUserCoin),
       body: isLoadingUserCoin
           ? const HomeShimmer()

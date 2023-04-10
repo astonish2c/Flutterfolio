@@ -18,11 +18,20 @@ class VerifyEmailScreen extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        title: const Text('Email verification'),
+        title: const Text('Almost There'),
       ),
       body: Column(
         children: [
           Spacer(),
+          SizedBox(
+            height: 120,
+            width: 120,
+            child: Image.asset(
+              'assets/images/happiness.png',
+              color: theme.colorScheme.onPrimaryContainer,
+            ),
+          ),
+          const SizedBox(height: 56),
           Center(
             child: Text(
               'A verification email has been sent to your mail.',
@@ -57,7 +66,7 @@ class VerifyEmailScreen extends StatelessWidget {
               onPressed: () => FirebaseAuth.instance.signOut(),
             ),
           ),
-          Spacer(),
+          Spacer(flex: 2),
         ],
       ),
     );

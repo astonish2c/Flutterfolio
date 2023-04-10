@@ -1,5 +1,4 @@
 import 'package:crypto_exchange_app/main.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,12 +22,20 @@ class _SignupWidgetState extends State<SignupWidget> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  bool _isPasswordObscured = true;
+
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     _retypePasswordController.dispose();
     super.dispose();
+  }
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _isPasswordObscured = !_isPasswordObscured;
+    });
   }
 
   @override
@@ -43,6 +50,22 @@ class _SignupWidgetState extends State<SignupWidget> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Spacer(),
+            SizedBox(
+              height: 80,
+              width: 80,
+              child: Image.asset(
+                'assets/images/writing.png',
+                color: theme.colorScheme.onPrimaryContainer,
+              ),
+            ),
+            const SizedBox(height: 24),
+            FittedBox(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text('Let\'s get you signed up', style: theme.textTheme.displaySmall),
+              ),
+            ),
+            const SizedBox(height: 48),
             TextFormField(
               controller: _emailController,
               decoration: const InputDecoration(
@@ -62,12 +85,19 @@ class _SignupWidgetState extends State<SignupWidget> {
             const SizedBox(height: 18),
             TextFormField(
               controller: _passwordController,
-              decoration: const InputDecoration(
-                label: Text('Password'),
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                label: const Text('Password'),
+                border: const OutlineInputBorder(),
+                suffixIcon: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () => _togglePasswordVisibility(),
+                  child: Icon(
+                    _isPasswordObscured ? Icons.visibility_off : Icons.visibility,
+                  ),
+                ),
               ),
               textInputAction: TextInputAction.done,
-              obscureText: true,
+              obscureText: _isPasswordObscured,
               validator: (password) {
                 if (password != null && password.length < 6) {
                   return 'Your password must be at least 6 characters long.';
@@ -78,12 +108,17 @@ class _SignupWidgetState extends State<SignupWidget> {
             const SizedBox(height: 18),
             TextFormField(
               controller: _retypePasswordController,
-              decoration: const InputDecoration(
-                label: Text('Retype password'),
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                label: const Text('Retype password'),
+                border: const OutlineInputBorder(),
+                suffixIcon: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () => _togglePasswordVisibility(),
+                  child: Icon(_isPasswordObscured ? Icons.visibility_off : Icons.visibility),
+                ),
               ),
               textInputAction: TextInputAction.done,
-              obscureText: true,
+              obscureText: _isPasswordObscured,
               validator: (retypedPassword) {
                 if (retypedPassword != null && _passwordController.text != _retypePasswordController.text) {
                   return 'Your password does not match.';
@@ -143,7 +178,7 @@ class _SignupWidgetState extends State<SignupWidget> {
                 ],
               ),
             ),
-            const Spacer(),
+            const Spacer(flex: 2),
           ],
         ),
       ),

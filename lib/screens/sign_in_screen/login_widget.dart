@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,11 +21,19 @@ class _LoginWidgetState extends State<LoginWidget> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  bool _isPasswordObscured = true;
+
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _isPasswordObscured = !_isPasswordObscured;
+    });
   }
 
   @override
@@ -36,6 +46,17 @@ class _LoginWidgetState extends State<LoginWidget> {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Spacer(),
+          SizedBox(
+            height: 80,
+            width: 80,
+            child: Image.asset(
+              'assets/images/smile.png',
+              color: theme.colorScheme.onPrimaryContainer,
+            ),
+          ),
+          const SizedBox(height: 24),
+          Text('Welcome', style: theme.textTheme.displayMedium),
+          const SizedBox(height: 48),
           TextField(
             controller: _emailController,
             decoration: const InputDecoration(
@@ -46,15 +67,20 @@ class _LoginWidgetState extends State<LoginWidget> {
             keyboardType: TextInputType.emailAddress,
           ),
           const SizedBox(height: 18),
-          TextField(
+          TextFormField(
             controller: _passwordController,
             autofocus: false,
-            decoration: const InputDecoration(
-              label: Text('Password'),
+            decoration: InputDecoration(
+              label: const Text('Password'),
               border: OutlineInputBorder(),
+              suffixIcon: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () => _togglePasswordVisibility(),
+                child: Icon(_isPasswordObscured ? Icons.visibility_off : Icons.visibility),
+              ),
             ),
             textInputAction: TextInputAction.done,
-            obscureText: true,
+            obscureText: _isPasswordObscured,
           ),
           const SizedBox(height: 24),
           SizedBox(
@@ -117,7 +143,7 @@ class _LoginWidgetState extends State<LoginWidget> {
               ],
             ),
           ),
-          const Spacer(),
+          const Spacer(flex: 2),
         ],
       ),
     );
