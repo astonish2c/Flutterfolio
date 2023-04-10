@@ -7,8 +7,13 @@
 <ul>
   <li>View real-time market prices for popular cryptocurrencies</li>
   <li>Add buy and sell transactions for each currency</li>
-  <li>Track the profit/loss of your portfolio</li>
   <li>View detailed transaction history for each currency</li>
+</ul>
+
+<h2>Features to be implemented</h2>
+
+<ul>
+  <li>Track the profit/loss of your portfolio</li>
   <li>Set alerts for price changes</li>
   <li>Securely store your API keys for cryptocurrency exchanges</li>
 </ul>
