@@ -1,21 +1,17 @@
-import 'dart:async';
-
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:crypto_exchange_app/provider/all_coins_provider.dart';
-import 'package:crypto_exchange_app/provider/user_coins_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:crypto_exchange_app/provider/all_coins_provider.dart';
+import 'package:crypto_exchange_app/provider/user_coins_provider.dart';
 import '../../custom_widgets/custom_alert_dialog.dart';
 import '../../custom_widgets/nav_bar.dart';
-import '../../provider/utils/helper_methods.dart';
 import '../market_screen/widgets/market_custom_error.dart';
 import 'components/home_app_bar.dart';
 import 'components/home_balance.dart';
+import 'components/home_drawer.dart';
 import 'components/home_portfolio.dart';
 import 'components/home_shimmer.dart';
 import 'helper_methods.dart';
-import 'components/home_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = 'Holdings-Page';
@@ -27,20 +23,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late StreamSubscription<ConnectivityResult> _subscription;
-
   @override
   void initState() {
-    setValues(context: context);
-    _subscription = listenConnectivity(context);
-
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _subscription.cancel();
-    super.dispose();
+    setValues(context: context);
   }
 
   @override

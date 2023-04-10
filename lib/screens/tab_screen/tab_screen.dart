@@ -23,19 +23,12 @@ class TabScreen extends StatefulWidget {
 class _TabScreenState extends State<TabScreen> with TickerProviderStateMixin {
   final FocusNode _focusNode = FocusNode();
   late TabController _tabController;
-  late StreamSubscription<ConnectivityResult> _subscription;
 
   late CoinModel _coin;
   late int _initialPage;
 
   late bool? _isPushHomePage;
   late int? _indexTransaction;
-
-  @override
-  void initState() {
-    _subscription = listenConnectivity(context);
-    super.initState();
-  }
 
   @override
   void didChangeDependencies() {
@@ -57,7 +50,6 @@ class _TabScreenState extends State<TabScreen> with TickerProviderStateMixin {
   void dispose() {
     _tabController.dispose();
     _focusNode.dispose();
-    _subscription.cancel();
     super.dispose();
   }
 

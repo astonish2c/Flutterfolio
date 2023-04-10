@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '/screens/home_screen/home_page.dart';
+import '../home_screen/home_screen.dart';
 import 'verify_email_screen.dart';
 import 'widgets/utils.dart';
 
@@ -21,7 +21,7 @@ class _VerificationStateState extends State<VerificationState> {
   bool _isEmailVerified = false;
   bool _canSendEmailVerification = true;
 
-  int _remainingSeconds = 30;
+  int _remainingSeconds = 60;
 
   @override
   void initState() {
@@ -79,15 +79,17 @@ class _VerificationStateState extends State<VerificationState> {
 
   Timer scheduledSendEmailVerification() {
     return Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        _remainingSeconds--;
-      });
+      if (mounted) {
+        setState(() {
+          _remainingSeconds--;
+        });
+      }
 
       if (_remainingSeconds == 0) {
         timer.cancel();
         setState(() {
           _canSendEmailVerification = true;
-          _remainingSeconds = 30;
+          _remainingSeconds = 60;
         });
       }
     });

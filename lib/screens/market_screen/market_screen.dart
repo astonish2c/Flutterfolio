@@ -1,17 +1,14 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:crypto_exchange_app/custom_widgets/helper_methods.dart';
-import 'package:crypto_exchange_app/provider/all_coins_provider.dart';
-import 'package:crypto_exchange_app/provider/user_coins_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../custom_widgets/custom_alert_dialog.dart';
 import '../../custom_widgets/nav_bar.dart';
-
-import '../../provider/utils/helper_methods.dart';
+import '/custom_widgets/helper_methods.dart';
+import '/provider/all_coins_provider.dart';
+import '/provider/user_coins_provider.dart';
 import 'components/market_coins.dart';
 import 'components/market_shimmer.dart';
 import 'widgets/market_custom_error.dart';
@@ -26,20 +23,14 @@ class MarketScreen extends StatefulWidget {
 }
 
 class _MarketScreenState extends State<MarketScreen> {
-  late StreamSubscription<ConnectivityResult> _subscription;
-
   @override
   void initState() {
     super.initState();
-
-    _subscription = listenConnectivity(context);
-
     getApiCoins();
   }
 
   @override
   void dispose() {
-    _subscription.cancel();
     super.dispose();
   }
 

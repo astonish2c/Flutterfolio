@@ -1,13 +1,8 @@
-// ignore_for_file: prefer_const_constructors
-
-import 'package:crypto_exchange_app/main.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:crypto_exchange_app/custom_widgets/helper_methods.dart';
-
+import 'package:crypto_exchange_app/main.dart';
 import 'password_reset_screen.dart';
 import 'widgets/utils.dart';
 
@@ -66,17 +61,17 @@ class _LoginWidgetState extends State<LoginWidget> {
             height: 60,
             width: double.infinity,
             child: ElevatedButton.icon(
-              icon: Icon(Icons.lock_open_rounded),
+              icon: const Icon(Icons.lock_open_rounded),
               label: Text(
                 'Sign in',
                 style: theme.textTheme.titleMedium!.copyWith(fontSize: 24, fontWeight: FontWeight.w500),
               ),
-              style: ButtonStyle(shape: MaterialStateProperty.all(RoundedRectangleBorder())),
+              style: ButtonStyle(shape: MaterialStateProperty.all(const RoundedRectangleBorder())),
               onPressed: () async {
                 showDialog(
                   context: context,
                   barrierDismissible: false,
-                  builder: (context) => Center(child: CircularProgressIndicator()),
+                  builder: (context) => const Center(child: CircularProgressIndicator()),
                 );
                 try {
                   await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -84,7 +79,13 @@ class _LoginWidgetState extends State<LoginWidget> {
                     password: _passwordController.text.trim(),
                   );
                 } on FirebaseAuthException catch (e) {
-                  Utils.showSnackBar(e.message);
+                  if (e.code == 'user-not-found') {
+                    Utils.showSnackBar('No user found for that email.');
+                  } else if (e.code == 'wrong-password') {
+                    Utils.showSnackBar('Wrong password provided for that user.');
+                  } else {
+                    Utils.showSnackBar(e.message);
+                  }
                 }
                 navigatorKey.currentState!.popUntil((route) => route.isFirst);
               },
@@ -93,7 +94,7 @@ class _LoginWidgetState extends State<LoginWidget> {
           const SizedBox(height: 24),
           GestureDetector(
             onTap: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => PasswordResetScreen(),
+              builder: (context) => const PasswordResetScreen(),
             )),
             child: Text(
               'Forgot password?',

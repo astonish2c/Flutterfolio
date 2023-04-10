@@ -67,7 +67,12 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
 
                     navigatorKey.currentState!.popUntil((route) => route.isFirst);
                   } on FirebaseAuthException catch (e) {
-                    Utils.showSnackBar(e.message);
+                    Navigator.of(context).pop();
+                    if (e.code == 'user-not-found') {
+                      Utils.showSnackBar('No user found for that email.');
+                    } else {
+                      Utils.showSnackBar(e.message);
+                    }
                   }
                 },
               ),

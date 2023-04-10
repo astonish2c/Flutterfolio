@@ -66,36 +66,6 @@ void addMapUserCoin({required DatabaseEvent event, required Map<String, CoinMode
   }
 }
 
-StreamSubscription<ConnectivityResult> listenConnectivity(BuildContext context) {
-  final bool isFirstRunUser = context.read<UserCoinsProvider>().isFirstRunUser;
-
-  Connectivity connectivity = Connectivity();
-
-  StreamSubscription<ConnectivityResult> subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
-    if (result == ConnectivityResult.none) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          duration: const Duration(seconds: 2),
-          backgroundColor: Colors.blue[900],
-          content: const SnackBarContainer(message: 'No internet connected'),
-        ),
-      );
-    } else {
-      if (isFirstRunUser) return;
-
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          duration: const Duration(seconds: 2),
-          backgroundColor: Colors.blue[900],
-          content: const SnackBarContainer(message: 'Internet connected'),
-        ),
-      );
-    }
-  });
-  return subscription;
-}
-
 class SnackBarContainer extends StatelessWidget {
   const SnackBarContainer({
     super.key,

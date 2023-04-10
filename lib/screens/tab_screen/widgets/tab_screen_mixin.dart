@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/coin_model.dart';
-import '../../home_screen/home_page.dart';
+import '../../home_screen/home_screen.dart';
 import '../../transactions_screen/transactions_screen.dart';
 
 mixin TabScreenMixin<T extends StatefulWidget> on State<T> {

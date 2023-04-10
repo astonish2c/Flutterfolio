@@ -1,14 +1,15 @@
-import 'package:crypto_exchange_app/screens/sign_in_screen/authentication_state.dart';
-import 'package:crypto_exchange_app/screens/sign_in_screen/verification_state.dart';
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '/screens/sign_in_screen/verification_state.dart';
+import '/screens/sign_in_screen/authentication_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'custom_widgets/custom_theme.dart';
-import '/screens/home_screen/home_page.dart';
+import 'screens/home_screen/home_screen.dart';
+import 'home_page.dart';
 import 'screens/add_coins_screen/add_coins_Screen.dart';
 import 'screens/sign_in_screen/login_widget.dart';
 import 'screens/sign_in_screen/widgets/utils.dart';
@@ -70,26 +71,9 @@ class App extends StatelessWidget {
           theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
           darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
           themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
-          home: Scaffold(
-            resizeToAvoidBottomInset: false,
-            body: SafeArea(
-              child: StreamBuilder<User?>(
-                stream: FirebaseAuth.instance.authStateChanges(),
-                builder: (context, user) {
-                  if (user.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (user.hasError) {
-                    return const Text('Something went wrong');
-                  } else if (user.hasData) {
-                    return const VerificationState();
-                  } else {
-                    return const AuthenticationState();
-                  }
-                },
-              ),
-            ),
-          ),
+          home: const HomePage(),
           routes: {
+            HomePage.routeName: (context) => const HomePage(),
             HomeScreen.routeName: (context) => const HomeScreen(),
             MarketScreen.routeName: (context) => const MarketScreen(),
             TransactionsScreen.routeName: (context) => const TransactionsScreen(),

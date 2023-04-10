@@ -1,4 +1,5 @@
 import 'package:crypto_exchange_app/main.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,6 +19,7 @@ class SignupWidget extends StatefulWidget {
 class _SignupWidgetState extends State<SignupWidget> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _retypePasswordController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -25,6 +27,7 @@ class _SignupWidgetState extends State<SignupWidget> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _retypePasswordController.dispose();
     super.dispose();
   }
 
@@ -72,6 +75,22 @@ class _SignupWidgetState extends State<SignupWidget> {
                 return null;
               },
             ),
+            const SizedBox(height: 18),
+            TextFormField(
+              controller: _retypePasswordController,
+              decoration: const InputDecoration(
+                label: Text('Retype password'),
+                border: OutlineInputBorder(),
+              ),
+              textInputAction: TextInputAction.done,
+              obscureText: true,
+              validator: (retypedPassword) {
+                if (retypedPassword != null && _passwordController.text != _retypePasswordController.text) {
+                  return 'Your password does not match.';
+                }
+                return null;
+              },
+            ),
             const SizedBox(height: 24),
             SizedBox(
               height: 60,
@@ -101,6 +120,8 @@ class _SignupWidgetState extends State<SignupWidget> {
                     );
                   } on FirebaseAuthException catch (e) {
                     Utils.showSnackBar(e.message);
+                    Navigator.of(context).pop();
+                    return;
                   }
                   navigatorKey.currentState!.popUntil((route) => route.isFirst);
                 },

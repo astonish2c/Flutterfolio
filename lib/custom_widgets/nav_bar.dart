@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../screens/home_screen/home_page.dart';
+import '../screens/home_screen/home_screen.dart';
 import '../screens/market_screen/market_screen.dart';
 
 class NavBar extends StatefulWidget {
