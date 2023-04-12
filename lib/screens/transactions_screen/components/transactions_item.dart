@@ -90,7 +90,7 @@ class TransactionsItem extends StatelessWidget {
           color: Colors.grey.withOpacity(0.2),
           thickness: 1,
         ),
-        SizedBox(height: defaultPadding / 2),
+        SizedBox(height: 16 / 2),
       ],
     );
   }

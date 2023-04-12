@@ -1,16 +1,17 @@
-import 'package:crypto_exchange_app/provider/all_coins_provider.dart';
-import 'package:crypto_exchange_app/provider/user_coins_provider.dart';
+import 'package:crypto_exchange_app/custom_widgets/custom_image.dart';
+import 'package:crypto_exchange_app/provider/allCoins_provider.dart';
+import 'package:crypto_exchange_app/provider/userCoins_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '/screens/tab_screen/tab_screen.dart';
-import '../../custom_widgets/custom_icon_btn.dart';
+import '../../custom_widgets/custom_iconButton.dart';
 import 'components/transactions_bottom_sheet.dart';
 import '../../custom_widgets/helper_methods.dart';
 import '../../model/coin_model.dart';
 
 import '../../provider/theme_provider.dart';
-import '../../custom_widgets/custom_big_btn.dart';
+import '../../custom_widgets/custom_bigButton.dart';
 import 'components/transactions_item.dart';
 
 class TransactionsScreen extends StatelessWidget {
@@ -41,15 +42,13 @@ class TransactionsScreen extends StatelessWidget {
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(
+            Image.network(
+              coin!.image,
               height: 25,
               width: 25,
-              child: Image.network(
-                coin!.image,
-                errorBuilder: (context, error, stackTrace) => Image.asset(
-                  'assets/images/no-wifi.png',
-                  color: theme.colorScheme.onSecondaryContainer,
-                ),
+              errorBuilder: (context, error, stackTrace) => const CustomImage(
+                imagePath: 'assets/images/no-wifi.png',
+                size: 25,
               ),
             ),
             const SizedBox(width: 4),
@@ -69,13 +68,13 @@ class TransactionsScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(defaultPadding),
+          padding: EdgeInsets.all(16),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(
               'Transactions',
               style: theme.textTheme.titleMedium!.copyWith(fontSize: 22),
             ),
-            SizedBox(height: defaultPadding),
+            SizedBox(height: 16),
             Expanded(
               child: Builder(builder: (context) {
                 context.select((UserCoinsProvider userCoinsProvider) => userCoinsProvider.userBalance);
@@ -108,7 +107,7 @@ class TransactionsScreen extends StatelessWidget {
               }),
             ),
             const SizedBox(height: 16),
-            CustomBigBtn(
+            CustomBigButton(
                 text: 'Add Transaction',
                 bgColor: Colors.blue[900],
                 onTap: () {

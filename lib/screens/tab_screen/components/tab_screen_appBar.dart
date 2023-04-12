@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../../../custom_widgets/custom_icon_btn.dart';
+import '/custom_widgets/custom_image.dart';
+import '../../../custom_widgets/custom_iconButton.dart';
 import '../../../custom_widgets/helper_methods.dart';
 import '../../../model/coin_model.dart';
-import '../../../provider/theme_provider.dart';
 
 class TabScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
   const TabScreenAppBar({
@@ -30,15 +29,13 @@ class TabScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       title: Row(
         children: [
-          SizedBox(
+          Image.network(
+            coinModel.image,
             height: 25,
             width: 25,
-            child: Image.network(
-              coinModel.image,
-              errorBuilder: (context, error, stackTrace) => Image.asset(
-                'assets/images/no-wifi.png',
-                color: theme.colorScheme.onSecondaryContainer,
-              ),
+            errorBuilder: (context, error, stackTrace) => const CustomImage(
+              imagePath: 'assets/images/no-wifi.png',
+              size: 25,
             ),
           ),
           const SizedBox(width: 4),

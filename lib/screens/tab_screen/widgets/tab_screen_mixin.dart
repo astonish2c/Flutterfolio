@@ -1,10 +1,10 @@
-import 'package:crypto_exchange_app/provider/all_coins_provider.dart';
-import 'package:crypto_exchange_app/provider/user_coins_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../provider/allCoins_provider.dart';
+import '../../../provider/userCoins_provider.dart';
 import '../../../model/coin_model.dart';
-import '../../home_screen/home_screen.dart';
+import '../../portfolio_screen/portfolio_screen.dart';
 import '../../transactions_screen/transactions_screen.dart';
 
 mixin TabScreenMixin<T extends StatefulWidget> on State<T> {
@@ -120,7 +120,7 @@ Future<void> submit({
 
     if (isPushHomePage != null) return;
 
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreen()));
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const PortfolioScreen()));
   }
 }
 

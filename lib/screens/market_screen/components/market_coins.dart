@@ -1,4 +1,5 @@
-import 'package:crypto_exchange_app/provider/all_coins_provider.dart';
+import 'package:crypto_exchange_app/custom_widgets/custom_image.dart';
+import 'package:crypto_exchange_app/provider/allCoins_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +36,7 @@ class MarketCoins extends StatelessWidget {
                   child: Column(
                     children: [
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: defaultPadding / 2),
+                        padding: EdgeInsets.symmetric(vertical: 16 / 2),
                         child: Row(
                           children: [
                             SizedBox(
@@ -44,19 +45,16 @@ class MarketCoins extends StatelessWidget {
                               child: Image.network(
                                 localCoins[index].image,
                                 errorBuilder: (context, error, stackTrace) {
-                                  return Image.asset(
-                                    'assets/images/no-wifi.png',
-                                    color: theme.colorScheme.onSecondaryContainer,
-                                  );
+                                  return const CustomImage(imagePath: 'assets/images/no-wifi.png');
                                 },
                               ),
                             ),
-                            SizedBox(width: defaultPadding),
+                            SizedBox(width: 16),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(localCoins[index].name.toCapitalized(), style: theme.textTheme.titleMedium),
-                                SizedBox(height: defaultPadding / 4),
+                                SizedBox(height: 16 / 4),
                                 Text(localCoins[index].symbol.toUpperCase(), style: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onPrimaryContainer.withOpacity(0.4))),
                               ],
                             ),

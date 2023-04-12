@@ -1,3 +1,4 @@
+import 'package:crypto_exchange_app/custom_widgets/custom_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -6,11 +7,10 @@ class MarketCustomError extends StatelessWidget {
     super.key,
     required this.error,
     this.pngPath,
-    this.svgPath,
   });
+
   final String error;
   final String? pngPath;
-  final String? svgPath;
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +21,7 @@ class MarketCustomError extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(
-            width: 150,
-            height: 150,
-            child: Image.asset(
-              '$pngPath',
-              color: theme.colorScheme.onPrimaryContainer,
-            ),
-          ),
+          CustomImage(imagePath: '$pngPath', size: 150),
           const SizedBox(height: 16),
           Text(
             '''$error''',

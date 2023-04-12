@@ -1,4 +1,4 @@
-import 'package:crypto_exchange_app/provider/user_coins_provider.dart';
+import 'package:crypto_exchange_app/provider/userCoins_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '/screens/tab_screen/tab_screen.dart';
 import '../../../model/coin_model.dart';
 import '../../../custom_widgets/helper_methods.dart';
-import '../../../custom_widgets/custom_big_btn.dart';
+import '../../../custom_widgets/custom_bigButton.dart';
 import '../widgets/transactions_bottom_sheet_row.dart';
 
 class TransactionsBottomSheet extends StatefulWidget {
@@ -41,7 +41,7 @@ class _TransactionsBottomSheetState extends State<TransactionsBottomSheet> {
             'Transaction Details',
             style: theme.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: defaultPadding),
+          SizedBox(height: 16),
           TransactionsBottomSheetRow(
             title1: 'Type',
             title2: transaction.isSell ? 'Sell' : 'Buy',
@@ -90,7 +90,7 @@ class _TransactionsBottomSheetState extends State<TransactionsBottomSheet> {
             color: Colors.grey,
           ),
           const SizedBox(height: 16),
-          CustomBigBtn(
+          CustomBigButton(
             text: 'Edit Transaction',
             bgColor: Colors.blue[900],
             textColor: Colors.white,
@@ -114,7 +114,7 @@ class _TransactionsBottomSheetState extends State<TransactionsBottomSheet> {
                   },
           ),
           const SizedBox(height: 8),
-          CustomBigBtn(
+          CustomBigButton(
             text: 'Remove Transaction',
             bgColor: Colors.red[900],
             textColor: Colors.white,

@@ -4,11 +4,12 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../custom_widgets/custom_alert_dialog.dart';
-import '../../custom_widgets/nav_bar.dart';
+import '../../custom_widgets/custom_alertDialog.dart';
+import '../../custom_widgets/custom_navBar.dart';
+import '../home_screen/widgets/utils.dart';
 import '/custom_widgets/helper_methods.dart';
-import '/provider/all_coins_provider.dart';
-import '/provider/user_coins_provider.dart';
+import '../../provider/allCoins_provider.dart';
+import '../../provider/userCoins_provider.dart';
 import 'components/market_coins.dart';
 import 'components/market_shimmer.dart';
 import 'widgets/market_custom_error.dart';
@@ -39,12 +40,12 @@ class _MarketScreenState extends State<MarketScreen> {
 
     final bool isDatabaseAvailable = readAllCoinsProvider.isDatabaseAvailable;
 
-    if (isDatabaseAvailable || !readAllCoinsProvider.firstRun) return;
+    if (isDatabaseAvailable || !readAllCoinsProvider.isFirstRun) return;
 
     try {
       await readAllCoinsProvider.getApiCoins();
     } catch (e) {
-      print(e);
+      Utils.showSnackBar(e.toString());
     }
   }
 
@@ -105,7 +106,7 @@ class _MarketScreenState extends State<MarketScreen> {
                 ? const MarketShimmer()
                 : MarketCoins(marketStatus: marketStatus),
       ),
-      bottomNavigationBar: const NavBar(currentIndex: 1),
+      bottomNavigationBar: const CustomNavBar(currentIndex: 1),
       floatingActionButton: isLoadingMarket
           ? const Text('')
           : FloatingActionButton(

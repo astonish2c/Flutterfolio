@@ -4,10 +4,6 @@ import 'package:decimal/decimal.dart';
 
 import '../model/coin_model.dart';
 
-const Color lightYellow = Colors.yellow;
-
-double defaultPadding = 16;
-
 String currencyConverter(double num, {bool isCurrency = true, bool isSell = false}) {
   if (num == 0) return '\$$num';
 

@@ -4,28 +4,23 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
-import '/screens/sign_in_screen/verification_state.dart';
-import '/screens/sign_in_screen/authentication_state.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'custom_widgets/custom_theme.dart';
+import 'screens/addCoins_screen/addCoins_screen.dart';
+import 'screens/portfolio_screen/portfolio_screen.dart';
 import 'screens/home_screen/home_screen.dart';
-import 'home_page.dart';
-import 'screens/add_coins_screen/add_coins_Screen.dart';
-import 'screens/sign_in_screen/login_widget.dart';
-import 'screens/sign_in_screen/widgets/utils.dart';
+import 'screens/home_screen/widgets/utils.dart';
 import 'screens/tab_screen/tab_screen.dart';
 import 'screens/transactions_screen/transactions_screen.dart';
 import 'screens/market_screen/market_screen.dart';
 import '/provider/theme_provider.dart';
-import '/provider/all_coins_provider.dart';
-import '/provider/user_coins_provider.dart';
+import 'provider/allCoins_provider.dart';
+import 'provider/userCoins_provider.dart';
 
 late Box box;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Hive.initFlutter();
-
   await Hive.openBox('themeBox');
 
   await Firebase.initializeApp();
@@ -71,10 +66,10 @@ class App extends StatelessWidget {
           theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
           darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
           themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
-          home: const HomePage(),
+          home: const HomeScreen(),
           routes: {
-            HomePage.routeName: (context) => const HomePage(),
             HomeScreen.routeName: (context) => const HomeScreen(),
+            PortfolioScreen.routeName: (context) => const PortfolioScreen(),
             MarketScreen.routeName: (context) => const MarketScreen(),
             TransactionsScreen.routeName: (context) => const TransactionsScreen(),
             AddCoinsScreen.routeName: (context) => const AddCoinsScreen(),

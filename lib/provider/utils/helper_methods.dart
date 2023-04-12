@@ -1,12 +1,8 @@
-import 'dart:async';
 import 'dart:convert';
 
-import 'package:crypto_exchange_app/provider/user_coins_provider.dart';
 import 'package:firebase_database/firebase_database.dart' hide Transaction;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:provider/provider.dart';
 
 import '../../model/coin_model.dart';
 
@@ -61,27 +57,6 @@ void addMapUserCoin({required DatabaseEvent event, required Map<String, CoinMode
         color: Colors.blue,
         market_cap_rank: coin.market_cap_rank,
         transactions: transactions,
-      ),
-    );
-  }
-}
-
-class SnackBarContainer extends StatelessWidget {
-  const SnackBarContainer({
-    super.key,
-    required this.message,
-  });
-
-  final String message;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.blue[900],
-      ),
-      child: Text(
-        message,
-        style: const TextStyle(color: Colors.white),
       ),
     );
   }
