@@ -52,7 +52,8 @@ class PortfolioDrawer extends StatelessWidget {
                   await FirebaseAuth.instance.signOut();
                   if (context.mounted) {
                     context.read<UserCoinsProvider>().resetUser();
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: ((context) => const HomeScreen())));
+                    Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+                    // Navigator.of(context).popUntil((route) => route.isFirst);
                   }
                 } on FirebaseAuthException catch (e) {
                   Utils.showSnackBar(e.message);
