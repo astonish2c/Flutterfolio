@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -66,11 +69,12 @@ Future<void> setValues({required BuildContext context}) async {
   AllCoinsProvider allCoinsProvider = context.read<AllCoinsProvider>();
   UserCoinsProvider userCoinsProvider = context.read<UserCoinsProvider>();
 
-  if (!userCoinsProvider.isFirstRunUser) return;
-
   try {
+    if (!userCoinsProvider.isFirstRunUser) return;
+
     await userCoinsProvider.setUserCoin();
     await allCoinsProvider.setDatabaseCoins();
+    print('Set values');
   } catch (e) {
     Utils.showSnackBar(e.toString());
   }

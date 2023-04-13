@@ -1,8 +1,11 @@
+import 'package:crypto_exchange_app/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '/screens/home_screen/home_screen.dart';
 import '../../../custom_widgets/custom_image.dart';
-import '../../home_screen/home_screen.dart';
+import '../../../provider/userCoins_provider.dart';
 import '../../home_screen/widgets/utils.dart';
 import '../widgets/helper_methods.dart';
 import '../widgets/portfolio_drawerSkeleton.dart';
@@ -48,7 +51,8 @@ class PortfolioDrawer extends StatelessWidget {
                 try {
                   await FirebaseAuth.instance.signOut();
                   if (context.mounted) {
-                    Navigator.popAndPushNamed(context, HomeScreen.routeName);
+                    context.read<UserCoinsProvider>().resetUser();
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: ((context) => const HomeScreen())));
                   }
                 } on FirebaseAuthException catch (e) {
                   Utils.showSnackBar(e.message);

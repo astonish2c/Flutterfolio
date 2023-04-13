@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart' hide Transaction;
 import 'package:flutter/material.dart';
 
@@ -15,6 +18,21 @@ class UserCoinsProvider with ChangeNotifier {
 
   bool isLoadingUserCoin = false;
   bool hasErrorUserCoin = false;
+
+  User? _user;
+
+  User? get user => _user;
+
+  Future<void> updateUser(User newUser) async {
+    await Future.delayed(Duration.zero);
+    _user = newUser;
+    notifyListeners();
+  }
+
+  void resetUser() {
+    _userCoins.clear();
+    isFirstRunUser = true;
+  }
 
   final Map<String, CoinModel> _userCoins = {};
 
@@ -35,10 +53,17 @@ class UserCoinsProvider with ChangeNotifier {
     }
 
     if (hasErrorUserCoin) hasErrorUserCoin = false;
+
     isLoadingUserCoin = true;
     notifyListeners();
 
-    databaseReference.child('userCoins/').onValue.listen((event) {
+    if (user == null) {
+      hasErrorUserCoin = true;
+      isLoadingUserCoin = false;
+      notifyListeners();
+      throw ('User is null');
+    }
+    databaseReference.child('userCoins/${user?.uid}/').onValue.listen((event) {
       if (event.snapshot.value == null) {
         isFirstRunUser = false;
         isLoadingUserCoin = false;
@@ -56,7 +81,7 @@ class UserCoinsProvider with ChangeNotifier {
   }
 
   Future<void> addUserCoin(CoinModel coinModel) async {
-    final String coinUrl = 'userCoins/${coinModel.symbol}';
+    final String coinUrl = 'userCoins/${user?.uid}/${coinModel.symbol}';
     final String symbol = coinModel.symbol;
 
     if (_userCoins.containsKey(coinModel.symbol)) {
@@ -67,7 +92,7 @@ class UserCoinsProvider with ChangeNotifier {
   }
 
   Future<void> addCoin(CoinModel coin) async {
-    DatabaseReference coinRef = FirebaseDatabase.instance.ref('userCoins/${coin.symbol}');
+    DatabaseReference coinRef = FirebaseDatabase.instance.ref('userCoins/${user?.uid}/${coin.symbol}');
 
     final String transactionId = coinRef.push().key as String;
 
@@ -131,7 +156,7 @@ class UserCoinsProvider with ChangeNotifier {
   Future<void> updateTransaction(CoinModel coin, int transactionIndex, Transaction transaction) async {
     final String transactionId = coin.transactions![transactionIndex].id as String;
 
-    DatabaseReference transactionRef = FirebaseDatabase.instance.ref('userCoins/${coin.symbol}/transactions/');
+    DatabaseReference transactionRef = FirebaseDatabase.instance.ref('userCoins/${user?.uid}/${coin.symbol}/transactions/');
 
     Transaction assignedId = transaction.addId(transaction, transactionId);
 
@@ -148,8 +173,8 @@ class UserCoinsProvider with ChangeNotifier {
 
     final String transactionId = transactions[transactionIndex].id as String;
 
-    final DatabaseReference coinRef = FirebaseDatabase.instance.ref('userCoins/${coin.symbol}');
-    final DatabaseReference transactionRef = FirebaseDatabase.instance.ref('userCoins/${coin.symbol}/transactions/$transactionId');
+    final DatabaseReference coinRef = FirebaseDatabase.instance.ref('userCoins/${user?.uid}/${coin.symbol}');
+    final DatabaseReference transactionRef = FirebaseDatabase.instance.ref('userCoins/${user?.uid}/${coin.symbol}/transactions/$transactionId');
 
     try {
       if (coin.transactions!.length == 1) {
