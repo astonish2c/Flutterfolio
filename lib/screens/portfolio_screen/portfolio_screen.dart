@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -31,13 +34,14 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('Portfolio build');
+
     final bool isLoadingUserCoin = context.select((UserCoinsProvider userCoinsProvider) => userCoinsProvider.isLoadingUserCoin);
     final bool hasErrorUserCoin = context.select((UserCoinsProvider userCoinsProvider) => userCoinsProvider.hasErrorUserCoin);
     final ThemeData theme = Theme.of(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      extendBody: true,
       appBar: PortfolioAppBar(hasErrorUserCoin: hasErrorUserCoin),
       body: isLoadingUserCoin
           ? const PortfolioShimmer()

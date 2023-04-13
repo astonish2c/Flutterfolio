@@ -1,3 +1,4 @@
+import 'package:crypto_exchange_app/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +23,8 @@ class HomeScreen extends StatelessWidget {
             } else if (user.hasError) {
               return const Text('Something went wrong');
             } else if (user.hasData) {
-              return const VerificationState();
+              final User? localUser = user.data;
+              return VerificationState(localUser: localUser);
             } else {
               return const AuthenticationState();
             }

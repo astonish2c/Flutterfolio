@@ -1,14 +1,18 @@
 import 'dart:async';
 
+import 'package:crypto_exchange_app/provider/userCoins_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../portfolio_screen/portfolio_screen.dart';
 import '../verify_email_screen.dart';
 import '../widgets/utils.dart';
 
 class VerificationState extends StatefulWidget {
-  const VerificationState({super.key});
+  const VerificationState({super.key, this.localUser});
+
+  final User? localUser;
 
   @override
   State<VerificationState> createState() => _VerificationStateState();
@@ -26,7 +30,6 @@ class _VerificationStateState extends State<VerificationState> {
   @override
   void initState() {
     super.initState();
-
     _isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
 
     if (!_isEmailVerified) {
@@ -93,6 +96,12 @@ class _VerificationStateState extends State<VerificationState> {
         });
       }
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    context.read<UserCoinsProvider>().updateUser(widget.localUser!);
+    super.didChangeDependencies();
   }
 
   @override

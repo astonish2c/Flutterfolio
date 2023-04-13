@@ -39,7 +39,11 @@ class AllCoinsProvider with ChangeNotifier {
       await checkConnectivity(errorField: hasErrorDatabase, loadingField: isLoadingDatabase);
 
       if (hasErrorDatabase) hasErrorDatabase = false;
+
       isLoadingDatabase = true;
+      notifyListeners();
+
+      isFirstRun = false;
       notifyListeners();
 
       await getMarketStatus();
