@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../home_screen/widgets/utils.dart';
+import '../../../Auth/widgets/utils.dart';
 import '../../../provider/allCoins_provider.dart';
 import '/provider/theme_provider.dart';
 import '../../../provider/userCoins_provider.dart';

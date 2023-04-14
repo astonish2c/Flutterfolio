@@ -1,4 +1,4 @@
-import 'package:crypto_exchange_app/screens/home_screen/widgets/helper_methods.dart';
+import 'package:crypto_exchange_app/Auth/widgets/helper_methods.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,18 +7,18 @@ import 'package:email_validator/email_validator.dart';
 import '../../../custom_widgets/custom_elevated_iconButton.dart';
 import '/custom_widgets/custom_image.dart';
 import '/main.dart';
-import '../widgets/utils.dart';
+import '../../widgets/utils.dart';
 
-class SignupWidget extends StatefulWidget {
+class SignUpScreen extends StatefulWidget {
   final VoidCallback onClickedSignup;
 
-  const SignupWidget({super.key, required this.onClickedSignup});
+  const SignUpScreen({super.key, required this.onClickedSignup});
 
   @override
-  State<SignupWidget> createState() => _SignupWidgetState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignupWidgetState extends State<SignupWidget> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _retypePasswordController = TextEditingController();

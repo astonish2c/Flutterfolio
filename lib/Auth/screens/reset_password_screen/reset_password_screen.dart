@@ -2,20 +2,21 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'package:crypto_exchange_app/screens/home_screen/widgets/helper_methods.dart';
+import 'package:crypto_exchange_app/Auth/widgets/helper_methods.dart';
 import 'package:crypto_exchange_app/custom_widgets/custom_elevated_iconButton.dart';
 import '/custom_widgets/custom_image.dart';
-import 'widgets/utils.dart';
+import '../../widgets/utils.dart';
 
-class PasswordResetScreen extends StatefulWidget {
+class ResetPasswordScreen extends StatefulWidget {
   static const routeName = 'Password_Reset_Screen';
-  const PasswordResetScreen({super.key});
+  const ResetPasswordScreen({super.key, this.scaffoldKey});
 
+  final GlobalKey<ScaffoldState>? scaffoldKey;
   @override
-  State<PasswordResetScreen> createState() => _PasswordResetScreenState();
+  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
-class _PasswordResetScreenState extends State<PasswordResetScreen> {
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final TextEditingController _emailController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -78,6 +79,9 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
 
                     try {
                       await resetPassword(context, email: _emailController.text);
+                      if (widget.scaffoldKey != null && widget.scaffoldKey!.currentState!.isDrawerOpen && context.mounted) {
+                        Navigator.of(context).pop();
+                      }
                     } on FirebaseAuthException catch (e) {
                       Navigator.of(context).pop();
                       if (e.code == 'user-not-found') {

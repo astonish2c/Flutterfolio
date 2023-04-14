@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../custom_widgets/custom_alertDialog.dart';
 import '../../custom_widgets/custom_navBar.dart';
-import '../home_screen/widgets/utils.dart';
+import '../../Auth/widgets/utils.dart';
 import '/custom_widgets/helper_methods.dart';
 import '../../provider/allCoins_provider.dart';
 import '../../provider/userCoins_provider.dart';

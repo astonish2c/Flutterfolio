@@ -2,7 +2,7 @@ import 'package:crypto_exchange_app/provider/allCoins_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../home_screen/widgets/utils.dart';
+import '../../../Auth/widgets/utils.dart';
 
 Future<void> checkDbStatus({required BuildContext context}) async {
   final bool isDatabaseAvailable = context.read<AllCoinsProvider>().isDatabaseAvailable;

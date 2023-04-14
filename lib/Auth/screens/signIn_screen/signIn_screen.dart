@@ -5,21 +5,21 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../widgets/helper_methods.dart';
-import '../widgets/utils.dart';
+import '../../widgets/helper_methods.dart';
+import '../../widgets/utils.dart';
 import '/custom_widgets/custom_image.dart';
-import '../password_reset_screen.dart';
+import '../reset_password_screen/reset_password_screen.dart';
 
-class SigninWidget extends StatefulWidget {
+class SignInScreen extends StatefulWidget {
   final VoidCallback onClickedSignIn;
 
-  const SigninWidget({super.key, required this.onClickedSignIn});
+  const SignInScreen({super.key, required this.onClickedSignIn});
 
   @override
-  State<SigninWidget> createState() => _SigninWidgetState();
+  State<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _SigninWidgetState extends State<SigninWidget> {
+class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -111,7 +111,7 @@ class _SigninWidgetState extends State<SigninWidget> {
                 const SizedBox(height: 8),
                 GestureDetector(
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const PasswordResetScreen(),
+                    builder: (context) => const ResetPasswordScreen(),
                   )),
                   child: Text(
                     'Forgot password?',

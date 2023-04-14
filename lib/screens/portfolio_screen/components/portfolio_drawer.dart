@@ -2,16 +2,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '/screens/home_screen/password_reset_screen.dart';
-import '/screens/home_screen/home_screen.dart';
+import '../../../Auth/screens/reset_password_screen/reset_password_screen.dart';
+import '../../../Auth/user_auth.dart';
 import '../../../provider/userCoins_provider.dart';
-import '../../home_screen/widgets/utils.dart';
+import '../../../Auth/widgets/utils.dart';
 import '../widgets/helper_methods.dart';
 import '../widgets/portfolio_drawerSkeleton.dart';
 
 class PortfolioDrawer extends StatelessWidget {
-  const PortfolioDrawer({super.key});
+  const PortfolioDrawer({super.key, required this.scaffoldKey});
 
+  final GlobalKey<ScaffoldState> scaffoldKey;
   @override
   Widget build(BuildContext context) {
     final User? user = FirebaseAuth.instance.currentUser;
@@ -35,6 +36,7 @@ class PortfolioDrawer extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 48),
+            const Divider(thickness: 0.5),
             PortfolioDrawerSkeleton(
               text: 'Change password',
               icon: Icons.mode_edit_outline_rounded,
@@ -42,11 +44,12 @@ class PortfolioDrawer extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const PasswordResetScreen(),
+                    builder: (context) => ResetPasswordScreen(scaffoldKey: scaffoldKey),
                   ),
                 );
               },
             ),
+            const Divider(thickness: 0.5),
             PortfolioDrawerSkeleton(
               text: 'Report a bug',
               icon: Icons.report,
@@ -54,6 +57,7 @@ class PortfolioDrawer extends StatelessWidget {
                 launchEmail();
               },
             ),
+            const Divider(thickness: 0.5),
             const SizedBox(height: 8),
             PortfolioDrawerSkeleton(
               text: 'Sign out',
@@ -63,13 +67,14 @@ class PortfolioDrawer extends StatelessWidget {
                   await FirebaseAuth.instance.signOut();
                   if (context.mounted) {
                     context.read<UserCoinsProvider>().resetUser();
-                    Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+                    Navigator.of(context).pushReplacementNamed(UserAuth.routeName);
                   }
                 } on FirebaseAuthException catch (e) {
                   Utils.showSnackBar(e.message);
                 }
               },
             ),
+            const Divider(thickness: 0.5),
           ],
         ),
       ),

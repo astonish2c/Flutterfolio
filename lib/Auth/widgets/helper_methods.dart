@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../../main.dart';
+import '../../main.dart';
 import 'utils.dart';
 
 Future<void> signIn(BuildContext context, {required String email, required String password}) async {
@@ -45,7 +45,7 @@ Future<void> resetPassword(BuildContext context, {required String email}) async 
     email: email.trim(),
   );
 
-  Utils.showSnackBar('Password reset email has been sent.', bgColor: Colors.green);
-
   navigatorKey.currentState!.popUntil((route) => route.isFirst);
+
+  Utils.showSnackBar('Password reset email has been sent.', bgColor: Colors.green);
 }

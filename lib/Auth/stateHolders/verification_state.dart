@@ -5,8 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../portfolio_screen/portfolio_screen.dart';
-import '../verify_email_screen.dart';
+import '../../screens/portfolio_screen/portfolio_screen.dart';
+import '../../screens/verify_email_screen/verify_email_screen.dart';
 import '../widgets/utils.dart';
 
 class VerificationState extends StatefulWidget {

@@ -68,13 +68,13 @@ class TransactionsScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(
               'Transactions',
               style: theme.textTheme.titleMedium!.copyWith(fontSize: 22),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Expanded(
               child: Builder(builder: (context) {
                 context.select((UserCoinsProvider userCoinsProvider) => userCoinsProvider.userBalance);

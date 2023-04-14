@@ -29,6 +29,8 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
     setValues(context: context);
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     print('Portfolio build');
@@ -38,6 +40,7 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
     final ThemeData theme = Theme.of(context);
 
     return Scaffold(
+      key: _scaffoldKey,
       resizeToAvoidBottomInset: true,
       extendBodyBehindAppBar: true,
       appBar: PortfolioAppBar(hasErrorUserCoin: hasErrorUserCoin),
@@ -60,7 +63,7 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
                   ),
       ),
       bottomNavigationBar: const CustomNavBar(currentIndex: 0),
-      drawer: const PortfolioDrawer(),
+      drawer: PortfolioDrawer(scaffoldKey: _scaffoldKey),
       floatingActionButton: !hasErrorUserCoin
           ? const Text('')
           : FloatingActionButton(

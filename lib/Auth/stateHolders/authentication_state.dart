@@ -1,7 +1,7 @@
+import 'package:crypto_exchange_app/Auth/screens/signup_screen/signUp_screen.dart';
 import 'package:flutter/material.dart';
 
-import '../components/signin_widget.dart';
-import '../components/signup_widget.dart';
+import '../screens/signIn_screen/signIn_screen.dart';
 
 class AuthenticationState extends StatefulWidget {
   const AuthenticationState({super.key});
@@ -17,6 +17,6 @@ class _AuthenticationStateState extends State<AuthenticationState> {
 
   @override
   Widget build(BuildContext context) {
-    return isLogin ? SigninWidget(onClickedSignIn: toggleIsLogin) : SignupWidget(onClickedSignup: toggleIsLogin);
+    return isLogin ? SignInScreen(onClickedSignIn: toggleIsLogin) : SignUpScreen(onClickedSignup: toggleIsLogin);
   }
 }

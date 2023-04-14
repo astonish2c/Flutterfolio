@@ -6,7 +6,7 @@ import 'package:firebase_database/firebase_database.dart' hide Transaction;
 import 'package:flutter/material.dart';
 
 import '../model/coin_model.dart';
-import '../screens/home_screen/widgets/utils.dart';
+import '../Auth/widgets/utils.dart';
 import 'utils/helper_methods.dart';
 
 class UserCoinsProvider with ChangeNotifier {

@@ -6,7 +6,7 @@ import 'package:firebase_database/firebase_database.dart' hide Transaction;
 import 'package:http/http.dart' as http;
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-import '../screens/home_screen/widgets/utils.dart';
+import '../Auth/widgets/utils.dart';
 import '/provider/utils/helper_methods.dart';
 import '../model/coin_model.dart';
 

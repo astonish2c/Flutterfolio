@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'stateHolders/authentication_state.dart';
 import 'stateHolders/verification_state.dart';
 
-class HomeScreen extends StatelessWidget {
+class UserAuth extends StatelessWidget {
   static const routeName = 'Home_Screen';
 
-  const HomeScreen({super.key});
+  const UserAuth({super.key});
 
   @override
   Widget build(BuildContext context) {

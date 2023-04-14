@@ -5,12 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
-import '/screens/home_screen/password_reset_screen.dart';
+import 'Auth/screens/reset_password_screen/reset_password_screen.dart';
 import 'custom_widgets/custom_theme.dart';
 import 'screens/addCoins_screen/addCoins_screen.dart';
 import 'screens/portfolio_screen/portfolio_screen.dart';
-import 'screens/home_screen/home_screen.dart';
-import 'screens/home_screen/widgets/utils.dart';
+import 'Auth/user_auth.dart';
+import 'Auth/widgets/utils.dart';
 import 'screens/tab_screen/tab_screen.dart';
 import 'screens/transactions_screen/transactions_screen.dart';
 import 'screens/market_screen/market_screen.dart';
@@ -69,15 +69,15 @@ class App extends StatelessWidget {
           theme: lightTheme,
           darkTheme: darkTheme,
           themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
-          home: const HomeScreen(),
+          home: const UserAuth(),
           routes: {
-            HomeScreen.routeName: (context) => const HomeScreen(),
+            UserAuth.routeName: (context) => const UserAuth(),
             PortfolioScreen.routeName: (context) => const PortfolioScreen(),
             MarketScreen.routeName: (context) => const MarketScreen(),
             TransactionsScreen.routeName: (context) => const TransactionsScreen(),
             AddCoinsScreen.routeName: (context) => const AddCoinsScreen(),
             TabScreen.routeName: (context) => const TabScreen(),
-            PasswordResetScreen.routeName: (context) => const PasswordResetScreen(),
+            ResetPasswordScreen.routeName: (context) => const ResetPasswordScreen(),
           },
         );
       },
