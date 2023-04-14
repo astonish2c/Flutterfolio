@@ -60,29 +60,6 @@ String currencyConverter(double num, {bool isCurrency = true, bool isSell = fals
   }
 }
 
-void navigateToPage(BuildContext context, Widget getPage) {
-  Navigator.pushReplacement(
-    context,
-    PageRouteBuilder(
-      pageBuilder: (context, animation1, animation2) => getPage,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        Offset begin = const Offset(0, 0);
-        var end = Offset.zero;
-        var curve = Curves.ease;
-
-        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
-      transitionDuration: Duration.zero,
-      reverseTransitionDuration: Duration.zero,
-    ),
-  );
-}
-
 double calTotalCost(CoinModel coin) {
   double totalCost = 0;
 

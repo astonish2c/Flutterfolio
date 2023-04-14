@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '/screens/home_screen/password_reset_screen.dart';
 import 'custom_widgets/custom_theme.dart';
 import 'screens/addCoins_screen/addCoins_screen.dart';
 import 'screens/portfolio_screen/portfolio_screen.dart';
@@ -61,10 +63,11 @@ class App extends StatelessWidget {
         return MaterialApp(
           scaffoldMessengerKey: Utils.scaffoldMessengerState,
           navigatorKey: navigatorKey,
-          title: 'Crypto Firebase',
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
-          darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
+          title: 'Crypto Firebase',
+          themeAnimationDuration: const Duration(milliseconds: 200),
+          theme: lightTheme,
+          darkTheme: darkTheme,
           themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
           home: const HomeScreen(),
           routes: {
@@ -74,6 +77,7 @@ class App extends StatelessWidget {
             TransactionsScreen.routeName: (context) => const TransactionsScreen(),
             AddCoinsScreen.routeName: (context) => const AddCoinsScreen(),
             TabScreen.routeName: (context) => const TabScreen(),
+            PasswordResetScreen.routeName: (context) => const PasswordResetScreen(),
           },
         );
       },

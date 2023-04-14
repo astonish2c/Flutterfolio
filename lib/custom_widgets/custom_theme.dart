@@ -1,4 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+final ThemeData lightTheme = ThemeData(
+  useMaterial3: true,
+  // appBarTheme: AppBarTheme(
+  //     systemOverlayStyle: SystemUiOverlayStyle(
+  //   statusBarColor: lightColorScheme.surface,
+  //   statusBarIconBrightness: Brightness.light,
+  //   statusBarBrightness: Brightness.light,
+  // )),
+  colorScheme: lightColorScheme,
+);
+
+final ThemeData darkTheme = ThemeData(
+  useMaterial3: true,
+  // appBarTheme: AppBarTheme(
+  //   systemOverlayStyle: SystemUiOverlayStyle(
+  //     statusBarColor: darkColorScheme.surface,
+  //     statusBarIconBrightness: Brightness.dark,
+  //     statusBarBrightness: Brightness.dark,
+  //   ),
+  // ),
+  colorScheme: darkColorScheme,
+);
 
 const lightColorScheme = ColorScheme(
   brightness: Brightness.light,

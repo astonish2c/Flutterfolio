@@ -19,47 +19,49 @@ class VerifyEmailScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         title: const Text('Almost There'),
       ),
-      body: Column(
-        children: [
-          const Spacer(),
-          const CustomImage(imagePath: 'assets/images/happiness.png', size: 120),
-          const SizedBox(height: 56),
-          Center(
-            child: Text(
-              'Verification email sent succesfully.',
-              textAlign: TextAlign.center,
-              style: theme.textTheme.titleLarge,
-            ),
-          ),
-          const SizedBox(height: 24),
-          SizedBox(
-            height: 50,
-            width: 250,
-            child: ElevatedButton.icon(
-              style: ButtonStyle(shape: MaterialStateProperty.all(const RoundedRectangleBorder())),
-              icon: const Icon(Icons.email_rounded),
-              label: Text(
-                canSendEmailVerification ? 'Resent email' : 'Resent email in $remainingSeconds',
-                style: theme.textTheme.titleMedium,
-              ),
-              onPressed: canSendEmailVerification ? sendVerificationEmail : null,
-            ),
-          ),
-          const SizedBox(height: 18),
-          SizedBox(
-            height: 50,
-            width: 250,
-            child: TextButton(
-              style: ButtonStyle(shape: MaterialStateProperty.all(const RoundedRectangleBorder())),
+      body: SafeArea(
+        child: Column(
+          children: [
+            const Spacer(),
+            const CustomImage(imagePath: 'assets/images/happiness.png', size: 120),
+            const SizedBox(height: 56),
+            Center(
               child: Text(
-                'Cancel',
-                style: theme.textTheme.titleMedium,
+                'Verification email sent succesfully.',
+                textAlign: TextAlign.center,
+                style: theme.textTheme.titleLarge,
               ),
-              onPressed: () => FirebaseAuth.instance.signOut(),
             ),
-          ),
-          const Spacer(flex: 2),
-        ],
+            const SizedBox(height: 24),
+            SizedBox(
+              height: 50,
+              width: 250,
+              child: ElevatedButton.icon(
+                style: ButtonStyle(shape: MaterialStateProperty.all(const RoundedRectangleBorder())),
+                icon: const Icon(Icons.email_rounded),
+                label: Text(
+                  canSendEmailVerification ? 'Resent email' : 'Resent email in $remainingSeconds',
+                  style: theme.textTheme.titleMedium,
+                ),
+                onPressed: canSendEmailVerification ? sendVerificationEmail : null,
+              ),
+            ),
+            const SizedBox(height: 18),
+            SizedBox(
+              height: 50,
+              width: 250,
+              child: TextButton(
+                style: ButtonStyle(shape: MaterialStateProperty.all(const RoundedRectangleBorder())),
+                child: Text(
+                  'Cancel',
+                  style: theme.textTheme.titleMedium,
+                ),
+                onPressed: () => FirebaseAuth.instance.signOut(),
+              ),
+            ),
+            const Spacer(flex: 2),
+          ],
+        ),
       ),
     );
   }
