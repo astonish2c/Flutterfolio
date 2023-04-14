@@ -8,6 +8,7 @@ import '/custom_widgets/custom_image.dart';
 import 'widgets/utils.dart';
 
 class PasswordResetScreen extends StatefulWidget {
+  static const routeName = 'Password_Reset_Screen';
   const PasswordResetScreen({super.key});
 
   @override

@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -42,25 +39,28 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
+      extendBodyBehindAppBar: true,
       appBar: PortfolioAppBar(hasErrorUserCoin: hasErrorUserCoin),
-      body: isLoadingUserCoin
-          ? const PortfolioShimmer()
-          : hasErrorUserCoin
-              ? const MarketCustomError(
-                  error: 'Please make sure your internet is connected and try again.',
-                  pngPath: 'assets/images/no-wifi.png',
-                )
-              : Column(
-                  children: const [
-                    PortfolioBalance(),
-                    SizedBox(height: 12),
-                    Expanded(
-                      child: PortfolioCoinsSection(),
-                    ),
-                  ],
-                ),
+      body: SafeArea(
+        child: isLoadingUserCoin
+            ? const PortfolioShimmer()
+            : hasErrorUserCoin
+                ? const MarketCustomError(
+                    error: 'Please make sure your internet is connected and try again.',
+                    pngPath: 'assets/images/no-wifi.png',
+                  )
+                : Column(
+                    children: const [
+                      PortfolioBalance(),
+                      SizedBox(height: 12),
+                      Expanded(
+                        child: PortfolioCoinsSection(),
+                      ),
+                    ],
+                  ),
+      ),
       bottomNavigationBar: const CustomNavBar(currentIndex: 0),
-      drawer: const Drawer(child: PortfolioDrawer()),
+      drawer: const PortfolioDrawer(),
       floatingActionButton: !hasErrorUserCoin
           ? const Text('')
           : FloatingActionButton(

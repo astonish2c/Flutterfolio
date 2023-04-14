@@ -12,6 +12,7 @@ import '../../provider/allCoins_provider.dart';
 import '../../provider/userCoins_provider.dart';
 import 'components/market_coins.dart';
 import 'components/market_shimmer.dart';
+import 'components/market_status.dart';
 import 'widgets/market_custom_error.dart';
 
 class MarketScreen extends StatefulWidget {
@@ -56,55 +57,24 @@ class _MarketScreenState extends State<MarketScreen> {
     final bool isLoadingMarket = context.select((AllCoinsProvider allCoinsProvider) => allCoinsProvider.isLoadingMarket);
     final bool hasErrorMarket = context.select((AllCoinsProvider allCoinsProvider) => allCoinsProvider.hasErrorMarket);
     final bool isDbAvailable = context.select((AllCoinsProvider allCoinsProvider) => allCoinsProvider.isDatabaseAvailable);
-    final double marketStatus = context.select((AllCoinsProvider allCoinsProvider) => allCoinsProvider.marketStatus);
     final bool hasErrorUserCoin = context.select((UserCoinsProvider userCoinsProvider) => userCoinsProvider.hasErrorUserCoin);
 
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: hasErrorMarket || isLoadingMarket
-            ? const Text('')
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'in the past 24 hours',
-                        style: theme.textTheme.bodyMedium,
-                      ),
-                      Text(
-                        marketStatus < 0 ? 'Market is down' : 'Market is up',
-                        style: theme.textTheme.titleMedium!.copyWith(fontSize: 26),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: marketStatus < 0 ? Colors.red : Colors.green,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      marketStatus < 0 ? '${convertPerToNum(marketStatus.toString())}%' : '+${convertPerToNum(marketStatus.toString())}%',
-                      style: theme.textTheme.bodyMedium!.copyWith(color: Colors.black),
-                    ),
-                  ),
-                ],
-              ),
-      ),
+      // appBar: AppBar(
+      //   automaticallyImplyLeading: false,
+      //   title: hasErrorMarket || isLoadingMarket ? const Text('') : MarketStatusSection(marketStatus: marketStatus),
+      // ),
       body: SafeArea(
         child: hasErrorUserCoin
             ? isDbAvailable
-                ? MarketCoins(marketStatus: marketStatus)
+                ? const MarketCoins()
                 : const MarketCustomError(
                     error: 'Please make sure your internet is connected and try again.',
                     pngPath: 'assets/images/no-wifi.png',
                   )
             : isLoadingMarket
                 ? const MarketShimmer()
-                : MarketCoins(marketStatus: marketStatus),
+                : const MarketCoins(),
       ),
       bottomNavigationBar: const CustomNavBar(currentIndex: 1),
       floatingActionButton: isLoadingMarket
