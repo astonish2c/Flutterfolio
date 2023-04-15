@@ -1,12 +1,11 @@
 import 'package:crypto_exchange_app/Auth/widgets/helper_methods.dart';
+import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:email_validator/email_validator.dart';
 
-import '../../../custom_widgets/custom_elevated_iconButton.dart';
 import '/custom_widgets/custom_image.dart';
-import '/main.dart';
+import '../../../custom_widgets/custom_elevated_iconButton.dart';
 import '../../widgets/utils.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -53,6 +52,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final ThemeData theme = Theme.of(context);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(

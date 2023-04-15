@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:decimal/decimal.dart';
+import 'package:intl/intl.dart';
 
 import '../model/coin_model.dart';
 

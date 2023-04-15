@@ -1,3 +1,4 @@
+import 'package:crypto_exchange_app/screens/onBoarding_screen/onBoarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -69,7 +70,7 @@ class App extends StatelessWidget {
           theme: lightTheme,
           darkTheme: darkTheme,
           themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
-          home: const UserAuth(),
+          home: const OnBoardingScreen(),
           routes: {
             UserAuth.routeName: (context) => const UserAuth(),
             PortfolioScreen.routeName: (context) => const PortfolioScreen(),

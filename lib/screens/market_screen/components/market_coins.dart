@@ -1,10 +1,8 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:crypto_exchange_app/custom_widgets/custom_image.dart';
-import 'package:crypto_exchange_app/provider/allCoins_provider.dart';
+import '/custom_widgets/custom_image.dart';
+import '/provider/allCoins_provider.dart';
 import '../../../custom_widgets/helper_methods.dart';
 import '../../../model/coin_model.dart';
 import '../../tab_screen/tab_screen.dart';
@@ -26,8 +24,8 @@ class MarketCoins extends StatelessWidget {
           floating: true,
           toolbarHeight: 92,
           leadingWidth: MediaQuery.of(context).size.width,
-          leading: Padding(
-            padding: const EdgeInsets.all(16),
+          leading: const Padding(
+            padding: EdgeInsets.all(16),
             child: MarketStatusSection(),
           ),
         ),
