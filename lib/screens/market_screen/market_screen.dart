@@ -31,11 +31,6 @@ class _MarketScreenState extends State<MarketScreen> {
     getApiCoins();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   Future<void> getApiCoins() async {
     final AllCoinsProvider readAllCoinsProvider = context.read<AllCoinsProvider>();
 
@@ -53,17 +48,14 @@ class _MarketScreenState extends State<MarketScreen> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final AllCoinsProvider allCoinsProvider = Provider.of<AllCoinsProvider>(context);
+    final UserCoinsProvider userCoinsProvider = Provider.of<UserCoinsProvider>(context);
 
-    final bool isLoadingMarket = context.select((AllCoinsProvider allCoinsProvider) => allCoinsProvider.isLoadingMarket);
-    final bool hasErrorMarket = context.select((AllCoinsProvider allCoinsProvider) => allCoinsProvider.hasErrorMarket);
-    final bool isDbAvailable = context.select((AllCoinsProvider allCoinsProvider) => allCoinsProvider.isDatabaseAvailable);
-    final bool hasErrorUserCoin = context.select((UserCoinsProvider userCoinsProvider) => userCoinsProvider.hasErrorUserCoin);
+    final bool isLoadingMarket = allCoinsProvider.isLoadingMarket;
+    final bool isDbAvailable = allCoinsProvider.isDatabaseAvailable;
+    final bool hasErrorUserCoin = userCoinsProvider.hasErrorUserCoin;
 
     return Scaffold(
-      // appBar: AppBar(
-      //   automaticallyImplyLeading: false,
-      //   title: hasErrorMarket || isLoadingMarket ? const Text('') : MarketStatusSection(marketStatus: marketStatus),
-      // ),
       body: SafeArea(
         child: hasErrorUserCoin
             ? isDbAvailable
@@ -76,7 +68,6 @@ class _MarketScreenState extends State<MarketScreen> {
                 ? const MarketShimmer()
                 : const MarketCoins(),
       ),
-      bottomNavigationBar: const CustomNavBar(currentIndex: 1),
       floatingActionButton: isLoadingMarket
           ? const Text('')
           : FloatingActionButton(

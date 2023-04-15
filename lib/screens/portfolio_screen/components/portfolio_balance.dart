@@ -25,7 +25,15 @@ class _PortfolioBalanceState extends State<PortfolioBalance> {
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       margin: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: theme.colorScheme.primaryContainer),
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.4),
+            blurRadius: 7,
+          )
+        ],
+        color: theme.colorScheme.primaryContainer,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

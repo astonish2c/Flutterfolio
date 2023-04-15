@@ -1,8 +1,8 @@
-import 'package:crypto_exchange_app/provider/userCoins_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '/provider/userCoins_provider.dart';
 import '/screens/tab_screen/tab_screen.dart';
 import '../../../model/coin_model.dart';
 import '../../../custom_widgets/helper_methods.dart';
@@ -41,7 +41,7 @@ class _TransactionsBottomSheetState extends State<TransactionsBottomSheet> {
             'Transaction Details',
             style: theme.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           TransactionsBottomSheetRow(
             title1: 'Type',
             title2: transaction.isSell ? 'Sell' : 'Buy',
@@ -125,13 +125,13 @@ class _TransactionsBottomSheetState extends State<TransactionsBottomSheet> {
                       isLoading = true;
                     });
 
-                    final bool lastTransaction = await context.read<UserCoinsProvider>().removeTransaction(coin: widget.coin, transactionIndex: widget.indexTransaction);
+                    final bool isLastTransaction = await context.read<UserCoinsProvider>().removeTransaction(coin: widget.coin, transactionIndex: widget.indexTransaction);
 
-                    if (context.mounted) Navigator.of(context).pop();
+                    if (context.mounted) Navigator.pop(context);
 
-                    if (!lastTransaction) return;
+                    if (!isLastTransaction) return;
 
-                    widget.popPage();
+                    if (context.mounted) Navigator.popUntil(context, (route) => route.isFirst);
                   },
             child: isLoading ? const SizedBox(height: 25, width: 25, child: CircularProgressIndicator(color: Colors.white)) : null,
           ),

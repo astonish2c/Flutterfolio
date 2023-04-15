@@ -4,7 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
-import 'package:crypto_exchange_app/screens/onBoarding_screen/onBoarding_screen.dart';
+import '/screens/onBoarding_screen/onBoarding_screen.dart';
 import 'Auth/screens/reset_password_screen/reset_password_screen.dart';
 import 'custom_widgets/custom_theme.dart';
 import 'screens/addCoins_screen/addCoins_screen.dart';
@@ -66,7 +66,7 @@ class App extends StatelessWidget {
           navigatorKey: navigatorKey,
           debugShowCheckedModeBanner: false,
           title: 'Crypto Firebase',
-          themeAnimationDuration: const Duration(milliseconds: 200),
+          themeAnimationDuration: const Duration(milliseconds: 300),
           theme: lightTheme,
           darkTheme: darkTheme,
           themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,

@@ -3,24 +3,11 @@ import 'package:flutter/services.dart';
 
 final ThemeData lightTheme = ThemeData(
   useMaterial3: true,
-  // appBarTheme: AppBarTheme(
-  //     systemOverlayStyle: SystemUiOverlayStyle(
-  //   statusBarColor: lightColorScheme.surface,
-  //   statusBarIconBrightness: Brightness.light,
-  //   statusBarBrightness: Brightness.light,
-  // )),
   colorScheme: lightColorScheme,
 );
 
 final ThemeData darkTheme = ThemeData(
   useMaterial3: true,
-  // appBarTheme: AppBarTheme(
-  //   systemOverlayStyle: SystemUiOverlayStyle(
-  //     statusBarColor: darkColorScheme.surface,
-  //     statusBarIconBrightness: Brightness.dark,
-  //     statusBarBrightness: Brightness.dark,
-  //   ),
-  // ),
   colorScheme: darkColorScheme,
 );
 
@@ -61,7 +48,7 @@ const lightColorScheme = ColorScheme(
 const darkColorScheme = ColorScheme(
   brightness: Brightness.dark,
   primary: Color.fromARGB(255, 255, 255, 255),
-  onPrimary: Color.fromARGB(255, 255, 255, 255),
+  onPrimary: Color.fromARGB(255, 0, 0, 0),
   primaryContainer: Color.fromARGB(255, 55, 55, 55),
   onPrimaryContainer: Color.fromARGB(255, 245, 247, 251),
   secondary: Color(0xFFA8C8FF),

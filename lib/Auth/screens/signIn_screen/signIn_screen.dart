@@ -1,10 +1,10 @@
-import 'package:crypto_exchange_app/screens/onBoarding_screen/onBoarding_screen.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import 'package:crypto_exchange_app/custom_widgets/custom_elevated_iconButton.dart';
+import '/screens/onBoarding_screen/onBoarding_screen.dart';
+import '/custom_widgets/custom_elevated_iconButton.dart';
 import 'package:hive/hive.dart';
 import '../../widgets/helper_methods.dart';
 import '../../widgets/utils.dart';
@@ -47,11 +47,6 @@ class _SignInScreenState extends State<SignInScreen> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const Text(''),
-      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -60,7 +55,7 @@ class _SignInScreenState extends State<SignInScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Spacer(),
+                const Spacer(flex: 2),
                 const CustomImage(imagePath: 'assets/images/smile.png', size: 80),
                 const SizedBox(height: 24),
                 Text('Welcome', textAlign: TextAlign.center, style: theme.textTheme.displayMedium),
@@ -165,7 +160,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     ],
                   ),
                 ),
-                const Spacer(flex: 2),
+                const Spacer(),
                 Row(
                   children: [
                     GestureDetector(

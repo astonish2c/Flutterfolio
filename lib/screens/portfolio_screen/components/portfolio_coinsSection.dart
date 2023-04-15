@@ -31,9 +31,9 @@ class _PortfolioCoinsSectionState extends State<PortfolioCoinsSection> {
 
   @override
   void dispose() {
-    super.dispose();
     _amountController.dispose();
     _priceController.dispose();
+    super.dispose();
   }
 
   @override
@@ -67,14 +67,19 @@ class _PortfolioCoinsSectionState extends State<PortfolioCoinsSection> {
                     itemCount: localUserCoins.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          child: PortfolioCoinSkeleton(coin: localUserCoins[index]),
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
+                        behavior: HitTestBehavior.translucent,
+                        child: PortfolioCoinSkeleton(coin: localUserCoins[index]),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
                               builder: (context) => TransactionsScreen(coin: localUserCoins[index]),
-                            ));
-                          });
-                    })
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  )
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -87,12 +92,12 @@ class _PortfolioCoinsSectionState extends State<PortfolioCoinsSection> {
                       const SizedBox(height: 32),
                       TextButton(
                         onPressed: () => Navigator.of(context).pushNamed(AddCoinsScreen.routeName),
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 18),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 18),
                           child: Text(
                             'Add transaction',
-                            style: TextStyle(
-                              fontSize: 16,
+                            style: theme.textTheme.titleLarge!.copyWith(
+                              color: theme.colorScheme.primary,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
