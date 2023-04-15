@@ -57,7 +57,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   prefixIcon: Icon(Icons.email_rounded),
                 ),
                 autofocus: false,
-                textInputAction: TextInputAction.next,
+                textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.emailAddress,
                 validator: (input) {
                   if (input!.isEmpty) {

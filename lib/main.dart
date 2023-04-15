@@ -1,11 +1,10 @@
-import 'package:crypto_exchange_app/screens/onBoarding_screen/onBoarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
+import 'package:crypto_exchange_app/screens/onBoarding_screen/onBoarding_screen.dart';
 import 'Auth/screens/reset_password_screen/reset_password_screen.dart';
 import 'custom_widgets/custom_theme.dart';
 import 'screens/addCoins_screen/addCoins_screen.dart';
@@ -24,7 +23,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Hive.initFlutter();
-  await Hive.openBox('themeBox');
+  await Hive.openBox('configs');
 
   await Firebase.initializeApp();
 
@@ -57,9 +56,10 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: Hive.box('themeBox').listenable(),
+      valueListenable: Hive.box('configs').listenable(),
       builder: (context, box, _) {
         final bool isDarkTheme = box.get('isDarkTheme') ?? false;
+        final bool isFirstRun = box.get('isFirstRun') ?? true;
 
         return MaterialApp(
           scaffoldMessengerKey: Utils.scaffoldMessengerState,
@@ -70,7 +70,7 @@ class App extends StatelessWidget {
           theme: lightTheme,
           darkTheme: darkTheme,
           themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
-          home: const OnBoardingScreen(),
+          home: isFirstRun ? const OnBoardingScreen() : const UserAuth(),
           routes: {
             UserAuth.routeName: (context) => const UserAuth(),
             PortfolioScreen.routeName: (context) => const PortfolioScreen(),

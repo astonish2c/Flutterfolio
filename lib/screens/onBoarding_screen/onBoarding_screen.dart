@@ -1,10 +1,9 @@
-import 'package:crypto_exchange_app/main.dart';
 import 'package:flutter/material.dart';
 
+import '/Auth/user_auth.dart';
 import 'data/onBoard_data.dart';
 import 'widgets/dot_indicator_widget.dart';
 import 'widgets/onBoard_content_widget.dart';
-import 'models/onBoard_model.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
@@ -33,6 +32,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+
+    bool isLastPage = !(_pageIndex < onBoardData.length - 1);
 
     return Scaffold(
       appBar: AppBar(),
@@ -69,31 +70,38 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     );
                   }),
                   const Spacer(),
-                  SizedBox(
-                    height: 60,
-                    width: 60,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (_pageIndex != 3) {
-                          _pageController.nextPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.ease,
-                          );
-                        } else {
-                          // Navigator.pushReplacement(context, newRoute);
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: theme.colorScheme.onBackground,
-                        shape: const CircleBorder(),
-                        padding: EdgeInsets.zero,
-                      ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (!isLastPage) {
+                        _pageController.nextPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.ease,
+                        );
+                      } else {
+                        Navigator.pushReplacement(
+                          context,
+                          PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => const UserAuth()),
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: theme.colorScheme.onBackground,
+                      shape: !isLastPage ? const CircleBorder() : RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      padding: EdgeInsets.zero,
+                    ),
+                    child: Padding(
+                      padding: !isLastPage ? const EdgeInsets.all(8) : const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       child: Center(
-                        child: Icon(
-                          Icons.arrow_right_alt,
-                          size: 35,
-                          color: theme.colorScheme.surface,
-                        ),
+                        child: !isLastPage
+                            ? Icon(
+                                Icons.arrow_right_alt,
+                                size: 30,
+                                color: theme.colorScheme.surface,
+                              )
+                            : Text(
+                                'Lets start',
+                                style: theme.textTheme.titleMedium!.copyWith(color: theme.colorScheme.background),
+                              ),
                       ),
                     ),
                   ),

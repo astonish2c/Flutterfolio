@@ -5,7 +5,7 @@ class ThemeProvider with ChangeNotifier {
   late bool _isDarkTheme;
 
   Future<void> toggleThemeMode() async {
-    Box box = await Hive.openBox('themeBox');
+    Box box = await Hive.openBox('configs');
 
     _isDarkTheme = box.get('isDarkTheme') ?? false;
 
