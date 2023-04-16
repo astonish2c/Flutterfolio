@@ -1,61 +1,49 @@
-<h1>Crypto Wallet</h1>
+<!DOCTYPE html>
+<html>
+<body>
 
-<p>Crypto Wallet is a mobile application that allows you to track the market prices of various cryptocurrencies and also enables you to add your buy and sell transactions for those currencies. With Crypto Wallet, you can stay up-to-date with the latest market trends and monitor your portfolio all in one place.</p>
+  <h1>Flutterfolio</h1>
 
-<h2>Features</h2>
+  <p>Flutterfolio is a mobile application built with Flutter that allows users to view the latest cryptocurrency market coin prices and add buy and sell transactions to their portfolio for tracking purposes. The application is backed by Firebase for user authentication and data storage.</p>
 
-<ul>
-  <li>View real-time market prices for popular cryptocurrencies</li>
-  <li>Add buy and sell transactions for each currency</li>
-  <li>View detailed transaction history for each currency</li>
-</ul>
+  <h2>Features</h2>
 
-<h2>Features to be implemented</h2>
+  <ul>
+    <li>View latest cryptocurrency market coin prices</li>
+    <li>Add buy and sell transactions to portfolio</li>
+    <li>Track your portfolio as it grows.</li>
+    <li>User authentication using Firebase</li>
+  </ul>
 
-<ul>
-  <li>Track the profit/loss of your portfolio</li>
-  <li>Set alerts for price changes</li>
-  <li>Securely store your API keys for cryptocurrency exchanges</li>
-</ul>
+  <h2>Installation</h2>
 
-<h2>Technologies</h2>
+  <ol>
+    <li>Clone the repository to your local machine</li>
+    <li>Install Flutter and Dart on your machine</li>
+    <li>Install the required dependencies using <code>flutter pub get</code></li>
+    <li>Run the app on a simulator or physical device using <code>flutter run</code></li>
+  </ol>
 
-<p>Crypto Wallet is built using the following technologies:</p>
+  <h2>Firebase Integration</h2>
 
-<ul>
-  <li>Flutter - A popular open-source framework for building cross-platform mobile applications</li>
-  <li>Dart - A client-optimized programming language for apps on multiple platforms</li>
-  <li>Firebase - A mobile and web application development platform</li>
-</ul>
+  <p>The Firebase integration for Flutterfolio includes Firebase Authentication and Realtime Database.</p>
 
-<h2>Installation</h2>
+  <h3>Firebase Authentication</h3>
 
-<p>Crypto Wallet is available for both Android and iOS devices. To install the app, follow these steps:</p>
+  <p>Firebase Authentication is used for user authentication. The user can register and sign in to the app using their email and password.</p>
 
-<ol>
-  <li>Clone the repository to your local machine.</li>
-  <li>Install Flutter on your machine (if you haven't already done so).</li>
-  <li>Set up a Firebase project and configure the app for both Android and iOS.</li>
-  <li>Run the app using <code>flutter run</code>.</li>
-</ol>
+  <h3>Realtime Database</h3>
 
-<h2>Contributions</h2>
+  <p>Realtime Database is used for data storage. The user's portfolio transactions are stored in Realtime Database, which allows for real-time updates and synchronization across devices.</p>
 
-<p>We welcome contributions from the community. To contribute, please follow these steps:</p>
+  <h2>Contributing</h2>
 
-<ol>
-  <li>Fork the repository to your own account.</li>
-  <li>Create a new branch with a descriptive name for your changes.</li>
-  <li>Make your changes and commit them to your branch.</li>
-  <li>Submit a pull request to the main repository.</li>
-</ol>
+  <p>Contributions are always welcome! If you have any suggestions or bug reports, please open an issue or submit a pull request.</p>
 
-<p>Please ensure that your changes adhere to our coding standards and that you have thoroughly tested your changes before submitting a pull request.</p>
+  <h2>License</h2>
 
-<h2>License</h2>
+  <p>Flutterfolio is licensed under the MIT License. See <code>LICENSE</code> for more information.</p>
 
-<p>Crypto Wallet is licensed under the MIT license. See the <code>LICENSE</code> file for more information.</p>
+</body>
 
-<h2>Contact</h2>
-
-<p>If you have any questions or comments about Crypto Wallet, please feel free to contact us at <a href="mailto:astonish2c@gmail.com">astonish2c@gmail.com</a>. We would love to hear from you!</p>
+</html>
