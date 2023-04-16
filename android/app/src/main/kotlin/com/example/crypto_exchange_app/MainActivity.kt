@@ -1,4 +1,4 @@
-package com.example.crypto_exchange_app
+package com.example.Flutterfolio
 
 import io.flutter.embedding.android.FlutterActivity
 

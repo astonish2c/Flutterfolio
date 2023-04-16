@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.crypto_exchange_app">
+    package="com.example.Flutterfolio">
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
 <queries>
     <intent>
@@ -16,7 +16,7 @@
     </intent>
 </queries>
    <application
-        android:label="Crypto Firebase"
+        android:label="Flutterfolio"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

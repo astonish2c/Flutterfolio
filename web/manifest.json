@@ -1,6 +1,6 @@
 {
-    "name": "crypto_exchange_app",
-    "short_name": "crypto_exchange_app",
+    "name": "Flutterfolio",
+    "short_name": "Flutterfolio",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -1,4 +1,4 @@
-import 'package:crypto_exchange_app/custom_widgets/custom_image.dart';
+import 'package:Flutterfolio/custom_widgets/custom_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

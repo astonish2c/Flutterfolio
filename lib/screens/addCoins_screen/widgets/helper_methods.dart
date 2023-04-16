@@ -1,4 +1,4 @@
-import 'package:crypto_exchange_app/provider/allCoins_provider.dart';
+import 'package:Flutterfolio/provider/allCoins_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -2,8 +2,8 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'package:crypto_exchange_app/Auth/widgets/helper_methods.dart';
-import 'package:crypto_exchange_app/custom_widgets/custom_elevated_iconButton.dart';
+import 'package:Flutterfolio/Auth/widgets/helper_methods.dart';
+import 'package:Flutterfolio/custom_widgets/custom_elevated_iconButton.dart';
 import '/custom_widgets/custom_image.dart';
 import '../../widgets/utils.dart';
 

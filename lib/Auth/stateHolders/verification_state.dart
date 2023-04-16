@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:crypto_exchange_app/main.dart';
-import 'package:crypto_exchange_app/provider/userCoins_provider.dart';
+import 'package:Flutterfolio/main.dart';
+import 'package:Flutterfolio/provider/userCoins_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

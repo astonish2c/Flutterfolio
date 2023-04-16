@@ -37,8 +37,8 @@ class _PortfolioAppBarState extends State<PortfolioAppBar> {
     return AppBar(
       centerTitle: true,
       title: Text(
-        'CryptoLand',
-        style: theme.textTheme.titleMedium,
+        'Flutterfolio',
+        style: theme.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w700, letterSpacing: 1.2),
       ),
       actions: [
         Consumer<ThemeProvider>(

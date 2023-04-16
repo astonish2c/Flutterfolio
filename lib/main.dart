@@ -65,7 +65,7 @@ class App extends StatelessWidget {
           scaffoldMessengerKey: Utils.scaffoldMessengerState,
           navigatorKey: navigatorKey,
           debugShowCheckedModeBanner: false,
-          title: 'Crypto Firebase',
+          title: 'Flutterfolio',
           themeAnimationDuration: const Duration(milliseconds: 300),
           theme: lightTheme,
           darkTheme: darkTheme,

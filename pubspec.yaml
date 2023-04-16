@@ -1,4 +1,4 @@
-name: crypto_exchange_app
+name: Flutterfolio
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -60,11 +60,19 @@ dependencies:
   firebase_auth: ^4.4.0
   email_validator: ^2.1.17
   url_launcher: ^6.1.10
+  flutter_launcher_icons: ^0.13.0
+  
   
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
+flutter_icons:
+  image_path: assets/images/logo.png
+  android: true
+  ios: true
+
+  
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your

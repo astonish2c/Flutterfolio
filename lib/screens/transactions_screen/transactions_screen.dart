@@ -1,7 +1,7 @@
-import 'package:crypto_exchange_app/custom_widgets/custom_image.dart';
-import 'package:crypto_exchange_app/main.dart';
-import 'package:crypto_exchange_app/provider/allCoins_provider.dart';
-import 'package:crypto_exchange_app/provider/userCoins_provider.dart';
+import 'package:Flutterfolio/custom_widgets/custom_image.dart';
+import 'package:Flutterfolio/main.dart';
+import 'package:Flutterfolio/provider/allCoins_provider.dart';
+import 'package:Flutterfolio/provider/userCoins_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

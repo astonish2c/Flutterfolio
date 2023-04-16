@@ -1,4 +1,4 @@
-import 'package:crypto_exchange_app/Auth/screens/signup_screen/signUp_screen.dart';
+import 'package:Flutterfolio/Auth/screens/signup_screen/signUp_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../screens/signIn_screen/signIn_screen.dart';
