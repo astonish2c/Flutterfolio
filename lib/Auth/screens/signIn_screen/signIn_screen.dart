@@ -1,9 +1,11 @@
-import 'package:crypto_exchange_app/custom_widgets/custom_elevated_iconButton.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import '/screens/onBoarding_screen/onBoarding_screen.dart';
+import '/custom_widgets/custom_elevated_iconButton.dart';
+import 'package:hive/hive.dart';
 import '../../widgets/helper_methods.dart';
 import '../../widgets/utils.dart';
 import '/custom_widgets/custom_image.dart';
@@ -45,21 +47,16 @@ class _SignInScreenState extends State<SignInScreen> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const Text(''),
-      ),
+      appBar: AppBar(),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Form(
             key: _formKey,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Spacer(),
+                const Spacer(flex: 2),
                 const CustomImage(imagePath: 'assets/images/smile.png', size: 80),
                 const SizedBox(height: 24),
                 Text('Welcome', textAlign: TextAlign.center, style: theme.textTheme.displayMedium),
@@ -108,15 +105,20 @@ class _SignInScreenState extends State<SignInScreen> {
                   },
                 ),
                 const SizedBox(height: 8),
-                GestureDetector(
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const ResetPasswordScreen(),
-                  )),
-                  child: Text(
-                    'Forgot password?',
-                    textAlign: TextAlign.right,
-                    style: theme.textTheme.titleMedium!.apply(decoration: TextDecoration.underline),
-                  ),
+                Row(
+                  children: [
+                    const Spacer(),
+                    GestureDetector(
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const ResetPasswordScreen(),
+                      )),
+                      child: Text(
+                        'Forgot password?',
+                        textAlign: TextAlign.right,
+                        style: theme.textTheme.titleMedium!.apply(decoration: TextDecoration.underline),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 18),
                 CustomElevatedIconBtn(
@@ -128,6 +130,9 @@ class _SignInScreenState extends State<SignInScreen> {
 
                       try {
                         await signIn(context, email: _emailController.text, password: _passwordController.text);
+
+                        final box = Hive.box('configs');
+                        box.put('isFirstRun', false);
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'user-not-found') {
                           Utils.showSnackBar('No user found for that email.');
@@ -155,6 +160,23 @@ class _SignInScreenState extends State<SignInScreen> {
                           )),
                     ],
                   ),
+                ),
+                const Spacer(),
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => const OnBoardingScreen()),
+                      ),
+                      child: Text(
+                        'Welcome screen',
+                        textAlign: TextAlign.right,
+                        style: theme.textTheme.titleMedium!.apply(decoration: TextDecoration.underline),
+                      ),
+                    ),
+                    const Spacer(),
+                  ],
                 ),
                 const Spacer(flex: 2),
               ],

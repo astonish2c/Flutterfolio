@@ -4,8 +4,6 @@ import 'package:provider/provider.dart';
 import '../../../provider/allCoins_provider.dart';
 import '../../../provider/userCoins_provider.dart';
 import '../../../model/coin_model.dart';
-import '../../portfolio_screen/portfolio_screen.dart';
-import '../../transactions_screen/transactions_screen.dart';
 
 mixin TabScreenMixin<T extends StatefulWidget> on State<T> {
   Future<void> selectDateAndTime({
@@ -117,10 +115,6 @@ Future<void> submit({
       );
   if (context.mounted) {
     Navigator.of(context).pop();
-
-    if (isPushHomePage != null) return;
-
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const PortfolioScreen()));
   }
 }
 
@@ -159,8 +153,6 @@ Future<void> addOrUpdate({
 
   if (context.mounted) {
     Navigator.of(context).pop();
-
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => TransactionsScreen(coin: coin)));
   }
 }
 

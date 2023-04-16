@@ -13,11 +13,13 @@ class ShimmerSkelton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
     return Container(
       height: height,
       width: width,
       padding: const EdgeInsets.all(6),
-      decoration: BoxDecoration(color: Colors.black.withOpacity(0.2), borderRadius: BorderRadius.circular(borderCircle ?? 12)),
+      decoration: BoxDecoration(color: theme.colorScheme.onBackground.withOpacity(0.2), borderRadius: BorderRadius.circular(borderCircle ?? 12)),
     );
   }
 }

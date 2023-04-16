@@ -1,4 +1,5 @@
 import 'package:crypto_exchange_app/custom_widgets/custom_image.dart';
+import 'package:crypto_exchange_app/main.dart';
 import 'package:crypto_exchange_app/provider/allCoins_provider.dart';
 import 'package:crypto_exchange_app/provider/userCoins_provider.dart';
 import 'package:flutter/material.dart';
@@ -14,23 +15,30 @@ import '../../provider/theme_provider.dart';
 import '../../custom_widgets/custom_bigButton.dart';
 import 'components/transactions_item.dart';
 
-class TransactionsScreen extends StatelessWidget {
+class TransactionsScreen extends StatefulWidget {
   const TransactionsScreen({super.key, this.coin});
 
   static const routeName = 'CoinDetailScreen';
   final CoinModel? coin;
 
   @override
+  State<TransactionsScreen> createState() => _TransactionsScreenState();
+}
+
+class _TransactionsScreenState extends State<TransactionsScreen> {
+  final _scaffoldState = GlobalKey<ScaffoldState>();
+
+  void popPage() {
+    if (!context.mounted) return;
+    navigatorKey.currentState!.popUntil((route) => route.isFirst);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
-    void popPage() {
-      if (!context.mounted) return;
-
-      Navigator.of(context).pop();
-    }
-
     return Scaffold(
+      key: _scaffoldState,
       appBar: AppBar(
         titleSpacing: 0,
         leading: Consumer<ThemeProvider>(
@@ -43,7 +51,7 @@ class TransactionsScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Image.network(
-              coin!.image,
+              widget.coin!.image,
               height: 25,
               width: 25,
               errorBuilder: (context, error, stackTrace) => const CustomImage(
@@ -53,14 +61,14 @@ class TransactionsScreen extends StatelessWidget {
             ),
             const SizedBox(width: 4),
             Text(
-              coin!.symbol.toUpperCase(),
+              widget.coin!.symbol.toUpperCase(),
               style: theme.textTheme.titleMedium!.copyWith(
                 fontSize: 18,
               ),
             ),
             const SizedBox(width: 4),
             Text(
-              coin!.name.toCapitalized(),
+              widget.coin!.name.toCapitalized(),
               style: theme.textTheme.bodyMedium,
             ),
           ],
@@ -79,7 +87,7 @@ class TransactionsScreen extends StatelessWidget {
               child: Builder(builder: (context) {
                 context.select((UserCoinsProvider userCoinsProvider) => userCoinsProvider.userBalance);
 
-                List<Transaction> localTransactions = coin!.transactions!;
+                List<Transaction> localTransactions = widget.coin!.transactions!;
 
                 localTransactions.sort((a, b) {
                   return b.dateTime.compareTo(a.dateTime);
@@ -90,7 +98,7 @@ class TransactionsScreen extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                           behavior: HitTestBehavior.translucent,
-                          child: TransactionsItem(coin: coin!, transaction: localTransactions[index]),
+                          child: TransactionsItem(coin: widget.coin!, transaction: localTransactions[index]),
                           onTap: () async {
                             await showModalBottomSheet(
                                 backgroundColor: theme.colorScheme.primaryContainer,
@@ -100,7 +108,7 @@ class TransactionsScreen extends StatelessWidget {
                                 ),
                                 context: context,
                                 builder: (context) {
-                                  return TransactionsBottomSheet(coin: coin!, indexTransaction: index, popPage: popPage);
+                                  return TransactionsBottomSheet(coin: widget.coin!, indexTransaction: index, popPage: popPage);
                                 });
                           });
                     });
@@ -111,7 +119,7 @@ class TransactionsScreen extends StatelessWidget {
                 text: 'Add Transaction',
                 bgColor: Colors.blue[900],
                 onTap: () {
-                  Navigator.of(context).pushNamed(TabScreen.routeName, arguments: {'coinModel': coin, 'isPushHomePage': false, 'initialPage': 0});
+                  Navigator.of(context).pushNamed(TabScreen.routeName, arguments: {'coinModel': widget.coin, 'isPushHomePage': false, 'initialPage': 0});
                 }),
           ]),
         ),

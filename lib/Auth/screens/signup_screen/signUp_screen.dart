@@ -1,9 +1,9 @@
-import 'package:crypto_exchange_app/Auth/widgets/helper_methods.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import '/Auth/widgets/helper_methods.dart';
 import '/custom_widgets/custom_image.dart';
 import '../../../custom_widgets/custom_elevated_iconButton.dart';
 import '../../widgets/utils.dart';
@@ -160,7 +160,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ],
                 ),
               ),
-              const Spacer(),
+              const Spacer(flex: 2),
             ],
           ),
         ),

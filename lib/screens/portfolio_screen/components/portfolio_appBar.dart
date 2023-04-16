@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
-import '../../../custom_widgets/custom_iconButton.dart';
 import '/provider/theme_provider.dart';
 
-class PortfolioAppBar extends StatelessWidget with PreferredSizeWidget {
+class PortfolioAppBar extends StatefulWidget with PreferredSizeWidget {
   const PortfolioAppBar({
     Key? key,
     required this.hasErrorUserCoin,
@@ -13,7 +13,22 @@ class PortfolioAppBar extends StatelessWidget with PreferredSizeWidget {
   final bool hasErrorUserCoin;
 
   @override
+  State<PortfolioAppBar> createState() => _PortfolioAppBarState();
+
+  @override
+  @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class _PortfolioAppBarState extends State<PortfolioAppBar> {
+  late bool _isDarkTheme;
+
+  @override
+  void initState() {
+    super.initState();
+    final box = Hive.box('configs');
+    _isDarkTheme = box.get('isDarkTheme') ?? false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +42,22 @@ class PortfolioAppBar extends StatelessWidget with PreferredSizeWidget {
       ),
       actions: [
         Consumer<ThemeProvider>(
-          builder: (context, themeProvider, child) => CustomIconButton(
-            size: 25,
-            onPressed: () {
-              themeProvider.toggleThemeMode();
+          builder: (context, themeProvider, child) => GestureDetector(
+            onTap: () async {
+              await themeProvider.toggleThemeMode();
+              setState(() {
+                _isDarkTheme = !_isDarkTheme;
+              });
             },
-            icon: Icons.dark_mode,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: AnimatedSwitcher(
+                switchInCurve: Curves.easeIn,
+                switchOutCurve: Curves.easeOut,
+                duration: const Duration(seconds: 1),
+                child: _isDarkTheme ? const Icon(Icons.wb_sunny_rounded, size: 25) : const Icon(Icons.nightlight_round_rounded, size: 25),
+              ),
+            ),
           ),
         ),
       ],

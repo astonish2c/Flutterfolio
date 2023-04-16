@@ -41,7 +41,7 @@ class PortfolioShimmer extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: const [
                         ShimmerSkelton(width: 60),
-                        SizedBox(height: 16 / 4),
+                        SizedBox(height: 4),
                         ShimmerSkelton(width: 30),
                       ],
                     ),
@@ -50,7 +50,7 @@ class PortfolioShimmer extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: const [
                         ShimmerSkelton(width: 60),
-                        SizedBox(height: 16 / 4),
+                        SizedBox(height: 4),
                         ShimmerSkelton(width: 40),
                       ],
                     ),

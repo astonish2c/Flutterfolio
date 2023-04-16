@@ -43,9 +43,7 @@ class PortfolioDrawer extends StatelessWidget {
               onClicked: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => ResetPasswordScreen(scaffoldKey: scaffoldKey),
-                  ),
+                  MaterialPageRoute(builder: (context) => ResetPasswordScreen(scaffoldKey: scaffoldKey)),
                 );
               },
             ),
@@ -65,10 +63,7 @@ class PortfolioDrawer extends StatelessWidget {
               onClicked: () async {
                 try {
                   await FirebaseAuth.instance.signOut();
-                  if (context.mounted) {
-                    context.read<UserCoinsProvider>().resetUser();
-                    Navigator.of(context).pushReplacementNamed(UserAuth.routeName);
-                  }
+                  if (context.mounted) context.read<UserCoinsProvider>().resetUser();
                 } on FirebaseAuthException catch (e) {
                   Utils.showSnackBar(e.message);
                 }

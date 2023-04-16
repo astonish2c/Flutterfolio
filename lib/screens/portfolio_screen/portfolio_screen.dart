@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../../provider/allCoins_provider.dart';
 import '../../provider/userCoins_provider.dart';
 import '../../custom_widgets/custom_alertDialog.dart';
-import '../../custom_widgets/custom_navBar.dart';
 import '../market_screen/widgets/market_custom_error.dart';
 import 'components/portfolio_appBar.dart';
 import 'components/portfolio_balance.dart';
@@ -33,11 +32,12 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('Portfolio build');
-
-    final bool isLoadingUserCoin = context.select((UserCoinsProvider userCoinsProvider) => userCoinsProvider.isLoadingUserCoin);
-    final bool hasErrorUserCoin = context.select((UserCoinsProvider userCoinsProvider) => userCoinsProvider.hasErrorUserCoin);
+    print('Portfolio Build');
     final ThemeData theme = Theme.of(context);
+    final UserCoinsProvider provider = Provider.of<UserCoinsProvider>(context);
+
+    final bool isLoadingUserCoin = provider.isLoadingUserCoin;
+    final bool hasErrorUserCoin = provider.hasErrorUserCoin;
 
     return Scaffold(
       key: _scaffoldKey,
@@ -62,7 +62,6 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
                     ],
                   ),
       ),
-      bottomNavigationBar: const CustomNavBar(currentIndex: 0),
       drawer: PortfolioDrawer(scaffoldKey: _scaffoldKey),
       floatingActionButton: !hasErrorUserCoin
           ? const Text('')

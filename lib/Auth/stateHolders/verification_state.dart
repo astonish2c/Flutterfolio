@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:crypto_exchange_app/main.dart';
 import 'package:crypto_exchange_app/provider/userCoins_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../screens/navigateScreen.dart';
 import '../../screens/portfolio_screen/portfolio_screen.dart';
 import '../screens/verify_email_screen/verify_email_screen.dart';
 import '../widgets/utils.dart';
@@ -107,7 +109,8 @@ class _VerificationStateState extends State<VerificationState> {
   @override
   Widget build(BuildContext context) {
     return _isEmailVerified
-        ? const PortfolioScreen()
+        ? const NavigateScreen()
+        // const PortfolioScreen()
         : VerifyEmailScreen(
             sendVerificationEmail: sendEmailVerification,
             canSendEmailVerification: _canSendEmailVerification,
