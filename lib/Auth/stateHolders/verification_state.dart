@@ -1,15 +1,13 @@
 import 'dart:async';
 
-import 'package:Flutterfolio/main.dart';
-import 'package:Flutterfolio/provider/userCoins_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../screens/navigateScreen.dart';
-import '../../screens/portfolio_screen/portfolio_screen.dart';
-import '../screens/verify_email_screen/verify_email_screen.dart';
 import '../widgets/utils.dart';
+import '/provider/userCoins_provider.dart';
+import '../screens/verify_email_screen/verify_email_screen.dart';
 
 class VerificationState extends StatefulWidget {
   const VerificationState({super.key, this.localUser});
@@ -36,7 +34,6 @@ class _VerificationStateState extends State<VerificationState> {
 
     if (!_isEmailVerified) {
       sendEmailVerification();
-
       _timerCheckEmailVerification = Timer.periodic(const Duration(seconds: 3), (timer) => checkEmailVerification());
     }
   }
@@ -101,16 +98,9 @@ class _VerificationStateState extends State<VerificationState> {
   }
 
   @override
-  void didChangeDependencies() {
-    context.read<UserCoinsProvider>().updateUser(widget.localUser!);
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return _isEmailVerified
         ? const NavigateScreen()
-        // const PortfolioScreen()
         : VerifyEmailScreen(
             sendVerificationEmail: sendEmailVerification,
             canSendEmailVerification: _canSendEmailVerification,

@@ -1,15 +1,14 @@
 import 'dart:async';
 
-import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../Auth/widgets/utils.dart';
 import '../../../provider/allCoins_provider.dart';
-import '/provider/theme_provider.dart';
 import '../../../provider/userCoins_provider.dart';
-import '../../../model/coin_model.dart';
+import '../../../models/coin_model.dart';
 
 String calTotalAmount(CoinModel coin) {
   double totalAmountBuy = 0.0;
@@ -66,15 +65,18 @@ String calTotalCost(CoinModel coin) {
 }
 
 Future<void> setValues({required BuildContext context}) async {
-  AllCoinsProvider allCoinsProvider = context.read<AllCoinsProvider>();
-  UserCoinsProvider userCoinsProvider = context.read<UserCoinsProvider>();
+  final UserCoinsProvider provider = context.read<UserCoinsProvider>();
+
+  final User? currentUser = FirebaseAuth.instance.currentUser;
+  final User? previousUser = context.read<UserCoinsProvider>().user;
+
+  if (currentUser != previousUser) provider.updateUser(currentUser!);
+
+  if (!provider.isFirstRunUser) return;
 
   try {
-    if (!userCoinsProvider.isFirstRunUser) return;
-
-    await userCoinsProvider.setUserCoin();
-    await allCoinsProvider.setDatabaseCoins();
-    print('Set values');
+    await provider.setUserCoin();
+    await context.read<AllCoinsProvider>().setDatabaseData();
   } catch (e) {
     Utils.showSnackBar(e.toString());
   }

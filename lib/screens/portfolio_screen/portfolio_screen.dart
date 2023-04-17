@@ -1,10 +1,10 @@
+import 'package:Flutterfolio/screens/market_screen/widgets/market_error.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/allCoins_provider.dart';
 import '../../provider/userCoins_provider.dart';
 import '../../custom_widgets/custom_alertDialog.dart';
-import '../market_screen/widgets/market_custom_error.dart';
 import 'components/portfolio_appBar.dart';
 import 'components/portfolio_balance.dart';
 import 'components/portfolio_drawer.dart';
@@ -43,14 +43,13 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
       key: _scaffoldKey,
       resizeToAvoidBottomInset: true,
       extendBodyBehindAppBar: true,
-      appBar: PortfolioAppBar(hasErrorUserCoin: hasErrorUserCoin),
+      appBar: PortfolioAppBar(),
       body: SafeArea(
         child: isLoadingUserCoin
             ? const PortfolioShimmer()
             : hasErrorUserCoin
-                ? const MarketCustomError(
+                ? const MarketError(
                     error: 'Please make sure your internet is connected and try again.',
-                    pngPath: 'assets/images/no-wifi.png',
                   )
                 : Column(
                     children: const [
@@ -76,11 +75,8 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
                 final AllCoinsProvider allCoinsProvider = context.read<AllCoinsProvider>();
 
                 try {
-                  setState(() {
-                    allCoinsProvider.hasErrorDatabase = false;
-                  });
                   await userCoinsProvider.setUserCoin();
-                  await allCoinsProvider.setDatabaseCoins();
+                  await allCoinsProvider.setDatabaseData();
                 } catch (e) {
                   await showDialog(
                     context: context,

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '/custom_widgets/custom_image.dart';
 import '../../../custom_widgets/custom_iconButton.dart';
 import '../../../custom_widgets/helper_methods.dart';
-import '../../../model/coin_model.dart';
+import '../../../models/coin_model.dart';
 
 class TabScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
   const TabScreenAppBar({

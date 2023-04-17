@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '/provider/userCoins_provider.dart';
 import '/screens/tab_screen/tab_screen.dart';
-import '../../../model/coin_model.dart';
+import '../../../models/coin_model.dart';
 import '../../../custom_widgets/helper_methods.dart';
 import '../../../custom_widgets/custom_bigButton.dart';
 import '../widgets/transactions_bottom_sheet_row.dart';

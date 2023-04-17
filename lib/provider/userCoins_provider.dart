@@ -5,8 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart' hide Transaction;
 import 'package:flutter/material.dart';
 
-import '../model/coin_model.dart';
 import '../Auth/widgets/utils.dart';
+import '../models/coin_model.dart';
 import 'utils/helper_methods.dart';
 
 class UserCoinsProvider with ChangeNotifier {
@@ -16,7 +16,7 @@ class UserCoinsProvider with ChangeNotifier {
 
   bool isSellMore = false;
 
-  bool isLoadingUserCoin = false;
+  bool isLoadingUserCoin = true;
   bool hasErrorUserCoin = false;
 
   User? _user;
@@ -104,7 +104,6 @@ class UserCoinsProvider with ChangeNotifier {
       'symbol': coin.symbol,
       'image': coin.image,
       'price_change_percentage_24h': coin.priceDiff,
-      'color': coin.color.toString(),
       'transactions': transaction.toJson(),
     });
 
@@ -116,7 +115,6 @@ class UserCoinsProvider with ChangeNotifier {
         symbol: coin.symbol,
         image: coin.image,
         priceDiff: coin.priceDiff,
-        color: coin.color,
         transactions: [transaction],
       ),
     );
@@ -142,7 +140,6 @@ class UserCoinsProvider with ChangeNotifier {
           symbol: coin.symbol,
           image: coin.image,
           priceDiff: coin.priceDiff,
-          color: coin.color,
           transactions: coin.transactions,
         );
       });

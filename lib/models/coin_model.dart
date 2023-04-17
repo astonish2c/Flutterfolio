@@ -1,13 +1,8 @@
-// ignore_for_file: non_constant_identifier_names
-
-import 'package:flutter/material.dart';
-
 class CoinModel {
   final double currentPrice;
   final String name;
   final String symbol;
   final String image;
-  final Color color;
   final String priceDiff;
   final List<Transaction>? transactions;
   final int? market_cap_rank;
@@ -18,7 +13,6 @@ class CoinModel {
     required this.symbol,
     required this.image,
     required this.priceDiff,
-    required this.color,
     this.transactions,
     this.market_cap_rank,
   });
@@ -30,7 +24,6 @@ class CoinModel {
       symbol: json["symbol"],
       image: json['image'],
       priceDiff: json["price_change_percentage_24h"].toString(),
-      color: Colors.blue,
       market_cap_rank: json["market_cap_rank"],
     );
   }
@@ -42,7 +35,6 @@ class CoinModel {
       'symbol': symbol,
       'image': image,
       'price_change_percentage_24h': priceDiff,
-      'color': color.toString(),
       "market_cap_rank": market_cap_rank,
     };
   }

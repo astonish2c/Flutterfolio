@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../custom_widgets/custom_image.dart';
 import '../../../provider/userCoins_provider.dart';
 import '../../addCoins_screen/addCoins_screen.dart';
-import '../../../model/coin_model.dart';
+import '../../../models/coin_model.dart';
 import '../../../custom_widgets/helper_methods.dart';
 import '../../transactions_screen/transactions_screen.dart';
 import '../widgets/portfolio_coinSkeleton.dart';

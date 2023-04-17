@@ -5,12 +5,7 @@ import 'package:provider/provider.dart';
 import '/provider/theme_provider.dart';
 
 class PortfolioAppBar extends StatefulWidget with PreferredSizeWidget {
-  const PortfolioAppBar({
-    Key? key,
-    required this.hasErrorUserCoin,
-  }) : super(key: key);
-
-  final bool hasErrorUserCoin;
+  const PortfolioAppBar();
 
   @override
   State<PortfolioAppBar> createState() => _PortfolioAppBarState();

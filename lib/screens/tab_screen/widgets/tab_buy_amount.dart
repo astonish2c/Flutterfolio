@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../model/coin_model.dart';
+import '../../../models/coin_model.dart';
 import '../../../custom_widgets/helper_methods.dart';
 
 class TabBuyAmount extends StatefulWidget {

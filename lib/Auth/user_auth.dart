@@ -1,5 +1,7 @@
+import 'package:Flutterfolio/provider/userCoins_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'stateHolders/authentication_state.dart';
 import 'stateHolders/verification_state.dart';
@@ -20,6 +22,7 @@ class UserAuth extends StatelessWidget {
           return const Text('Something went wrong');
         } else if (user.hasData) {
           final User? localUser = user.data;
+          // Provider.of<UserCoinsProvider>(context).updateUser(localUser!);
           return VerificationState(localUser: localUser);
         } else {
           return const AuthenticationState();

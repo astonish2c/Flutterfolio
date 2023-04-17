@@ -9,7 +9,7 @@ import '/screens/tab_screen/tab_screen.dart';
 import '../../custom_widgets/custom_iconButton.dart';
 import 'components/transactions_bottom_sheet.dart';
 import '../../custom_widgets/helper_methods.dart';
-import '../../model/coin_model.dart';
+import '../../models/coin_model.dart';
 
 import '../../provider/theme_provider.dart';
 import '../../custom_widgets/custom_bigButton.dart';

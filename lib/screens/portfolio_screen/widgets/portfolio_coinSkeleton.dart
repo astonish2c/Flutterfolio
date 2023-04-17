@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '/custom_widgets/helper_methods.dart';
+import '../../../models/coin_model.dart';
 import '/custom_widgets/custom_image.dart';
-import '../../../model/coin_model.dart';
-import '../../../custom_widgets/helper_methods.dart';
 import '../components/portfolio_priceColumn.dart';
 
 class PortfolioCoinSkeleton extends StatelessWidget {

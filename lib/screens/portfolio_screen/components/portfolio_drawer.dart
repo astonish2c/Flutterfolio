@@ -1,11 +1,12 @@
+import 'package:Flutterfolio/Auth/user_auth.dart';
+import 'package:Flutterfolio/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Auth/screens/reset_password_screen/reset_password_screen.dart';
-import '../../../Auth/user_auth.dart';
-import '../../../provider/userCoins_provider.dart';
 import '../../../Auth/widgets/utils.dart';
+import '../../../provider/userCoins_provider.dart';
 import '../widgets/helper_methods.dart';
 import '../widgets/portfolio_drawerSkeleton.dart';
 
@@ -62,8 +63,11 @@ class PortfolioDrawer extends StatelessWidget {
               icon: Icons.logout_rounded,
               onClicked: () async {
                 try {
+                  //TODO: there should not be any need of resetUser and no pushReplacement
+
+                  context.read<UserCoinsProvider>().resetUser();
                   await FirebaseAuth.instance.signOut();
-                  if (context.mounted) context.read<UserCoinsProvider>().resetUser();
+                  navigatorKey.currentState?.pushReplacement(MaterialPageRoute(builder: (context) => UserAuth()));
                 } on FirebaseAuthException catch (e) {
                   Utils.showSnackBar(e.message);
                 }

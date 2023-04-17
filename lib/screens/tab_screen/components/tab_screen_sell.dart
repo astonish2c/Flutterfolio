@@ -5,7 +5,7 @@ import '/screens/tab_screen/widgets/tab_screen_mixin.dart';
 import '../widgets/tab_buy_amount.dart';
 import '../widgets/tab_buy_price.dart';
 import '../../../custom_widgets/helper_methods.dart';
-import '../../../model/coin_model.dart';
+import '../../../models/coin_model.dart';
 import '../widgets/tab_transaction_details.dart';
 
 class SellTab extends StatefulWidget {

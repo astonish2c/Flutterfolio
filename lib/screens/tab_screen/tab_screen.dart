@@ -4,7 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/coin_model.dart';
+import '../../models/coin_model.dart';
 
 import '../../provider/utils/helper_methods.dart';
 import 'components/tab_screen_buy.dart';

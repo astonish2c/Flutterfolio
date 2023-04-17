@@ -1,7 +1,7 @@
 import 'package:decimal/decimal.dart';
 import 'package:intl/intl.dart';
 
-import '../model/coin_model.dart';
+import '../models/coin_model.dart';
 
 String currencyConverter(double num, {bool isCurrency = true, bool isSell = false}) {
   if (num == 0) return '\$$num';

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../../model/coin_model.dart';
+import '../../../models/coin_model.dart';
 import '../../../provider/theme_provider.dart';
 import '../../../custom_widgets/helper_methods.dart';
 

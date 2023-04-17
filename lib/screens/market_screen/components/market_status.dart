@@ -11,7 +11,7 @@ class MarketStatusSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
-    final double marketStatus = context.select((AllCoinsProvider allCoinsProvider) => allCoinsProvider.marketStatus);
+    final double marketStatus = context.select((AllCoinsProvider allCoinsProvider) => allCoinsProvider.getMarketStatus);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

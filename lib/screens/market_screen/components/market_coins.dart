@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '/custom_widgets/custom_image.dart';
 import '/provider/allCoins_provider.dart';
 import '../../../custom_widgets/helper_methods.dart';
-import '../../../model/coin_model.dart';
+import '../../../models/coin_model.dart';
 import '../../tab_screen/tab_screen.dart';
 import 'market_price_column.dart';
 import 'market_status.dart';
