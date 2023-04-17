@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../Auth/widgets/utils.dart';
+import '../../custom_widgets/custom_noInternet.dart';
 import '../../provider/allCoins_provider.dart';
 import 'components/market_coins.dart';
 import 'components/market_shimmer.dart';
-import 'widgets/market_error.dart';
 
 class MarketScreen extends StatelessWidget {
   static const routeName = 'Market_Page';
@@ -31,7 +31,14 @@ class MarketScreen extends StatelessWidget {
               return MarketShimmer();
             }
             if (snapshot.hasError) {
-              if (provider.getCoins.isEmpty) return MarketError(error: snapshot.error.toString());
+              if (provider.getCoins.isEmpty)
+                return CustomNoInternet(
+                  error: snapshot.error.toString(),
+                  onPressed: () {
+                    provider.setIsFirstRun(true);
+                    provider.setIsLoadingMarket(true);
+                  },
+                );
               WidgetsBinding.instance.addPostFrameCallback((timeStamp) => Utils.showSnackBar(snapshot.error.toString()));
               return MarketCoins();
             }

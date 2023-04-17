@@ -1,7 +1,7 @@
-import 'package:Flutterfolio/screens/market_screen/widgets/market_error.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../custom_widgets/custom_noInternet.dart';
 import '../../provider/allCoins_provider.dart';
 import '../../provider/userCoins_provider.dart';
 import '../../custom_widgets/custom_alertDialog.dart';
@@ -48,9 +48,7 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
         child: isLoadingUserCoin
             ? const PortfolioShimmer()
             : hasErrorUserCoin
-                ? const MarketError(
-                    error: 'Please make sure your internet is connected and try again.',
-                  )
+                ? const CustomNoInternet(error: 'Please make sure your internet is connected and try again.')
                 : Column(
                     children: const [
                       PortfolioBalance(),

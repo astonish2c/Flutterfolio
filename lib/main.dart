@@ -66,7 +66,6 @@ class App extends StatelessWidget {
           navigatorKey: navigatorKey,
           debugShowCheckedModeBanner: false,
           title: 'Flutterfolio',
-          themeAnimationDuration: const Duration(milliseconds: 300),
           theme: lightTheme,
           darkTheme: darkTheme,
           themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,

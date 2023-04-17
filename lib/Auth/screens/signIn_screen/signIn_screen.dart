@@ -56,7 +56,7 @@ class _SignInScreenState extends State<SignInScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Spacer(flex: 2),
+                const Spacer(),
                 const CustomImage(imagePath: 'assets/images/smile.png', size: 80),
                 const SizedBox(height: 24),
                 Text('Welcome', textAlign: TextAlign.center, style: theme.textTheme.displayMedium),

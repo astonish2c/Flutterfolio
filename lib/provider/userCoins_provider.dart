@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart' hide Transaction;
 import 'package:flutter/material.dart';
@@ -23,15 +22,20 @@ class UserCoinsProvider with ChangeNotifier {
 
   User? get user => _user;
 
-  Future<void> updateUser(User newUser) async {
-    await Future.delayed(Duration.zero);
+  void updateUser(User newUser) {
     _user = newUser;
-    notifyListeners();
   }
 
   void resetUser() {
     _userCoins.clear();
+    userBalance = 0.0;
+
     isFirstRunUser = true;
+
+    isSellMore = false;
+
+    isLoadingUserCoin = true;
+    hasErrorUserCoin = false;
   }
 
   final Map<String, CoinModel> _userCoins = {};
@@ -43,26 +47,6 @@ class UserCoinsProvider with ChangeNotifier {
   DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
 
   Future<void> setUserCoin() async {
-    final ConnectivityResult connectivityResult = await (Connectivity().checkConnectivity());
-
-    if (connectivityResult == ConnectivityResult.none) {
-      hasErrorUserCoin = true;
-      isLoadingUserCoin = false;
-      notifyListeners();
-      throw ('Please connect to a network and try again');
-    }
-
-    if (hasErrorUserCoin) hasErrorUserCoin = false;
-
-    isLoadingUserCoin = true;
-    notifyListeners();
-
-    if (user == null) {
-      hasErrorUserCoin = true;
-      isLoadingUserCoin = false;
-      notifyListeners();
-      throw ('User is null');
-    }
     databaseReference.child('userCoins/${user?.uid}/').onValue.listen((event) {
       if (event.snapshot.value == null) {
         isFirstRunUser = false;

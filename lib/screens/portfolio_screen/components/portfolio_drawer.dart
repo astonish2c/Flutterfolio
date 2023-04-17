@@ -63,11 +63,9 @@ class PortfolioDrawer extends StatelessWidget {
               icon: Icons.logout_rounded,
               onClicked: () async {
                 try {
-                  //TODO: there should not be any need of resetUser and no pushReplacement
-
+                  navigatorKey.currentState!.pop();
                   context.read<UserCoinsProvider>().resetUser();
                   await FirebaseAuth.instance.signOut();
-                  navigatorKey.currentState?.pushReplacement(MaterialPageRoute(builder: (context) => UserAuth()));
                 } on FirebaseAuthException catch (e) {
                   Utils.showSnackBar(e.message);
                 }

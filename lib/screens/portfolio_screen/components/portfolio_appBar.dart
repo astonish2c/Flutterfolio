@@ -46,12 +46,7 @@ class _PortfolioAppBarState extends State<PortfolioAppBar> {
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: AnimatedSwitcher(
-                switchInCurve: Curves.easeIn,
-                switchOutCurve: Curves.easeOut,
-                duration: const Duration(seconds: 1),
-                child: _isDarkTheme ? const Icon(Icons.wb_sunny_rounded, size: 25) : const Icon(Icons.nightlight_round_rounded, size: 25),
-              ),
+              child: _isDarkTheme ? const Icon(Icons.wb_sunny_rounded, size: 25) : const Icon(Icons.nightlight_round_rounded, size: 25),
             ),
           ),
         ),
