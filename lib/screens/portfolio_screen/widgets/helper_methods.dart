@@ -75,7 +75,7 @@ Future<void> setValues({required BuildContext context}) async {
   if (!provider.isFirstRunUser) return;
 
   try {
-    await provider.setUserCoin();
+    await Future.sync(() => provider.listenUserCoins());
     await context.read<AllCoinsProvider>().setDatabaseData();
   } catch (e) {
     Utils.showSnackBar(e.toString());

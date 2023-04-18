@@ -4,16 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../Auth/widgets/utils.dart';
-import '../../custom_widgets/custom_noInternet.dart';
+import '../../custom_widgets/custom_error.dart';
 import '../../provider/allCoins_provider.dart';
 import 'components/market_coins.dart';
 import 'components/market_shimmer.dart';
 
-class MarketScreen extends StatelessWidget {
+class MarketScreen extends StatefulWidget {
   static const routeName = 'Market_Page';
 
   const MarketScreen({super.key});
 
+  @override
+  State<MarketScreen> createState() => _MarketScreenState();
+}
+
+class _MarketScreenState extends State<MarketScreen> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -32,12 +37,15 @@ class MarketScreen extends StatelessWidget {
             }
             if (snapshot.hasError) {
               if (provider.getCoins.isEmpty)
-                return CustomNoInternet(
+                return CustomError(
+                  imagePath: 'assets/images/no-wifi.png',
                   error: snapshot.error.toString(),
                   onPressed: () {
                     provider.setIsFirstRun(true);
                     provider.setIsLoadingMarket(true);
+                    setState(() {});
                   },
+                  buttonTitle: 'Try again',
                 );
               WidgetsBinding.instance.addPostFrameCallback((timeStamp) => Utils.showSnackBar(snapshot.error.toString()));
               return MarketCoins();

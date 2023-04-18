@@ -95,7 +95,7 @@ Future<void> submit({
   required bool? isPushHomePage,
   required bool isSell,
 }) async {
-  await context.read<UserCoinsProvider>().addUserCoin(
+  await context.read<UserCoinsProvider>().addTransaction(
         CoinModel(
           currentPrice: price,
           name: coin.name,

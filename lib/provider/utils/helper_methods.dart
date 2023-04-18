@@ -23,7 +23,7 @@ double addMarketStatus(http.Response rMarketStatus) {
   return marketCapPercentage;
 }
 
-void addMapUserCoin({required DatabaseEvent event, required Map<String, CoinModel> userCoins}) {
+void addFetchedUserCoins({required DatabaseEvent event, required Map<String, CoinModel> userCoins}) {
   if (event.snapshot.value == null) return;
 
   final Map<String, dynamic> coinsMapDynamic = Map<String, dynamic>.from(event.snapshot.value as Map<Object?, Object?>);

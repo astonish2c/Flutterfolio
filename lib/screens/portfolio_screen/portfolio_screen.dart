@@ -34,10 +34,9 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
   Widget build(BuildContext context) {
     print('Portfolio Build');
     final ThemeData theme = Theme.of(context);
-    final UserCoinsProvider provider = Provider.of<UserCoinsProvider>(context);
 
-    final bool isLoadingUserCoin = provider.isLoadingUserCoin;
-    final bool hasErrorUserCoin = provider.hasErrorUserCoin;
+    final bool isLoading = context.select((UserCoinsProvider provider) => provider.isLoadingUserCoin);
+    final bool hasError = context.select((UserCoinsProvider provider) => provider.hasErrorUserCoin);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -45,9 +44,9 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
       extendBodyBehindAppBar: true,
       appBar: PortfolioAppBar(),
       body: SafeArea(
-        child: isLoadingUserCoin
+        child: isLoading
             ? const PortfolioShimmer()
-            : hasErrorUserCoin
+            : hasError
                 ? const CustomNoInternet(error: 'Please make sure your internet is connected and try again.')
                 : Column(
                     children: const [
@@ -60,7 +59,7 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
                   ),
       ),
       drawer: PortfolioDrawer(scaffoldKey: _scaffoldKey),
-      floatingActionButton: !hasErrorUserCoin
+      floatingActionButton: !hasError
           ? const Text('')
           : FloatingActionButton(
               backgroundColor: theme.colorScheme.primary,
@@ -73,7 +72,7 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
                 final AllCoinsProvider allCoinsProvider = context.read<AllCoinsProvider>();
 
                 try {
-                  await userCoinsProvider.setUserCoin();
+                  await Future.sync(() => userCoinsProvider.listenUserCoins());
                   await allCoinsProvider.setDatabaseData();
                 } catch (e) {
                   await showDialog(

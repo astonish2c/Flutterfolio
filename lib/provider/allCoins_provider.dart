@@ -80,6 +80,7 @@ class AllCoinsProvider with ChangeNotifier {
 
   Future<void> getApiData() async {
     try {
+      print('getApiData called');
       final http.Response rMarketStatus = await http.get(uriMarketStatus);
       if (rMarketStatus.statusCode != 200) throwError(response: rMarketStatus, errorMessage: 'Get API marketStatus failed: ', fields: [_isLoadingMarket]);
 

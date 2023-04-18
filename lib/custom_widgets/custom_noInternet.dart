@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../screens/market_screen/models/market_error_model.dart';
 import 'custom_image.dart';
 import 'custom_roundButton.dart';
 

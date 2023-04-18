@@ -46,16 +46,18 @@ class UserCoinsProvider with ChangeNotifier {
 
   DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
 
-  Future<void> setUserCoin() async {
-    databaseReference.child('userCoins/${user?.uid}/').onValue.listen((event) {
-      if (event.snapshot.value == null) {
+  void listenUserCoins() {
+    StreamSubscription<DatabaseEvent> streamSubscription = databaseReference.child('userCoins/${user?.uid}/').onValue.listen((event) {});
+
+    streamSubscription.onData((data) {
+      if (data.snapshot.value == null) {
         isFirstRunUser = false;
         isLoadingUserCoin = false;
         notifyListeners();
         return;
       }
 
-      addMapUserCoin(event: event, userCoins: _userCoins);
+      addFetchedUserCoins(event: data, userCoins: _userCoins);
 
       isFirstRunUser = false;
       isLoadingUserCoin = false;
@@ -64,18 +66,15 @@ class UserCoinsProvider with ChangeNotifier {
     });
   }
 
-  Future<void> addUserCoin(CoinModel coinModel) async {
-    final String coinUrl = 'userCoins/${user?.uid}/${coinModel.symbol}';
-    final String symbol = coinModel.symbol;
-
-    if (_userCoins.containsKey(coinModel.symbol)) {
-      await addTransaction(coinModel.transactions![0], coinUrl, symbol);
+  Future<void> addTransaction(CoinModel coin) async {
+    if (_userCoins.containsKey(coin.symbol)) {
+      await addAsSingleTransaction(coin);
     } else {
-      await addCoin(coinModel);
+      await addAsNewCoin(coin);
     }
   }
 
-  Future<void> addCoin(CoinModel coin) async {
+  Future<void> addAsNewCoin(CoinModel coin) async {
     DatabaseReference coinRef = FirebaseDatabase.instance.ref('userCoins/${user?.uid}/${coin.symbol}');
 
     final String transactionId = coinRef.push().key as String;
@@ -105,17 +104,17 @@ class UserCoinsProvider with ChangeNotifier {
     calTotalUserBalance();
   }
 
-  Future<void> addTransaction(Transaction getTransaction, String coinUrl, String symbol) async {
-    DatabaseReference transactionsRef = FirebaseDatabase.instance.ref('$coinUrl/transactions');
+  Future<void> addAsSingleTransaction(CoinModel coin) async {
+    DatabaseReference transactionsRef = FirebaseDatabase.instance.ref('$userCoins/${user?.uid}/${coin.symbol}/transactions');
 
     final String transactionId = transactionsRef.push().key as String;
 
-    final Transaction transaction = getTransaction.addId(getTransaction, transactionId);
+    final Transaction transaction = coin.transactions![0].addId(coin.transactions![0], transactionId);
 
     try {
       await transactionsRef.update(transaction.toJson());
 
-      _userCoins.update(symbol, (coin) {
+      _userCoins.update(coin.symbol, (coin) {
         coin.transactions!.add(transaction);
 
         return CoinModel(
@@ -178,10 +177,6 @@ class UserCoinsProvider with ChangeNotifier {
     } catch (e) {
       rethrow;
     }
-  }
-
-  List<Transaction> getTransactions({required CoinModel coin}) {
-    return _userCoins[coin.symbol]!.transactions!;
   }
 
   void calTotalUserBalance() {
