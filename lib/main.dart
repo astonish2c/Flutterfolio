@@ -29,18 +29,12 @@ Future<void> main() async {
 
   runApp(
     DevicePreview(
-      enabled: false,
+      enabled: true,
       builder: (context) => MultiProvider(
         providers: [
-          ChangeNotifierProvider<AllCoinsProvider>(
-            create: (context) => AllCoinsProvider(),
-          ),
-          ChangeNotifierProvider<UserCoinsProvider>(
-            create: (context) => UserCoinsProvider(),
-          ),
-          ListenableProvider<ThemeProvider>(
-            create: (context) => ThemeProvider(),
-          ),
+          ChangeNotifierProvider<AllCoinsProvider>(create: (context) => AllCoinsProvider()),
+          ChangeNotifierProvider<UserCoinsProvider>(create: (context) => UserCoinsProvider()),
+          ListenableProvider<ThemeProvider>(create: (context) => ThemeProvider()),
         ],
         builder: (context, child) => const App(),
       ),
